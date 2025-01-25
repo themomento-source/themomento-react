@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc"; // Google Icon
+import { useNavigate } from "react-router-dom";
+import {MyContext} from "../../App"
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,10 +16,21 @@ function Login() {
   });
 
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate(); // Use navigate here
+  const context = useContext(MyContext);
 
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Forgot Password function (Moved outside handleSubmit)
+  const forgotPassword = () => {
+    
+      context.openAlertBox("Success", "OTP Send in your email");
+      navigate("/verify");
+      
+    
   };
 
   // Validate form on submit
@@ -81,7 +94,9 @@ function Login() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword((prev) => !prev)}>
+                      <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
                         {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
                       </IconButton>
                     </InputAdornment>
@@ -95,6 +110,10 @@ function Login() {
               <a
                 className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
                 href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  forgotPassword();
+                }}
               >
                 Forgot Password?
               </a>
@@ -110,10 +129,12 @@ function Login() {
                   transition: "0.3s ease",
                 }}
                 onMouseOver={(e) =>
-                  (e.target.style.background = "linear-gradient(45deg, #0056b3, #003f7f)")
+                  (e.target.style.background =
+                    "linear-gradient(45deg, #0056b3, #003f7f)")
                 }
                 onMouseOut={(e) =>
-                  (e.target.style.background = "linear-gradient(45deg, #007BFF, #0056b3)")
+                  (e.target.style.background =
+                    "linear-gradient(45deg, #007BFF, #0056b3)")
                 }
               >
                 Login
