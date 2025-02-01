@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { createContext } from "react";
@@ -25,11 +25,13 @@ import toast, { Toaster } from "react-hot-toast";
 import ChangePassword from "./Pages/ForgotPassword";
 import Checkout from "./Pages/Checkout";
 import MyAccount from "./Pages/MyAccount";
+import { fetchDataFromApi } from "./utils/api.js";
 
 export const MyContext = createContext();
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const openAlertBox = (status, msg) => {
     switch (status) {
@@ -57,13 +59,31 @@ function App() {
   const values = {
     openAlertBox,
     isLogin,
-    setIsLogin
+    setIsLogin,
+    userData,
+    setUserData,
   };
   const [openCartPanel, setOpenCartPanel] = useState(false); // Initially false to keep the cart panel closed
 
   const toggleCartPanel = (newOpen) => {
     setOpenCartPanel(newOpen);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token !== undefined && token !== null && token !== "") {
+      setIsLogin(true);
+
+      fetchDataFromApi(`/api/user/user-details?token=${token}`).then(
+        (response) => {
+          console.log(response);
+          setUserData(response.data);
+        }
+      );
+    } else {
+      setIsLogin(false);
+    }
+  }, [isLogin]);
 
   return (
     <>

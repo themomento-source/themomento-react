@@ -6,12 +6,13 @@ import IconButton from "@mui/material/IconButton";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc"; // Google Icon
 import { useNavigate } from "react-router-dom";
-import {MyContext} from "../../App"
+import { postData } from "../../utils/api.js";
+import { MyContext } from "../../App";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    identifier: "",
+    email: "",
     password: "",
   });
 
@@ -26,20 +27,16 @@ function Login() {
 
   // Forgot Password function (Moved outside handleSubmit)
   const forgotPassword = () => {
-    
-      context.openAlertBox("Success", "OTP Send in your email");
-      navigate("/verify");
-      
-    
+    context.openAlertBox("Success", "OTP Send in your email");
   };
 
   // Validate form on submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let validationErrors = {};
 
-    if (!formData.identifier.trim()) {
-      validationErrors.identifier = "Username or Email is required";
+    if (!formData.email.trim()) {
+      validationErrors.email = "Username or Email is required";
     }
 
     if (!formData.password.trim()) {
@@ -50,7 +47,31 @@ function Login() {
 
     if (Object.keys(validationErrors).length === 0) {
       console.log("Form submitted successfully", formData);
-      // Add your login logic here
+
+      try {
+        const response = await postData("/api/user/login", formData, {
+          withCredentials: true,
+        }); // ✅ Await the API response
+        console.log("API Response:", response);
+
+        if (response?.error !== true) {
+          setFormData({
+            email: "",
+            password: "",
+          });
+
+          // ✅ Ensure response contains data
+          if (response?.data?.accessToken && response?.data?.refreshToken) {
+            localStorage.setItem("accessToken", response.data.accessToken);
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+          } else {
+            console.error("Tokens are missing in API response:", response);
+          }
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
     }
   };
 
@@ -66,15 +87,15 @@ function Login() {
             <div className="form-group w-full mb-5">
               <TextField
                 type="text"
-                name="identifier"
-                id="identifier"
+                name="email"
+                id="email"
                 label="Username or Email *"
                 variant="outlined"
                 className="w-full"
-                value={formData.identifier}
+                value={formData.email}
                 onChange={handleChange}
-                error={!!errors.identifier}
-                helperText={errors.identifier}
+                error={!!errors.email}
+                helperText={errors.email}
               />
             </div>
 

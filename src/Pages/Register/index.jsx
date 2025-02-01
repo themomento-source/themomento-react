@@ -1,47 +1,80 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc"; // Google Icon
+import { postData } from "../../utils/api.js";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     fullname: "",
-    phone: "",
+    mobile: "",
     email: "",
     password: "",
-    accountType: "buyer", // Default to "buyer"
   });
 
   const [errors, setErrors] = useState({
-    username: false,
+    name: false,
+    email: false,
+    password: false,
   });
+
+  const [loading, setLoading] = useState(false); // Loading state to show spinner
+  const [successMessage, setSuccessMessage] = useState(""); // To store success message
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate(); // Hook for navigation
 
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    if (e.target.name === "username" && e.target.value.trim() !== "") {
-      setErrors({ ...errors, username: false });
+    if (e.target.value.trim() !== "") {
+      setErrors({ ...errors, [e.target.name]: false });
     }
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.username.trim() === "") {
-      setErrors({ ...errors, username: true });
+    // Validate required fields
+    const newErrors = {
+      name: formData.name.trim() === "",
+      email: formData.email.trim() === "",
+      password: formData.password.trim() === "",
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) {
       return;
     }
 
-    console.log("Form Data:", formData);
+    try {
+      setLoading(true); // Set loading to true while submitting
+      const response = await postData("/api/user/register", formData);
+
+      if (response.success) {
+        localStorage.setItem("userEmail", formData.email);
+        setSuccessMessage(
+          "Registration successful! An OTP has been sent to your email to verify."
+        );
+        setTimeout(() => {
+          navigate("/verify"); // Redirect to verify page
+        }, 2000); // Redirect after 5 seconds to let user read the message
+      } else {
+        setSuccessMessage(""); // Clear success message on error
+        setErrorMessage(response.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   return (
@@ -52,18 +85,18 @@ function Register() {
             Create Your Account
           </h3>
           <form className="w-full mt-5" onSubmit={handleSubmit}>
-            {/* User Name Field (Required) */}
+            {/* Name Field (Required) */}
             <div className="form-group w-full mb-5">
               <TextField
-                name="username"
+                name="name"
                 type="text"
-                label="User Name *"
+                label="Username *"
                 variant="outlined"
                 className="w-full"
-                value={formData.username}
+                value={formData.name}
                 onChange={handleChange}
-                error={errors.username}
-                helperText={errors.username ? "User Name is required" : ""}
+                error={errors.name}
+                helperText={errors.name ? "Name is required" : ""}
               />
             </div>
 
@@ -80,15 +113,15 @@ function Register() {
               />
             </div>
 
-            {/* Phone Number Field */}
+            {/* Mobile Number Field */}
             <div className="form-group w-full mb-5">
               <TextField
-                name="phone"
+                name="mobile"
                 type="tel"
-                label="Phone Number"
+                label="Mobile Number"
                 variant="outlined"
                 className="w-full"
-                value={formData.phone}
+                value={formData.mobile}
                 onChange={handleChange}
               />
             </div>
@@ -98,11 +131,13 @@ function Register() {
               <TextField
                 name="email"
                 type="email"
-                label="Email ID"
+                label="Email ID *"
                 variant="outlined"
                 className="w-full"
                 value={formData.email}
                 onChange={handleChange}
+                error={errors.email}
+                helperText={errors.email ? "Email is required" : ""}
               />
             </div>
 
@@ -111,13 +146,16 @@ function Register() {
               <TextField
                 name="password"
                 type={showPassword ? "text" : "password"}
-                label="Password"
+                label="Password *"
                 variant="outlined"
                 className="w-full"
                 value={formData.password}
                 onChange={handleChange}
+                error={errors.password}
+                helperText={errors.password ? "Password is required" : ""}
               />
-              <Button
+              <button
+                type="button"
                 className="!absolute top-[10px] right-[10px] z-50 !w-[35px] !h-[45px] !min-w-[35px] !text-black !rounded-full"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
@@ -126,51 +164,41 @@ function Register() {
                 ) : (
                   <IoMdEye className="!text-[20px] !opacity-75" />
                 )}
-              </Button>
+              </button>
             </div>
-
-            {/* Account Type Field */}
-            <div className="form-group w-full mb-5">
-              <FormLabel component="legend">Account Type *</FormLabel>
-              <RadioGroup
-                name="accountType"
-                value={formData.accountType}
-                onChange={handleChange}
-                row
-              >
-                <FormControlLabel
-                  value="buyer"
-                  control={<Radio />}
-                  label="Buyer"
-                />
-                <FormControlLabel
-                  value="seller"
-                  control={<Radio />}
-                  label="Seller"
-                />
-              </RadioGroup>
-            </div>
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="mt-3 text-center text-red-500">
+                {errorMessage}
+              </div> // Display error message here
+            )}
 
             {/* Register Button */}
             <div className="flex items-center mt-5">
               <Button
                 type="submit"
-                className="w-full py-3 text-white !text-white !font-bold rounded-md"
+                className="w-full py-3 text-white font-bold rounded-md"
                 style={{
                   background: "linear-gradient(45deg, #007BFF, #0056b3)",
                   color: "white",
                   transition: "0.3s ease",
                 }}
-                onMouseOver={(e) =>
-                  (e.target.style.background = "linear-gradient(45deg, #0056b3, #003f7f)")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.background = "linear-gradient(45deg, #007BFF, #0056b3)")
-                }
+                disabled={loading} // Disable the button while loading
               >
-                Register
+                {loading ? (
+                  <CircularProgress size={24} color="white" /> // Show loader while loading
+                ) : (
+                  "Register"
+                )}
               </Button>
             </div>
+
+            {/* Success Message */}
+            {successMessage && (
+              <div className="mt-3 text-center text-green-500">
+                {successMessage}
+              </div>
+            )}
 
             {/* Already have an account? Login */}
             <div className="text-center mt-4">
@@ -193,14 +221,7 @@ function Register() {
             </div>
 
             <div className="flex items-center justify-center">
-              <Button
-                className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md text-black font-medium"
-                style={{
-                  transition: "0.3s ease",
-                }}
-                onMouseOver={(e) => (e.target.style.background = "#f5f5f5")}
-                onMouseOut={(e) => (e.target.style.background = "white")}
-              >
+              <Button className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md text-black font-medium">
                 <FcGoogle className="text-[20px] mr-2" />
                 Continue with Gmail
               </Button>

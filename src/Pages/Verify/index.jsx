@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { postData } from "../../utils/api.js";
 
 function Verify() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Handle OTP input change
@@ -13,18 +15,42 @@ function Verify() {
     const { value } = e.target;
     if (/^\d{0,6}$/.test(value)) {
       setOtp(value);
+      setError(""); // Clear error when user types valid input
     }
   };
 
   // Handle OTP submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate OTP length
     if (otp.length !== 6) {
-      setError("OTP must be 6 digits");
+      setError("OTP must be exactly 6 digits.");
       return;
     }
-    console.log("OTP Verified: ", otp);
-    navigate("/change-password"); // Redirect to change password page
+
+    setLoading(true); // Show loading state
+    try {
+      const response = await postData("/api/user/verifyemail", {
+        email: localStorage.getItem("userEmail"),
+        otp: otp,
+      });
+
+      if (response.success) {
+        console.log("OTP Verified:", otp);
+        localStorage.removeItem("userEmail");
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        setError(response.message || "Invalid OTP. Please try again.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading state
+    }
   };
 
   return (
@@ -54,8 +80,9 @@ function Verify() {
             type="submit"
             className="w-full py-3 mt-4 text-white font-bold rounded-md"
             style={{ background: "linear-gradient(45deg, #007BFF, #0056b3)" }}
+            disabled={loading}
           >
-            Verify OTP
+            {loading ? "Verifying..." : "Verify OTP"}
           </Button>
         </form>
       </div>
