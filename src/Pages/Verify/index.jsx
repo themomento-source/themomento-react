@@ -20,36 +20,50 @@ function Verify() {
   };
 
   // Handle OTP submit
+  // Updated handleSubmit in Verify component
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate OTP length
+    const actionType = localStorage.getItem("actionType");
+    const userEmail = localStorage.getItem("userEmail");
+  
     if (otp.length !== 6) {
       setError("OTP must be exactly 6 digits.");
       return;
     }
-
-    setLoading(true); // Show loading state
+  
+    setLoading(true);
+  
     try {
-      const response = await postData("/api/user/verifyemail", {
-        email: localStorage.getItem("userEmail"),
-        otp: otp,
-      });
-
+      let response;
+      
+      if (actionType === "forgot-password") {
+        // Correct endpoint for OTP verification
+        response = await postData("/api/user/verify-otp", {
+          email: userEmail,
+          otp: otp
+        });
+      } else {
+        response = await postData("/api/user/verifyemail", {
+          email: userEmail,
+          otp,
+        });
+      }
+  
       if (response.success) {
-        console.log("OTP Verified:", otp);
-        localStorage.removeItem("userEmail");
-
-        setTimeout(() => {
+        if (actionType === "forgot-password") {
+          navigate("/change-password");
+        } else {
+          localStorage.removeItem("userEmail");
           navigate("/login");
-        }, 1000);
+        }
       } else {
         setError(response.message || "Invalid OTP. Please try again.");
       }
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setError("An error occurred. Please try again.");
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false);
     }
   };
 

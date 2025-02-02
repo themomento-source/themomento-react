@@ -22,10 +22,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Verify from "./Pages/Verify";
 import toast, { Toaster } from "react-hot-toast";
-import ChangePassword from "./Pages/ForgotPassword";
 import Checkout from "./Pages/Checkout";
 import MyAccount from "./Pages/MyAccount";
 import { fetchDataFromApi } from "./utils/api.js";
+import ChangePassword from "./Pages/ChangePassword/index.jsx";
 
 export const MyContext = createContext();
 
@@ -99,9 +99,10 @@ function App() {
             <Route path={"/login"} element={<Login />} />
             <Route path={"/register"} element={<Register />} />
             <Route path={"/verify"} element={<Verify />} />
-            <Route path={"/change-password"} element={<ChangePassword />} />
+
             <Route path={"/checkout"} element={<Checkout />} />
             <Route path={"/my-account"} element={<MyAccount />} />
+            <Route path="/change-password" element={<ChangePassword />} />
           </Routes>
           <Footer />
         </MyContext.Provider>

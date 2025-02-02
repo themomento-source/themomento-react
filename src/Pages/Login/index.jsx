@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc"; // Google Icon
+import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../utils/api.js";
 import { MyContext } from "../../App";
@@ -15,30 +15,46 @@ function Login() {
     email: "",
     password: "",
   });
-
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate(); // Use navigate here
+  const navigate = useNavigate();
   const context = useContext(MyContext);
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Forgot Password function (Moved outside handleSubmit)
-  const forgotPassword = () => {
-    context.openAlertBox("Success", "OTP Send in your email");
+  const forgotPassword = async () => {
+    if (!formData.email.trim()) {
+      context.openAlertBox("error", "Email is required");
+      return;
+    }
+
+    try {
+      const response = await postData("/api/user/forgot-password", {
+        email: formData.email,
+      });
+
+      if (response.success) {
+        context.openAlertBox("success", `OTP sent to ${formData.email}`);
+        localStorage.setItem("userEmail", formData.email);
+        localStorage.setItem("actionType", "forgot-password");
+        navigate("/verify");
+      } else {
+        context.openAlertBox("error", response.message || "Failed to send OTP");
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      context.openAlertBox("error", "An error occurred while sending OTP");
+    }
   };
 
-  // Validate form on submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let validationErrors = {};
+    const validationErrors = {};
 
     if (!formData.email.trim()) {
       validationErrors.email = "Username or Email is required";
     }
-
     if (!formData.password.trim()) {
       validationErrors.password = "Password is required";
     }
@@ -46,31 +62,30 @@ function Login() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Form submitted successfully", formData);
-
       try {
         const response = await postData("/api/user/login", formData, {
           withCredentials: true,
-        }); // ✅ Await the API response
-        console.log("API Response:", response);
+        });
 
-        if (response?.error !== true) {
-          setFormData({
-            email: "",
-            password: "",
-          });
-
-          // ✅ Ensure response contains data
-          if (response?.data?.accessToken && response?.data?.refreshToken) {
-            localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-          } else {
-            console.error("Tokens are missing in API response:", response);
-          }
+        if (response?.error === true) {
+          context.openAlertBox(
+            "error",
+            response.message || "Invalid credentials"
+          );
+          setErrors({ password: "Incorrect password" }); // Show error under password field
+        } else if (
+          response?.data?.accessToken &&
+          response?.data?.refreshToken
+        ) {
+          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
           navigate("/");
+        } else {
+          console.error("Tokens missing in response:", response);
         }
       } catch (error) {
         console.error("Login failed:", error);
+        context.openAlertBox("error", "Invalid credentials or server error");
       }
     }
   };
@@ -83,7 +98,6 @@ function Login() {
             Login to Your Account
           </h3>
           <form className="w-full mt-5" onSubmit={handleSubmit}>
-            {/* Username or Email Field */}
             <div className="form-group w-full mb-5">
               <TextField
                 type="text"
@@ -99,7 +113,6 @@ function Login() {
               />
             </div>
 
-            {/* Password Field */}
             <div className="form-group w-full mb-5">
               <TextField
                 type={showPassword ? "text" : "password"}
@@ -126,7 +139,6 @@ function Login() {
               />
             </div>
 
-            {/* Forgot Password Link */}
             <div className="text-center my-3">
               <a
                 className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
@@ -140,7 +152,6 @@ function Login() {
               </a>
             </div>
 
-            {/* Login Button */}
             <div className="flex items-center mt-5">
               <Button
                 type="submit"
@@ -162,7 +173,6 @@ function Login() {
               </Button>
             </div>
 
-            {/* Not registered? Sign up */}
             <div className="text-center mt-4">
               <span className="text-gray-600 text-[15px]">
                 Not registered?{" "}
@@ -175,7 +185,6 @@ function Login() {
               </span>
             </div>
 
-            {/* OR continue with Google */}
             <div className="flex items-center my-5">
               <hr className="flex-grow border-gray-300" />
               <span className="px-3 text-gray-500 text-[14px]">OR</span>
