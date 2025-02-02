@@ -74,12 +74,10 @@ function App() {
     if (token !== undefined && token !== null && token !== "") {
       setIsLogin(true);
 
-      fetchDataFromApi(`/api/user/user-details?token=${token}`).then(
-        (response) => {
-          console.log(response);
-          setUserData(response.data);
-        }
-      );
+      fetchDataFromApi(`/api/user/user-details`).then((response) => {
+        console.log(response);
+        setUserData(response.data);
+      });
     } else {
       setIsLogin(false);
     }

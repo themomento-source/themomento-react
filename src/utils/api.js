@@ -6,7 +6,7 @@ export const postData = async (url, FormData) => {
     const response = await fetch(apiUrl + url, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(FormData),
@@ -26,13 +26,33 @@ export const postData = async (url, FormData) => {
 
 export const fetchDataFromApi = async (url) => {
   try {
-    const { data } = await axios.get(apiUrl + url, {
-      Authorization: `Bearer &{localStorage.getItem("token")}`,
-      "Content-Type": "application/json",
-    });
+    const params = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.get(apiUrl + url, params);
+
     return data;
   } catch (error) {
     console.log(error);
     return error;
+  }
+};
+
+export const editData = async (url, updateData, config) => {
+  try {
+    const response = await axios.put(apiUrl + url, updateData, {
+      ...config,
+      headers: {
+        ...config?.headers,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Request failed" };
   }
 };

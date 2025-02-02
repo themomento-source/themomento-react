@@ -1,234 +1,319 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@mui/material";
-import { MdFileUpload, MdDashboard, MdSettings, MdLogout } from "react-icons/md";
-import { FaRegUser, FaWallet, FaImages, FaShoppingBag } from "react-icons/fa";
+import React, { useState, useContext } from "react";
+import {
+  Button,
+  CircularProgress,
+  Tabs,
+  Tab,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Chip,
+} from "@mui/material";
+import {
+  MdDashboard,
+  MdSettings,
+  MdLogout,
+  MdPhotoLibrary,
+  MdShoppingBag,
+  MdCloudUpload,
+} from "react-icons/md";
+import { MyContext } from "../../App.jsx";
+import { useNavigate } from "react-router-dom";
+import { editData } from "../../utils/api.js";
 
 function MyAccount() {
-  const [file, setFile] = useState(null);
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [photos, setPhotos] = useState([]);
-  const [purchasedPhotos, setPurchasedPhotos] = useState([]);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [activeTab, setActiveTab] = useState("selling");
+  const { userData, setUserData, openAlertBox, setIsLogin } =
+    useContext(MyContext);
+  const navigate = useNavigate();
 
-  // Mock fetch user's photos on page load
-  useEffect(() => {
-    // Mocked response, replace with actual axios call when ready
-    const mockPhotos = [
-      { _id: "1", title: "Photo 1", description: "Description 1", price: 100, imageUrl: "https://via.placeholder.com/150" },
-      { _id: "2", title: "Photo 2", description: "Description 2", price: 150, imageUrl: "https://via.placeholder.com/150" },
-    ];
-    setPhotos(mockPhotos);
-  }, []);
+  const sellingPhotos = [
+    {
+      id: 1,
+      title: "Mountain Landscape",
+      price: 49,
+      sales: 12,
+      image: "https://via.placeholder.com/300",
+    },
+    {
+      id: 2,
+      title: "City Night",
+      price: 39,
+      sales: 8,
+      image: "https://via.placeholder.com/300",
+    },
+  ];
 
-  const handleFileUpload = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
+  const purchasedPhotos = [
+    {
+      id: 3,
+      title: "Beach Sunset",
+      price: 29,
+      author: "Photographer1",
+      image: "https://via.placeholder.com/300",
+    },
+    {
+      id: 4,
+      title: "Forest Path",
+      price: 35,
+      author: "Photographer2",
+      image: "https://via.placeholder.com/300",
+    },
+  ];
+
+  const stats = [
+    { title: "Total Sales", value: "$1,240", icon: <MdShoppingBag /> },
+    { title: "Total Earnings", value: "$620", icon: <MdPhotoLibrary /> },
+    { title: "Purchases", value: "24 Photos", icon: <MdCloudUpload /> },
+    { title: "Wallet Balance", value: "$150", icon: <MdCloudUpload /> },
+  ];
+
+  const handleAvatarUpload = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.match(/image\/(jpeg|jpg|png|webp)/)) {
+        openAlertBox("error", "Only JPG/PNG/WEBP images are allowed");
+        return;
+      }
+
+      setUploadingAvatar(true);
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      const response = await editData("/api/user/user-avatar", formData);
+
+      if (response?.data?.avatar) {
+        setUserData((prev) => ({ ...prev, avatar: response.data.avatar }));
+        openAlertBox("success", "Avatar updated successfully!");
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      openAlertBox("error", error.response?.data?.message || "Upload failed");
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!file || !title || !price || !description) {
-      alert("Please fill all fields and upload a photo!");
-      return;
-    }
-
-    // Mocked response for file upload, replace with actual axios call when ready
-    const mockResponse = {
-      data: {
-        _id: new Date().getTime().toString(),
-        title,
-        description,
-        price,
-        imageUrl: "https://via.placeholder.com/150", // Mock image URL
-      },
-    };
-
-    try {
-      // Simulating the backend response
-      setPhotos([...photos, mockResponse.data]);
-
-      alert("Photo submitted for publishing!");
-
-      // Reset form
-      setTitle("");
-      setPrice("");
-      setDescription("");
-      setFile(null);
-    } catch (err) {
-      console.error("Error submitting photo:", err);
-      alert("Error submitting photo");
-    }
-  };
-
-  const handlePurchasePhoto = async (photoId) => {
-    try {
-      const photoToPurchase = photos.find(photo => photo._id === photoId);
-      setPurchasedPhotos([...purchasedPhotos, photoToPurchase]);
-
-      // Mocking the purchase update, replace with actual axios call when ready
-      alert(`Purchased photo: ${photoToPurchase.title}`);
-    } catch (err) {
-      console.error("Error purchasing photo:", err);
-      alert("Error purchasing photo");
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLogin(false);
+    navigate("/login");
   };
 
   return (
-    <section className="py-10 w-full bg-gray-900 min-h-screen text-white">
-      <div className="container flex gap-8">
+    <section className="py-8 w-full bg-gray-50 min-h-screen">
+      <div className="container mx-auto px-4 flex gap-8">
         {/* Sidebar */}
-        <div className="col1 w-[25%]">
-          <div className="card bg-gray-800 shadow-lg rounded-lg p-6">
-            {/* Profile Picture */}
-            <div className="w-full p-3 flex items-center justify-center flex-col">
-              <div className="w-[150px] h-[150px] rounded-full overflow-hidden mb-4 relative group border-4 border-gray-600">
-                <img
-                  src="https://images.pexels.com/photos/5257495/pexels-photo-5257495.jpeg"
-                  className="w-full h-full object-cover cursor-pointer transition-all duration-300 hover:scale-105"
+        <div className="w-64 flex-shrink-0">
+          <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+            {/* Profile Section */}
+            <div className="text-center mb-6">
+              <div className="relative mx-auto w-24 h-24 mb-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                  id="avatarInput"
+                  disabled={uploadingAvatar}
                 />
+                <label htmlFor="avatarInput" className="cursor-pointer">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
+                    {userData?.avatar ? (
+                      <img
+                        src={userData.avatar}
+                        className="w-full h-full object-cover"
+                        alt="Profile"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">Add Photo</span>
+                      </div>
+                    )}
+                  </div>
+                </label>
               </div>
-              <h3 className="text-[22px] font-bold">Anna Shvets</h3>
-              <p className="text-gray-400 text-sm">anna.shvets@email.com</p>
-              <p className="text-green-400 font-semibold mt-2">
-                $250.00 Balance
-              </p>
-              <p className="text-blue-400 text-sm">Premium Membership</p>
+              <h3 className="text-lg font-semibold text-gray-800">
+                {userData?.name || "User Name"}
+              </h3>
+              <p className="text-sm text-gray-600">{userData?.email}</p>
             </div>
 
             {/* Navigation */}
-            <ul className="list-none pb-5 flex flex-col items-start mt-6">
-              <NavItem icon={<MdDashboard />} text="Dashboard" />
-              <NavItem icon={<FaImages />} text="My Photos" />
-              <NavItem icon={<FaShoppingBag />} text="Orders" />
-              <NavItem icon={<FaWallet />} text="Wallet" />
-              <NavItem icon={<MdSettings />} text="Settings" />
-              <NavItem icon={<MdLogout />} text="Logout" className="text-red-400" />
-            </ul>
+            <nav className="space-y-1">
+              <Button
+                fullWidth
+                startIcon={<MdDashboard />}
+                className="!justify-start !text-gray-600 hover:!bg-gray-50"
+              >
+                Dashboard
+              </Button>
+              <Button
+                fullWidth
+                startIcon={<MdPhotoLibrary />}
+                className="!justify-start !text-gray-600 hover:!bg-gray-50"
+                onClick={() => setActiveTab("selling")}
+              >
+                My Photos
+              </Button>
+              <Button
+                fullWidth
+                startIcon={<MdShoppingBag />}
+                className="!justify-start !text-gray-600 hover:!bg-gray-50"
+                onClick={() => setActiveTab("buying")}
+              >
+                Purchases
+              </Button>
+              <Button
+                fullWidth
+                startIcon={<MdSettings />}
+                className="!justify-start !text-gray-600 hover:!bg-gray-50"
+              >
+                Settings
+              </Button>
+              <Button
+                fullWidth
+                startIcon={<MdLogout />}
+                className="!justify-start !text-red-500 hover:!bg-red-50"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </nav>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="col2 w-[75%]">
-          <div className="bg-gray-800 shadow-lg rounded-lg p-6">
-            {/* Upload New Photo */}
-            <h2 className="text-xl font-semibold mb-4">Upload New Photo</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="text-sm text-gray-300">Title</label>
-                <input
-                  type="text"
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
+        <div className="flex-1">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {stats.map((stat, index) => (
+              <Card key={index} className="shadow-sm border border-gray-200">
+                <CardContent className="flex items-center gap-4">
+                  <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+                    {stat.icon}
+                  </div>
+                  <div>
+                    <Typography variant="body2" className="text-gray-600">
+                      {stat.title}
+                    </Typography>
+                    <Typography variant="h6" className="font-semibold">
+                      {stat.value}
+                    </Typography>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-              <div className="mb-4">
-                <label className="text-sm text-gray-300">Price</label>
-                <input
-                  type="number"
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm text-gray-300">Description</label>
-                <textarea
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* File Input */}
-              <div
-                className="w-full p-5 border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-700 transition"
-                onClick={() => document.getElementById("fileUpload").click()}
-              >
-                <MdFileUpload className="text-white text-5xl" />
-                <p className="mt-2 text-gray-400">Click to upload or drag & drop</p>
-              </div>
-              <input
-                type="file"
-                id="fileUpload"
-                className="hidden"
-                onChange={handleFileUpload}
+          {/* Content Tabs */}
+          <Card className="shadow-sm border border-gray-200">
+            <Tabs
+              value={activeTab}
+              onChange={(e, newValue) => setActiveTab(newValue)}
+              className="border-b border-gray-200"
+            >
+              <Tab
+                label="Your Photos for Sale"
+                value="selling"
+                className="!font-medium"
               />
+              <Tab
+                label="Purchased Photos"
+                value="buying"
+                className="!font-medium"
+              />
+            </Tabs>
 
-              <Button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-500 mt-4 py-3 text-white"
-              >
-                Submit for Publishing
-              </Button>
-            </form>
-
-            {/* My Published Photos */}
-            <h2 className="text-xl font-semibold mt-8 mb-4">My Published Photos</h2>
-            <div className="grid grid-cols-2 gap-6">
-              {photos.map((photo) => (
-                <div key={photo._id} className="card bg-gray-700 p-4 rounded-lg">
-                  <img
-                    src={photo.imageUrl}
-                    alt={photo.title}
-                    className="w-full h-40 object-cover mb-4"
-                  />
-                  <h3 className="text-lg font-bold">{photo.title}</h3>
-                  <p className="text-sm text-gray-400">{photo.description}</p>
-                  <p className="font-semibold mt-2">${photo.price}</p>
+            {/* Selling Content */}
+            {activeTab === "selling" && (
+              <div className="p-6">
+                <div className="mb-6">
                   <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handlePurchasePhoto(photo._id)}
+                    variant="contained"
+                    startIcon={<MdCloudUpload />}
+                    className="!bg-blue-600 !text-white hover:!bg-blue-700"
                   >
-                    Purchase
+                    Upload New Photo
                   </Button>
                 </div>
-              ))}
-            </div>
 
-            {/* Purchased Photos */}
-            <h2 className="text-xl font-semibold mt-8 mb-4">Purchased Photos</h2>
-            <div className="grid grid-cols-2 gap-6">
-              {purchasedPhotos.map((photo) => (
-                <div key={photo._id} className="card bg-gray-700 p-4 rounded-lg">
-                  <img
-                    src={photo.imageUrl}
-                    alt={photo.title}
-                    className="w-full h-40 object-cover mb-4"
-                  />
-                  <h3 className="text-lg font-bold">{photo.title}</h3>
-                  <p className="text-sm text-gray-400">{photo.description}</p>
-                  <p className="font-semibold mt-2">${photo.price}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {sellingPhotos.map((photo) => (
+                    <Card
+                      key={photo.id}
+                      className="shadow-sm border border-gray-200"
+                    >
+                      <CardMedia
+                        component="img"
+                        image={photo.image}
+                        alt={photo.title}
+                        className="h-48 object-cover"
+                      />
+                      <CardContent>
+                        <Typography variant="h6" className="font-semibold mb-2">
+                          {photo.title}
+                        </Typography>
+                        <div className="flex justify-between items-center">
+                          <Chip
+                            label={`$${photo.price}`}
+                            className="!bg-green-100 !text-green-800"
+                          />
+                          <span className="text-sm text-gray-600">
+                            {photo.sales} sales
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
+
+            {/* Buying Content */}
+            {activeTab === "buying" && (
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {purchasedPhotos.map((photo) => (
+                    <Card
+                      key={photo.id}
+                      className="shadow-sm border border-gray-200"
+                    >
+                      <CardMedia
+                        component="img"
+                        image={photo.image}
+                        alt={photo.title}
+                        className="h-48 object-cover"
+                      />
+                      <CardContent>
+                        <Typography variant="h6" className="font-semibold mb-2">
+                          {photo.title}
+                        </Typography>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">
+                            by {photo.author}
+                          </span>
+                          <Chip
+                            label={`$${photo.price}`}
+                            className="!bg-blue-100 !text-blue-800"
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Card>
         </div>
       </div>
     </section>
   );
 }
-
-// Reusable Navigation Item
-const NavItem = ({ icon, text, className = "" }) => (
-  <li className="w-full text-left flex justify-start">
-    <Button
-      className={`w-full rounded-none !capitalize text-gray-400 py-3 ${className}`}
-      startIcon={icon}
-    >
-      {text}
-    </Button>
-  </li>
-);
 
 export default MyAccount;
