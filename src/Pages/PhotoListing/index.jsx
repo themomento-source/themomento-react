@@ -1,62 +1,101 @@
-import React from "react";
-import ImageCard from "../../components/ImageCard";
+import React, { useState, useEffect } from "react";
 import { BsCartFill } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
-
-const images = [
-  {
-    id: 1,
-    img: "https://images.pexels.com/photos/29469384/pexels-photo-29469384/free-photo-of-women-in-traditional-dresses-amidst-vibrant-lotus-field.jpeg",
-    title: "Lotus Field Beauty",
-    author: "John Doe",
-    price: 120,
-  },
-  {
-    id: 2,
-    img: "https://source.unsplash.com/800x600/?landscape",
-    title: "Majestic Mountains",
-    author: "Jane Smith",
-    price: 90,
-  },
-  {
-    id: 3,
-    img: "https://source.unsplash.com/800x600/?city",
-    title: "City Lights",
-    author: "Alex Johnson",
-    price: 250,
-  },
-  {
-    id: 4,
-    img: "https://source.unsplash.com/800x600/?ocean",
-    title: "Ocean Sunset",
-    author: "Michael Lee",
-    price: 150,
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { fetchDataFromApi } from "../../utils/api";
 
 function PhotoListing() {
+  const [allPhotos, setAllPhotos] = useState([]);
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  useEffect(() => {
+    const fetchAllPhotos = async () => {
+      try {
+        const data = await fetchDataFromApi("/api/product/all-product");
+        if (data && data.products) {
+          setAllPhotos(data.products); // Assuming API returns products in the "products" key
+        } else {
+          console.error("Invalid data structure:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching photos:", error);
+      }
+    };
+    fetchAllPhotos();
+  }, []);
+
+  const handleImageClick = (id) => {
+    navigate(`/photodetails/${id}`); // Navigate to the photo details page
+  };
+
+  const handleContextMenu = (e) => {
+    e.preventDefault(); // Prevent the default right-click menu
+    console.log("Right-click is disabled on image.");
+  };
+
   return (
-    <section className="py-12 bg-gray-100">
+    <section className="py-12 bg-gray-50 min-h-screen">
       {/* Page Header */}
-      <div className="container mx-auto text-center mb-8">
-        <h2 className="text-4xl font-bold text-gray-800">Explore Our Collection</h2>
-        <p className="text-gray-600 mt-2">Discover and buy high-quality stock photos</p>
+      <div className="container mx-auto text-center mb-12 px-4">
+        <h2 className="text-4xl font-bold text-gray-900 font-serif mb-4">
+          Premium Stock Photography
+        </h2>
+        <p className="text-gray-600 text-lg m-6">
+          Discover exceptional images for your creative projects
+        </p>
       </div>
 
-      {/* Image Grid */}
+      {/* Masonry-style Grid */}
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {images.map((item) => (
-            <ImageCard
-              key={item.id}
-              id={item.id}
-              img={item.img}
-              title={item.title}
-              author={item.author}
-              price={item.price}
-              icon1={<BsCartFill className="text-white text-2xl cursor-pointer hover:text-gray-300" />}
-              icon2={<FaRegHeart className="text-white text-2xl cursor-pointer hover:text-red-500" />}
-            />
+        <div className="columns-1 sm:columns-1 lg:columns-2 xl:columns-2 gap-6 space-y-6">
+          {allPhotos.map((photo) => (
+            <div
+              key={photo._id}
+              className="relative group break-inside-avoid"
+              onClick={() => handleImageClick(photo._id)} // Ensure navigation on click
+            >
+              <div
+                className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-zoom-in"
+                onContextMenu={handleContextMenu} // Prevent right-click on image
+              >
+                <img
+                  src={photo.imageUrl || "default-image-url.jpg"} // Ensure valid image URL
+                  alt={photo.title}
+                  className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
+                />
+
+                {/* Image Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                  <div className="text-white">
+                    <h3 className="text-xl font-bold mb-1">{photo.title}</h3>
+                    <p className="text-sm opacity-90">by {photo.author}</p>
+                    <div className="flex items-center justify-between mt-3">
+                      <span className="text-lg font-semibold">${photo.price}</span>
+                      <div className="flex gap-3">
+                        <button
+                          className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle cart logic here
+                          }}
+                        >
+                          <BsCartFill className="text-xl" />
+                        </button>
+                        <button
+                          className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle favorite logic here
+                          }}
+                        >
+                          <FaRegHeart className="text-xl text-red-400" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>

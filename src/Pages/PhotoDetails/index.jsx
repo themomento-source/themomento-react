@@ -1,39 +1,40 @@
-import { Breadcrumbs, Button, Rating, TextField } from "@mui/material";
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-
-// Sample data (Replace this with API fetching logic)
-const photoData = [
-  {
-    id: "1",
-    title: "Elegant Silhouette Photography",
-    photographer: "John Doe",
-    price: "$29.99",
-    description:
-      "A breathtaking silhouette portrait capturing the essence of solitude and mystery.",
-    imageUrl:
-      "https://images.pexels.com/photos/30230301/pexels-photo-30230301/free-photo-of-silhouette-woman-standing-by-window-in-dark-room.jpeg",
-    resolution: "4000x3000 px",
-    license: "Royalty-free",
-    formats: ["JPG", "PNG"],
-    rating: 4.5,
-    reviews: [
-      { user: "Alice", rating: 5, comment: "Absolutely stunning!" },
-      { user: "Bob", rating: 4, comment: "Great photo, loved the details." },
-    ],
-  },
-];
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { fetchDataFromApi } from "../../utils/api";
+import { Rating, Button, TextField } from "@mui/material"; // Make sure to import these from Material-UI
+import Breadcrumbs from "@mui/material/Breadcrumbs"; // Import Breadcrumbs from Material-UI
 
 function PhotoDetails() {
   const { id } = useParams();
-  const photo = photoData.find((item) => item.id === id);
-  const [rating, setRating] = useState(0);
+  const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState("");
-  const [reviews, setReviews] = useState(photo ? photo.reviews : []);
+  const [rating, setRating] = useState(0);
 
-  if (!photo) {
-    return <div className="text-center py-10 text-gray-500">Photo not found</div>;
-  }
+  useEffect(() => {
+    const fetchPhotoDetails = async () => {
+      try {
+        const data = await fetchDataFromApi(`/api/product/${id}`);
+        setPhoto(data.product);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchPhotoDetails();
+  }, [id]);
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error)
+    return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (!photo)
+    return (
+      <div className="text-center py-10 text-gray-500">Photo not found</div>
+    );
 
   const handleReviewSubmit = () => {
     if (reviewText.trim()) {
@@ -48,8 +49,12 @@ function PhotoDetails() {
     <div className="container mx-auto p-5">
       {/* Breadcrumb Navigation */}
       <Breadcrumbs className="text-gray-600 mb-6">
-        <Link to="/" className="hover:text-blue-500">Home</Link>
-        <Link to="/photolisting" className="hover:text-blue-500">Photos</Link>
+        <Link to="/" className="hover:text-blue-500">
+          Home
+        </Link>
+        <Link to="/photolisting" className="hover:text-blue-500">
+          Photos
+        </Link>
         <span className="text-gray-500">{photo.title}</span>
       </Breadcrumbs>
 
@@ -66,8 +71,8 @@ function PhotoDetails() {
 
         {/* Details */}
         <div className="lg:w-1/3 space-y-4">
-          <h2 className="text-3xl font-bold text-gray-900">{photo.title}</h2>
-          <p className="text-gray-600 text-sm">By {photo.photographer}</p>
+          <h2 className="text-3xl font-bold text-gray-900">{photo.name}</h2>
+          <p className="text-gray-600 text-sm">By {photo.sellerr?.name}</p>
 
           <div className="flex items-center gap-2">
             <Rating value={photo.rating} precision={0.1} readOnly />
@@ -78,15 +83,28 @@ function PhotoDetails() {
           <p className="text-gray-500">{photo.description}</p>
 
           <div className="flex gap-4 mt-4">
-            <Button variant="contained" color="primary" size="large">Buy Now</Button>
-            <Button variant="outlined" color="primary" size="large">Download Preview</Button>
-            <Button variant="contained" color="secondary" size="large">Add to Cart</Button>
+            <Button variant="contained" color="primary" size="large">
+              Buy Now
+            </Button>
+            <Button variant="outlined" color="primary" size="large">
+              Download Preview
+            </Button>
+            <Button variant="contained" color="secondary" size="large">
+              Add to Cart
+            </Button>
           </div>
 
           <div className="text-gray-600 text-sm mt-6">
-            <p><strong>Resolution:</strong> {photo.resolution}</p>
-            <p><strong>License:</strong> {photo.license}</p>
-            <p><strong>Formats:</strong> {photo.formats.join(", ")}</p>
+            <p>
+              <strong>Resolution:</strong> {photo.resolution}
+            </p>
+            <p>
+              <strong>License:</strong> {photo.license}
+            </p>
+            <p>
+              <strong>Formats:</strong>{" "}
+              {photo.formats?.join(", ") || "No formats available"}
+            </p>
           </div>
         </div>
       </div>
@@ -100,20 +118,31 @@ function PhotoDetails() {
               <div key={index} className="p-4 border rounded-lg bg-gray-50">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">{review.user}</span>
-                  <Rating value={review.rating} precision={0.5} readOnly size="small" />
+                  <Rating
+                    value={review.rating}
+                    precision={0.5}
+                    readOnly
+                    size="small"
+                  />
                 </div>
                 <p className="text-gray-600 text-sm mt-2">{review.comment}</p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">No reviews yet. Be the first to leave one!</p>
+          <p className="text-gray-500">
+            No reviews yet. Be the first to leave one!
+          </p>
         )}
 
         {/* Add Review */}
         <div className="mt-6 p-4 border rounded-lg bg-white">
           <h4 className="text-lg font-semibold">Leave a Review</h4>
-          <Rating value={rating} onChange={(e, newValue) => setRating(newValue)} precision={0.5} />
+          <Rating
+            value={rating}
+            onChange={(e, newValue) => setRating(newValue)}
+            precision={0.5}
+          />
           <TextField
             fullWidth
             multiline
