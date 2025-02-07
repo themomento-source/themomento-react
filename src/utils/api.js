@@ -56,3 +56,11 @@ export const editData = async (url, updateData, config) => {
     throw error.response?.data || { message: "Request failed" };
   }
 };
+
+export const blogAPI = {
+  getAll: (params = "") => fetchDataFromApi(`/api/blog/all${params}`),
+  getById: (id) => fetchDataFromApi(`/api/blog/${id}`),
+  create: (data) => postData("/api/blog/create", data),
+  update: (id, data) => editData(`/api/blog/${id}`, data),
+  delete: (id) => editData(`/api/blog/${id}`, {}, { method: "DELETE" }),
+};

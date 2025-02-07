@@ -93,7 +93,7 @@ function App() {
             <Route path={"/bloglisting"} element={<BlogListing />} />
             <Route path={"/photolisting"} element={<PhotoListing />} />
             <Route path={"/photodetails/:id"} element={<PhotoDetails />} />
-            <Route path={"/blogdetails/:id"} element={<BlogDetails />} />
+            <Route path={"/blog/:id"} element={<BlogDetails />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/register"} element={<Register />} />
             <Route path={"/verify"} element={<Verify />} />
