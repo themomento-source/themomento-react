@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 import { Rating, Button, TextField, IconButton } from "@mui/material";
-import {
-  FaHeart,
-  FaRegHeart,
-  FaDownload,
-  FaShoppingCart,
-} from "react-icons/fa";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { FaHeart, FaRegHeart, FaDownload, FaShoppingCart } from "react-icons/fa";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { motion } from "framer-motion";
 
@@ -20,7 +14,6 @@ function PhotoDetails() {
   const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
-  const [activeImg, setActiveImg] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
@@ -47,15 +40,6 @@ function PhotoDetails() {
       setReviewText("");
       setRating(0);
     }
-  };
-
-  const slideLeft = () => {
-    if (activeImg > 0) setActiveImg(activeImg - 1);
-  };
-
-  const slideRight = () => {
-    if (activeImg < (photo?.images?.length - 1 || 0))
-      setActiveImg(activeImg + 1);
   };
 
   if (loading) return <div className="text-center py-20">Loading...</div>;
@@ -95,7 +79,7 @@ function PhotoDetails() {
       </Breadcrumbs>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Image Gallery */}
+        {/* Image Display */}
         <div className="lg:col-span-2">
           <div className="relative group bg-white shadow-lg rounded-lg">
             <motion.div
@@ -104,26 +88,10 @@ function PhotoDetails() {
               className="relative rounded-lg overflow-hidden flex items-center justify-center min-h-[70vh]"
             >
               <img
-                src={photo.images?.[activeImg] || photo.imageUrl}
+                src={photo.imageUrl}
                 alt={photo.title}
                 className="w-full h-auto max-h-[80vh] object-contain cursor-zoom-in"
               />
-
-              {/* Navigation Arrows */}
-              <div className="absolute top-1/2 w-full flex justify-between px-4 transform -translate-y-1/2">
-                <IconButton
-                  onClick={slideLeft}
-                  className="!bg-white/90 hover:!bg-white !text-gray-900 !shadow-lg !rounded-full border border-gray-200"
-                >
-                  <MdChevronLeft className="text-2xl" />
-                </IconButton>
-                <IconButton
-                  onClick={slideRight}
-                  className="!bg-white/90 hover:!bg-white !text-gray-900 !shadow-lg !rounded-full border border-gray-200"
-                >
-                  <MdChevronRight className="text-2xl" />
-                </IconButton>
-              </div>
             </motion.div>
 
             {/* Floating Action Bar */}
@@ -146,28 +114,6 @@ function PhotoDetails() {
                 )}
               </IconButton>
             </div>
-          </div>
-
-          {/* Thumbnails Grid */}
-          <div className="grid grid-cols-6 gap-4 mt-8">
-            {photo.images?.map((img, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.02 }}
-                className={`cursor-pointer ${
-                  activeImg === index
-                    ? "ring-2 ring-blue-500"
-                    : "ring-1 ring-gray-200"
-                } rounded-lg overflow-hidden bg-white aspect-square shadow-sm`}
-                onClick={() => setActiveImg(index)}
-              >
-                <img
-                  src={img}
-                  alt={`Thumbnail ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            ))}
           </div>
         </div>
 
@@ -298,33 +244,98 @@ function PhotoDetails() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white p-4 rounded-lg border border-gray-200"
               >
-                <div className="flex items-center gap-4 mb-3">
-                  <Avatar className="!bg-blue-100 !text-blue-600">
-                    {comment.user[0].toUpperCase()}
-                  </Avatar>
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
                   <div>
-                    <h4 className="text-gray-900 font-medium">
+                    <div className="font-semibold text-gray-900">
                       {comment.user}
-                    </h4>
-                    <p className="text-gray-500 text-sm">
+                    </div>
+                    <div className="text-sm text-gray-500">
                       {new Date(comment.date).toLocaleDateString()}
-                    </p>
+                    </div>
                   </div>
                 </div>
-                <p className="text-gray-700 leading-relaxed">{comment.text}</p>
+                <p className="text-gray-600 mt-4">{comment.text}</p>
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-gray-500">
-            No comments yet. Be the first to share your thoughts!
-          </div>
+          <p className="text-gray-600">No comments yet</p>
         )}
       </div>
 
-      {/* Metadata Section */}
+      {/* Reviews Section */}
       <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        {/* ... keep existing metadata section with light theme adjustments */}
+        <h3 className="text-2xl font-bold text-gray-900 mb-6">
+          Customer Reviews ({reviews.length})
+        </h3>
+
+        {/* Review Form */}
+        <div className="mb-8 bg-gray-50 rounded-lg p-4">
+          <div className="flex gap-4 items-center">
+            <Rating
+              value={rating}
+              onChange={(e, newValue) => setRating(newValue)}
+              precision={0.5}
+              className="!text-yellow-500"
+            />
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              variant="outlined"
+              label="Write a review..."
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              InputProps={{
+                className: "!text-gray-900 bg-white",
+              }}
+              className="!rounded-lg"
+            />
+          </div>
+          <div className="mt-4 flex justify-end">
+            <Button
+              variant="contained"
+              className="!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-8 !py-2"
+              onClick={handleReviewSubmit}
+              disabled={!reviewText.trim()}
+            >
+              Submit Review
+            </Button>
+          </div>
+        </div>
+
+        {/* Reviews List */}
+        {reviews.length > 0 ? (
+          <div className="space-y-6">
+            {reviews.map((review, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white p-4 rounded-lg border border-gray-200"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+                  <div>
+                    <div className="font-semibold text-gray-900">
+                      {review.user}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {new Date().toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 text-yellow-500">
+                  <Rating value={review.rating} readOnly precision={0.5} />
+                </div>
+                <p className="text-gray-600 mt-2">{review.comment}</p>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-600">No reviews yet</p>
+        )}
       </div>
     </div>
   );
