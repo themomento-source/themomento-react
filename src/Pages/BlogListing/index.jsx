@@ -5,6 +5,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import CircularProgress from "@mui/material/CircularProgress";
 import { blogAPI } from "../../utils/api";
+import SafeHTML from "../../components/SafeHTML";
 
 function handleClick(event) {
   event.preventDefault();
@@ -20,6 +21,7 @@ function BlogListing() {
     const fetchBlogs = async () => {
       try {
         const response = await blogAPI.getAll("?limit=6");
+        console.log(response); // Debugging the API response structure
         if (response?.success) {
           setBlogs(response.data.blogs);
         } else {
@@ -56,7 +58,12 @@ function BlogListing() {
           aria-label="breadcrumb"
           className="flex justify-center mt-3"
         >
-          <Link underline="hover" color="inherit" href="/" onClick={handleClick}>
+          <Link
+            underline="hover"
+            color="inherit"
+            href="/"
+            onClick={handleClick}
+          >
             Home
           </Link>
           <Typography color="text.primary">Blogs</Typography>
@@ -75,7 +82,11 @@ function BlogListing() {
                 img={blog.image}
                 title={blog.title}
                 author={blog.author?.name || "Unknown Author"}
-                intro={(blog.description || "").substring(0, 100) + "..."}
+                intro={
+                  <SafeHTML
+                    html={(blog.description || "").substring(0, 100) + "..."}
+                  />
+                }
                 id={blog._id}
               />
             </div>
@@ -98,7 +109,10 @@ function BlogListing() {
                 className="w-16 h-16 rounded-md object-cover"
               />
               <div>
-                <Typography variant="h6" className="text-gray-800 font-semibold">
+                <Typography
+                  variant="h6"
+                  className="text-gray-800 font-semibold"
+                >
                   {blog.title}
                 </Typography>
                 <Typography variant="body2" className="text-gray-500">

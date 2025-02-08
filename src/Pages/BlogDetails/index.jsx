@@ -45,7 +45,7 @@ const BlogDetails = () => {
       <img
         src={blog.image || "https://via.placeholder.com/600"}
         alt={blog.title || "Blog Cover"}
-        className="w-full h-[450px] object-cover rounded-lg shadow-lg"
+        className="w-[1200]] h-[800px] object-cover rounded-lg shadow-lg"
       />
 
       {/* Blog Author */}
