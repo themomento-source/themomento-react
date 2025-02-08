@@ -116,7 +116,7 @@ const Navigation = () => {
                    hover:!text-[#ff5252]"
                   >
                     {" "}
-                    People & Potraits{" "}
+                    People{" "}
                   </Button>
                 </Link>
               </li>
@@ -127,7 +127,7 @@ const Navigation = () => {
                    hover:!text-[#ff5252]"
                   >
                     {" "}
-                    Ethnic & Tribal Heritage{" "}
+                    Tribal Heritage{" "}
                   </Button>
                 </Link>
               </li>
@@ -135,7 +135,7 @@ const Navigation = () => {
                 <Link to="/" className="link transition text-[14px] font-[500]">
                   <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
                     {" "}
-                    Travel & Architecture{" "}
+                    Architecture{" "}
                   </Button>
                 </Link>
               </li>
@@ -143,7 +143,7 @@ const Navigation = () => {
                 <Link to="/" className="link transition text-[14px] font-[500]">
                   <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
                     {" "}
-                    Traditions & Festivals{" "}
+                  Festivals{" "}
                   </Button>
                 </Link>
               </li>

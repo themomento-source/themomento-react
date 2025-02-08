@@ -6,6 +6,12 @@ import { FcGoogle } from "react-icons/fc"; // Google Icon
 import { postData } from "../../utils/api.js";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../firebase.jsx";
+import { MyContext } from "../../App";
+
+const auth = getAuth(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,10 +29,10 @@ function Register() {
     password: false,
   });
 
-  const [loading, setLoading] = useState(false); // Loading state to show spinner
-  const [successMessage, setSuccessMessage] = useState(""); // To store success message
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   // Handle input change
   const handleChange = (e) => {
@@ -55,25 +61,66 @@ function Register() {
     }
 
     try {
-      setLoading(true); // Set loading to true while submitting
+      setLoading(true);
       const response = await postData("/api/user/register", formData);
 
       if (response.success) {
         localStorage.setItem("userEmail", formData.email);
         setSuccessMessage(
-          "Registration successful! An OTP has been sent to your email to verify."
+          "Registration successful! An OTP has been sent to your email."
         );
         setTimeout(() => {
-          navigate("/verify"); // Redirect to verify page
-        }, 2000); // Redirect after 5 seconds to let user read the message
+          navigate("/verify");
+        }, 2000);
       } else {
-        setSuccessMessage(""); // Clear success message on error
         setErrorMessage(response.message || "Something went wrong");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setErrorMessage("Registration failed.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
+    }
+  };
+
+  // Handle Google Authentication
+  const authWithGoogle = async () => {
+    
+    try {
+      setLoading(true);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      const fields = {
+        name: user.displayName,
+        email: user.email,
+        avatar: user.photoURL,
+        password: null,
+        mobile: user.phoneNumber,
+        role: "USER",
+      };
+
+      const response = await postData("/api/user/authWithGoogle", fields);
+
+      if (response.success) {
+        localStorage.setItem("userEmail", fields.email);
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
+        context.setIsLogin(true);
+
+        setSuccessMessage("Google sign-in successful! Redirecting...");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        setErrorMessage(response.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Google authentication error:", error);
+      setErrorMessage(error.message || "Google sign-in failed.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +132,6 @@ function Register() {
             Create Your Account
           </h3>
           <form className="w-full mt-5" onSubmit={handleSubmit}>
-            {/* Name Field (Required) */}
             <div className="form-group w-full mb-5">
               <TextField
                 name="name"
@@ -100,7 +146,6 @@ function Register() {
               />
             </div>
 
-            {/* Full Name Field */}
             <div className="form-group w-full mb-5">
               <TextField
                 name="fullname"
@@ -113,7 +158,6 @@ function Register() {
               />
             </div>
 
-            {/* Mobile Number Field */}
             <div className="form-group w-full mb-5">
               <TextField
                 name="mobile"
@@ -126,7 +170,6 @@ function Register() {
               />
             </div>
 
-            {/* Email Field */}
             <div className="form-group w-full mb-5">
               <TextField
                 name="email"
@@ -141,7 +184,6 @@ function Register() {
               />
             </div>
 
-            {/* Password Field */}
             <div className="form-group w-full mb-5 relative">
               <TextField
                 name="password"
@@ -156,76 +198,55 @@ function Register() {
               />
               <button
                 type="button"
-                className="!absolute top-[10px] right-[10px] z-50 !w-[35px] !h-[45px] !min-w-[35px] !text-black !rounded-full"
+                className="absolute top-[10px] right-[10px]"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? (
-                  <IoMdEyeOff className="!text-[20px] !opacity-75" />
-                ) : (
-                  <IoMdEye className="!text-[20px] !opacity-75" />
-                )}
+                {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
               </button>
             </div>
-            {/* Error Message */}
+
             {errorMessage && (
-              <div className="mt-3 text-center text-red-500">
-                {errorMessage}
-              </div> // Display error message here
+              <div className="text-center text-red-500">{errorMessage}</div>
             )}
 
-            {/* Register Button */}
-            <div className="flex items-center mt-5">
-              <Button
-                type="submit"
-                className="w-full py-3 text-white font-bold rounded-md"
-                style={{
-                  background: "linear-gradient(45deg, #007BFF, #0056b3)",
-                  color: "white",
-                  transition: "0.3s ease",
-                }}
-                disabled={loading} // Disable the button while loading
-              >
-                {loading ? (
-                  <CircularProgress size={24} color="white" /> // Show loader while loading
-                ) : (
-                  "Register"
-                )}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              className="w-full py-3 text-white font-bold"
+              style={{ background: "linear-gradient(45deg, #007BFF, #0056b3)" }}
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress size={24} color="white" />
+              ) : (
+                "Register"
+              )}
+            </Button>
 
-            {/* Success Message */}
             {successMessage && (
-              <div className="mt-3 text-center text-green-500">
-                {successMessage}
-              </div>
+              <div className="text-center text-green-500">{successMessage}</div>
             )}
 
-            {/* Already have an account? Login */}
             <div className="text-center mt-4">
-              <span className="text-gray-600 text-[15px]">
+              <span className="text-gray-600">
                 Already have an account?{" "}
-                <a
-                  className="text-blue-600 font-semibold cursor-pointer hover:underline"
-                  href="#"
-                >
+                <a className="text-blue-600 font-semibold" href="#">
                   Login
                 </a>
               </span>
             </div>
 
-            {/* OR continue with Gmail */}
             <div className="flex items-center my-5">
               <hr className="flex-grow border-gray-300" />
-              <span className="px-3 text-gray-500 text-[14px]">OR</span>
+              <span className="px-3 text-gray-500">OR</span>
               <hr className="flex-grow border-gray-300" />
             </div>
 
-            <div className="flex items-center justify-center">
-              <Button className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md text-black font-medium">
-                <FcGoogle className="text-[20px] mr-2" />
-                Continue with Gmail
-              </Button>
-            </div>
+            <Button
+              className="w-full flex items-center py-3 border"
+              onClick={authWithGoogle}
+            >
+              <FcGoogle className="text-[20px] mr-2" /> Continue with Gmail
+            </Button>
           </form>
         </div>
       </div>
