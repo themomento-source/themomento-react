@@ -55,7 +55,6 @@ const BlogDetails = () => {
 
       {/* Blog Description */}
       <p className="text-gray-700 leading-relaxed">
-        {blog.description || "No description available."}
         <SafeHTML html={blog.description} />
       </p>
     </div>
