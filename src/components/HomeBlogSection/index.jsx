@@ -41,18 +41,8 @@ function HomeBlogSection() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-400 mb-4">
-            Photography Insights
-          </h2>
-          <p className="text-gray-400 text-lg mb-8">
-            Discover tips, stories, and inspiration from our lens
-          </p>
-          <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full" />
-        </div>
-
         {blogs.length === 0 ? (
           <p className="text-gray-400 text-center text-xl">
             No blogs available
@@ -64,10 +54,6 @@ function HomeBlogSection() {
                 key={blog._id}
                 img={blog?.image || "/placeholder-blog.jpg"}
                 title={blog?.title || "Capturing Moments"}
-                intro={
-                  blog?.description?.substring(0, 120) + "..." ||
-                  "Explore the art behind the lens..."
-                }
                 id={blog._id}
                 className="group relative overflow-hidden transform transition-all duration-500 hover:-translate-y-2"
               />
