@@ -10,7 +10,7 @@ function Home() {
     <>
       <HomeSlider />
       <br />
-      <HomeCatSlider />
+      {/* <HomeCatSlider /> */}
 
       <HomeImageGallery />
 

@@ -1,0 +1,19 @@
+// components/SafeHTML.jsx
+import React from 'react';
+import DOMPurify from 'dompurify';
+
+const SafeHTML = ({ html }) => {
+  const cleanHTML = DOMPurify.sanitize(html, {
+    USE_PROFILES: { html: true },
+    ALLOWED_TAGS: [
+      'p', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li', 'a', 'img', 'video', 'iframe', 'blockquote',
+      'pre', 'code', 'span', 'div', 'br', 'hr'
+    ],
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'style', 'target', 'rel']
+  });
+
+  return <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
+};
+
+export default SafeHTML;

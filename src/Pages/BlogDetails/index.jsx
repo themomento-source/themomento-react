@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { blogAPI } from "../../utils/api"; // Make sure this points to your API functions
+import SafeHTML from ".././../components/SafeHTML";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -15,14 +16,12 @@ const BlogDetails = () => {
 
         const response = await blogAPI.getById(id);
         console.log("API Response:", response); // Debugging
-        
+
         if (response && response._id) {
           setBlog(response);
         } else {
           setError("Blog not found");
         }
-        
-        
       } catch (err) {
         setError(err.message || "Failed to load blog");
       } finally {
@@ -57,6 +56,7 @@ const BlogDetails = () => {
       {/* Blog Description */}
       <p className="text-gray-700 leading-relaxed">
         {blog.description || "No description available."}
+        <SafeHTML html={blog.description} />
       </p>
     </div>
   );
