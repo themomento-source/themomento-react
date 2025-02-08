@@ -1,4 +1,41 @@
-.categoryPanel button{text-transform: capitalize !important;}
-
-.nav  li .submenu{visibility: hidden; z-index: 1000;}
-.nav  li:hover .submenu{opacity: 1 !important; visibility: inherit; top: 100%; } 
+/* Navigation */
+.nav li .submenu {
+    transition: all 0.3s ease;
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .nav li:hover .submenu {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Category Panel */
+  .MuiDrawer-paper {
+    transition: transform 0.3s ease-in-out !important;
+  }
+  
+  /* Mobile Bottom Navigation */
+  @media (max-width: 768px) {
+    .MuiBadge-badge {
+      font-size: 0.6rem !important;
+      min-width: 18px !important;
+      height: 18px !important;
+    }
+    
+    .category-panel .MuiButton-root {
+      font-size: 0.9rem !important;
+      padding: 12px !important;
+    }
+  }
+  
+  /* General */
+  button {
+    text-transform: capitalize !important;
+  }
+  
+  .MuiButton-root:hover {
+    background-color: rgba(255, 82, 82, 0.1) !important;
+  }

@@ -1,181 +1,173 @@
-import Button from "@mui/material/Button";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Divider,
+  IconButton,
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { TfiAngleDown } from "react-icons/tfi";
+import { MdClose } from "react-icons/md";
+import { BsCamera, BsGrid, BsNewspaper } from "react-icons/bs";
 import CategoryPanel from "./CategoryPanel";
-import { Link } from "react-router-dom";
 import "../Navigation/style.css";
 
 const Navigation = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const openCategoryPanel = () => {
-    setIsOpenCatPanel(true);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
+
+  const mainMenuItems = [
+    { name: "Home", path: "/" },
+    { name: "Nature & Landscape", path: "/nature", hasSubmenu: true },
+    { name: "People", path: "/people" },
+    { name: "Tribal Heritage", path: "/tribal" },
+    { name: "Architecture", path: "/architecture" },
+    { name: "Festivals", path: "/festivals" },
+  ];
+
+  const mobileMenuItems = [
+    { name: "Menu", icon: <GiHamburgerMenu />, action: handleDrawerToggle },
+    { name: "Categories", icon: <BsGrid />, action: () => setIsOpenCatPanel(true) },
+    { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
+    { name: "Blog", icon: <BsNewspaper />, path: "/bloglisting" },
+  ];
+
+  const drawerContent = (
+    <Box sx={{ width: 280 }} role="presentation">
+      <div className="flex items-center justify-between p-4">
+        <h3 className="text-xl font-bold">Menu</h3>
+        <IconButton onClick={handleDrawerToggle}>
+          <MdClose className="text-2xl" />
+        </IconButton>
+      </div>
+      <Divider />
+      <List>
+        {mainMenuItems.map((item) => (
+          <ListItem key={item.name} disablePadding>
+            <ListItemButton
+              component={Link}
+              to={item.path}
+              onClick={handleDrawerToggle}
+              sx={{
+                '&:hover': { backgroundColor: 'rgba(255,82,82,0.1)' }
+              }}
+            >
+              <ListItemText
+                primary={item.name}
+                primaryTypographyProps={{ fontWeight: 500 }}
+              />
+              {item.hasSubmenu && <TfiAngleDown className="ml-auto" />}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
 
   return (
     <>
-      <nav className="py-2">
-        <div className="container flex items-center justify-end gap-8">
-          <div className="col_1 w-[15%]">
+      {/* Desktop Navigation */}
+      <nav className="hidden md:block py-2 bg-white shadow-sm">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
             <Button
-              className="!text-black gap-2 w-full"
-              onClick={openCategoryPanel}
+              onClick={() => setIsOpenCatPanel(true)}
+              className="!text-gray-700 !capitalize hover:!bg-gray-50 !px-4 !py-2"
+              startIcon={<GiHamburgerMenu />}
+              endIcon={<TfiAngleDown />}
             >
-              {" "}
-              <GiHamburgerMenu className="text-[18px]" /> Shop by Catogories{" "}
-              <TfiAngleDown className="text-[13px] ml-auto font-bold cursor-pointer" />{" "}
+              Categories
             </Button>
-          </div>
-          <div className="col_2 w-[70%]">
-            <ul className="flex items-center gap-6 nav">
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
-                    Home
-                  </Button>
-                </Link>
-              </li>
 
-              <li className="list-none relative">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
-                    {" "}
-                    Nature & Landscape{" "}
-                  </Button>
-                </Link>
-                <div
-                  className="submenu absolute top-[120%] left-[0%] min-w-[200px] bg-white shadow-md 
-                opacity-0 transition-all"
-                >
-                  <ul>
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          River
-                        </Button>
-                      </Link>
-                    </li>
+            <div className="flex-1 flex justify-center">
+              <ul className="flex items-center gap-4">
+                {mainMenuItems.map((item) => (
+                  <li key={item.name} className="relative group">
+                    <Button
+                      component={Link}
+                      to={item.path}
+                      className="!text-gray-700 !capitalize hover:!text-red-500"
+                    >
+                      {item.name}
+                    </Button>
+                    {item.hasSubmenu && (
+                      <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-white shadow-lg rounded-lg py-2">
+                        {/* Submenu items */}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          Hill
-                        </Button>
-                      </Link>
-                    </li>
-
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          Sea
-                        </Button>
-                      </Link>
-                    </li>
-
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          Desert
-                        </Button>
-                      </Link>
-                    </li>
-
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          Garden
-                        </Button>
-                      </Link>
-                    </li>
-
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          Mountain
-                        </Button>
-                      </Link>
-                    </li>
-
-                    <li className="list-none">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0.8)] w-full !text-left !justify-start">
-                          Field
-                        </Button>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  <Button
-                    className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ]
-                   hover:!text-[#ff5252]"
-                  >
-                    {" "}
-                    People{" "}
-                  </Button>
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  <Button
-                    className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ]
-                   hover:!text-[#ff5252]"
-                  >
-                    {" "}
-                    Tribal Heritage{" "}
-                  </Button>
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
-                    {" "}
-                    Architecture{" "}
-                  </Button>
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
-                    {" "}
-                  Festivals{" "}
-                  </Button>
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="col_3 w-[15%]">
-            <ul className="flex">
-              <li className="list-none">
-                <Link
-                  to="/bloglisting"
-                  className="link transition text-[14px] font-[500]"
-                >
-                  <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
-                    Blog{" "}
-                  </Button>
-                </Link>
-              </li>
-
-              <li className="list-none">
-                <Link
-                  to="/photolisting"
-                  className="link transition text-[14px] font-[500]"
-                >
-                  <Button className="!link-transition !font-[500] !text-[rgba(0,0,0,9)] ] hover:!text-[#ff5252]">
-                    Photo{" "}
-                  </Button>
-                </Link>
-              </li>
-            </ul>
+            <div className="flex items-center gap-2">
+              <Button
+                component={Link}
+                to="/bloglisting"
+                className="!text-gray-700 !capitalize hover:!text-red-500"
+              >
+                Blog
+              </Button>
+              <Button
+                component={Link}
+                to="/photolisting"
+                className="!text-gray-700 !capitalize hover:!text-red-500"
+              >
+                Photos
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Bottom Navigation */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden">
+          <div className="flex justify-around items-center h-16">
+            {mobileMenuItems.map((item) => (
+              <IconButton
+                key={item.name}
+                component={item.path ? Link : "button"}
+                to={item.path}
+                onClick={item.action}
+                className="!text-gray-600 hover:!text-red-500"
+              >
+                {item.icon}
+              </IconButton>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="left"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: 280,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
 
       <CategoryPanel
         isOpenCatPanel={isOpenCatPanel}

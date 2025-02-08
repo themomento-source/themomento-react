@@ -2,110 +2,104 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
-import { MdClose } from "react-icons/md";
-import { FaRegSquarePlus } from "react-icons/fa6";
-import { FiMinusSquare } from "react-icons/fi";
-
+import { MdOutlineClose } from "react-icons/md";  // React Icon instead of MUI
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { useEffect } from "react";
+const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
+  const [openSubmenu, setOpenSubmenu] = React.useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-const CategoryPanel = (props) => {
-  const [submenuIndex, setSubmenuIndex] = React.useState(null);
+  const categories = [
+    {
+      name: "Nature & Landscape",
+      subcategories: ["Hill", "Landscape", "River", "Mountain", "Forest"],
+    },
+  ];
 
-  const toggleDrawer = (newOpen) => () => {
-    props.setIsOpenCatPanel(newOpen);
-  };
+  const drawerContent = (
+    <Box
+      sx={{
+        width: isMobile ? "100vw" : 320,
+        height: "100%",
+        bgcolor: "background.paper",
+      }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <h3 className="text-xl font-bold">Categories</h3>
+        <button onClick={() => setIsOpenCatPanel(false)} className="text-2xl">
+          <MdOutlineClose />
+        </button>
+      </div>
 
-  const openSubmenu = (index) => {
-    if (submenuIndex === index) {
-      setSubmenuIndex(null);
-    } else {
-      setSubmenuIndex(index);
-    }
-  };
+      {/* Category List */}
+      <div className="overflow-y-auto h-[calc(100%-64px)]">
+        {categories.map((category, index) => (
+          <div key={category.name} className="border-b">
+            <Button
+              fullWidth
+              onClick={() =>
+                setOpenSubmenu(openSubmenu === index ? null : index)
+              }
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "12px 16px",
+                color: "gray",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+              }}
+            >
+              {category.name}
+              {openSubmenu === index ? <FaChevronUp /> : <FaChevronDown />}
+            </Button>
 
-  const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" className="categoryPanel">
-      <h3 className="p-3 text-[18px] font-[700] text-black flex items-center justify-between">
-        Catagories{" "}
-        <MdClose
-          onClick={toggleDrawer(false)}
-          className="cursor-pointer text-[20px]"
-        />
-      </h3>
-
-      <div className="scroll">
-        <ul className="w-full">
-          <li className="list-none flex items-center relative">
-            <Link to="/" className="w-full">
-              <Button
-                className="w-full cursor-pointer !text-left !justify-start !px-4
-              !text-[rgba(0,0,0.8)]"
-              >
-                Nature & Landscape
-              </Button>
-            </Link>
-
-            {submenuIndex === 0 ? (
-              <FiMinusSquare
-                className="absolute top-[10px] right-[15px] cursor-pointer"
-                onClick={() => openSubmenu(0)}
-              />
-            ) : (
-              <FaRegSquarePlus
-                className="absolute top-[10px] right-[15px] cursor-pointer"
-                onClick={() => openSubmenu(0)}
-              />
+            {/* Subcategories */}
+            {openSubmenu === index && (
+              <div className="bg-gray-50 pl-4">
+                {category.subcategories.map((sub) => (
+                  <Button
+                    key={sub}
+                    component={Link}
+                    to="/"
+                    fullWidth
+                    sx={{
+                      display: "flex",
+                      justifyContent: "start",
+                      padding: "8px 16px",
+                      color: "#555",
+                      "&:hover": { backgroundColor: "#eaeaea" },
+                    }}
+                  >
+                    {sub}
+                  </Button>
+                ))}
+              </div>
             )}
-
-            {submenuIndex === 0 && (
-              <ul className="submenu absolute top-[100%] left-[0%] w-full pl-3">
-                <li className="list-none relative">
-                  <Link to="/">
-                    <Button
-                      className="w-full cursor-pointer !text-left !justify-start !px-4
-              !text-[rgba(0,0,0.8)]"
-                    >
-                      Hill
-                    </Button>
-                  </Link>
-                </li>
-
-                <li className="list-none relative">
-                  <Link to="/">
-                    <Button
-                      className="w-full cursor-pointer !text-left !justify-start !px-4
-              !text-[rgba(0,0,0.8)]"
-                    >
-                      Landscape
-                    </Button>
-                  </Link>
-                </li>
-
-                <li className="list-none relative">
-                  <Link to="/">
-                    <Button
-                      className="w-full cursor-pointer !text-left !justify-start !px-4
-              !text-[rgba(0,0,0.8)]"
-                    >
-                      River
-                    </Button>
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
-        </ul>
+          </div>
+        ))}
       </div>
     </Box>
   );
+
   return (
-    <>
-      <Drawer open={props.isOpenCatPanel} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
-    </>
+    <Drawer
+      anchor={isMobile ? "bottom" : "left"}
+      open={isOpenCatPanel}
+      onClose={() => setIsOpenCatPanel(false)}
+      ModalProps={{ keepMounted: true }}
+      sx={{
+        "& .MuiDrawer-paper": {
+          height: isMobile ? "70vh" : "100%",
+          overflow: "visible",
+        },
+      }}
+    >
+      {drawerContent}
+    </Drawer>
   );
 };
 
