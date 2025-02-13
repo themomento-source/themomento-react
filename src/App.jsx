@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import { createContext } from "react";
 import Header from "./components/Header";
@@ -14,7 +14,6 @@ import Register from "./Pages/Register";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import { IoCloseSharp } from "react-icons/io5";
-
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -31,9 +30,20 @@ import Settings from "./Pages/MyAccount/settings.jsx";
 
 export const MyContext = createContext();
 
+const ProtectedRoute = ({ children }) => {
+  const { isLogin } = useContext(MyContext);
+
+  if (!isLogin) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const openAlertBox = (status, msg) => {
     switch (status) {
@@ -44,7 +54,7 @@ function App() {
         toast.error(msg);
         break;
       default:
-        toast(msg); // Fallback for other statuses
+        toast(msg);
     }
   };
 
@@ -58,14 +68,7 @@ function App() {
     setOpenPhotoDetailsModal(false);
   };
 
-  const values = {
-    openAlertBox,
-    isLogin,
-    setIsLogin,
-    userData,
-    setUserData,
-  };
-  const [openCartPanel, setOpenCartPanel] = useState(false); // Initially false to keep the cart panel closed
+  const [openCartPanel, setOpenCartPanel] = useState(false);
 
   const toggleCartPanel = (newOpen) => {
     setOpenCartPanel(newOpen);
@@ -73,17 +76,47 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    if (token !== undefined && token !== null && token !== "") {
-      setIsLogin(true);
 
-      fetchDataFromApi(`/api/user/user-details`).then((response) => {
-        console.log(response);
-        setUserData(response.data);
-      });
+    if (token) {
+      fetchDataFromApi(`/api/user/user-details`)
+        .then((response) => {
+          setUserData(response.data);
+          setIsLogin(true);
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          setIsLogin(false);
+        })
+        .finally(() => {
+          setIsLoading(false); // Mark auth check as complete
+        });
     } else {
       setIsLogin(false);
+      setIsLoading(false); // Mark auth check as complete
     }
-  }, [isLogin]);
+  }, []);
+
+  const values = {
+    openAlertBox,
+    isLogin,
+    setIsLogin,
+    userData,
+    setUserData,
+    isLoading, // Include isLoading in context
+  };
+  const ProtectedRoute = ({ children }) => {
+    const { isLogin, isLoading } = useContext(MyContext);
+
+    if (isLoading) {
+      return <div>Loading...</div>; // Show loading state
+    }
+
+    if (!isLogin) {
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  };
 
   return (
     <>
@@ -91,22 +124,49 @@ function App() {
         <MyContext.Provider value={values}>
           <Header />
           <Routes>
-            <Route path={"/"} element={<Home />} />
-            <Route path={"/bloglisting"} element={<BlogListing />} />
-            <Route path={"/photolisting"} element={<PhotoListing />} />
-            <Route path={"/photodetails/:id"} element={<PhotoDetails />} />
-            <Route path={"/blog/:id"} element={<BlogDetails />} />
-            <Route path={"/login"} element={<Login />} />
-            <Route path={"/register"} element={<Register />} />
-            <Route path={"/verify"} element={<Verify />} />
-
+            <Route path="/" element={<Home />} />
+            <Route path="/bloglisting" element={<BlogListing />} />
+            <Route path="/photolisting" element={<PhotoListing />} />
+            <Route path="/photodetails/:id" element={<PhotoDetails />} />
+            <Route path="/blog/:id" element={<BlogDetails />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify" element={<Verify />} />
             <Route path="/user/:userId" element={<PublicProfile />} />
 
-            {/* Protect*/}
-            <Route path="/my-account/settings" element={<Settings />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path={"/my-account"} element={<MyAccount />} />
-            <Route path={"/checkout"} element={<Checkout />} />
+            {/* Protected Routes */}
+            <Route
+              path="/my-account/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/change-password"
+              element={
+                <ProtectedRoute>
+                  <ChangePassword />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-account"
+              element={
+                <ProtectedRoute>
+                  <MyAccount />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
           <Footer />
         </MyContext.Provider>
@@ -117,8 +177,6 @@ function App() {
       <Dialog
         open={openPhotoDetailsModal}
         onClose={handleClosePhotoDetailsModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
         className="PhotoDetailsModal"
       >
         <DialogContent>
@@ -130,8 +188,6 @@ function App() {
         </DialogContent>
       </Dialog>
 
-      {/* Cart */}
-      <Button onClick={() => toggleCartPanel(true)}>Open drawer</Button>
       <Drawer
         open={openCartPanel}
         onClose={() => toggleCartPanel(false)}
