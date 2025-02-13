@@ -112,7 +112,7 @@ const PublicProfile = () => {
   }
 
   return (
-    <Container maxWidth="xl" className="mt-8 relative">
+    <Container maxWidth="xl" className="mt-8 relative m-10">
       {/* Profile Header */}
       <GlassBox className="p-4 mb-6 text-center relative overflow-hidden">
         <ProfileAvatar
