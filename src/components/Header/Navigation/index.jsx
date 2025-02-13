@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -11,20 +11,23 @@ import {
   Divider,
   IconButton,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
+import { BsPerson } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { TfiAngleDown } from "react-icons/tfi";
 import { MdClose } from "react-icons/md";
 import { BsCamera, BsGrid, BsNewspaper } from "react-icons/bs";
 import CategoryPanel from "./CategoryPanel";
 import "../Navigation/style.css";
+import { MyContext } from "../../../App";
 
 const Navigation = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const context = useContext(MyContext);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -41,9 +44,14 @@ const Navigation = () => {
 
   const mobileMenuItems = [
     { name: "Menu", icon: <GiHamburgerMenu />, action: handleDrawerToggle },
-    { name: "Categories", icon: <BsGrid />, action: () => setIsOpenCatPanel(true) },
+    {
+      name: "Categories",
+      icon: <BsGrid />,
+      action: () => setIsOpenCatPanel(true),
+    },
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
     { name: "Blog", icon: <BsNewspaper />, path: "/bloglisting" },
+    { name: "Account", icon: <BsPerson />, path: "/login" },
   ];
 
   const drawerContent = (
@@ -63,7 +71,7 @@ const Navigation = () => {
               to={item.path}
               onClick={handleDrawerToggle}
               sx={{
-                '&:hover': { backgroundColor: 'rgba(255,82,82,0.1)' }
+                "&:hover": { backgroundColor: "rgba(255,82,82,0.1)" },
               }}
             >
               <ListItemText
@@ -74,6 +82,28 @@ const Navigation = () => {
             </ListItemButton>
           </ListItem>
         ))}
+        {!context.isLogin && (
+          <>
+            <ListItem disablePadding>
+              <ListItemButton
+                component={Link}
+                to="/login"
+                onClick={handleDrawerToggle}
+              >
+                <ListItemText primary="Login" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton
+                component={Link}
+                to="/register"
+                onClick={handleDrawerToggle}
+              >
+                <ListItemText primary="Register" />
+              </ListItemButton>
+            </ListItem>
+          </>
+        )}
       </List>
     </Box>
   );
@@ -136,18 +166,20 @@ const Navigation = () => {
 
       {/* Mobile Bottom Navigation */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden">
-          <div className="flex justify-around items-center h-16">
+        <div className="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden">
+          <div className="flex justify-around items-center h-full">
             {mobileMenuItems.map((item) => (
-              <IconButton
-                key={item.name}
-                component={item.path ? Link : "button"}
-                to={item.path}
-                onClick={item.action}
-                className="!text-gray-600 hover:!text-red-500"
-              >
-                {item.icon}
-              </IconButton>
+              <div key={item.name} className="flex flex-col items-center">
+                <IconButton
+                  component={item.path ? Link : "button"}
+                  to={item.path}
+                  onClick={item.action}
+                  className="!text-gray-600 hover:!text-red-500"
+                >
+                  {item.icon}
+                </IconButton>
+                <span className="text-xs">{item.name}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -160,9 +192,9 @@ const Navigation = () => {
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: 280,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
           },
         }}
       >

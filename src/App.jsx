@@ -96,13 +96,26 @@ function App() {
     }
   }, []);
 
+  const logout = async () => {
+    try {
+      await fetchDataFromApi(`/api/user/logout`);
+      localStorage.removeItem("accessToken");
+      setIsLogin(false);
+      setUserData(null);
+      openAlertBox("success", "Logged out successfully");
+    } catch (error) {
+      openAlertBox("error", "Logout failed");
+    }
+  };
+
   const values = {
     openAlertBox,
     isLogin,
     setIsLogin,
     userData,
     setUserData,
-    isLoading, // Include isLoading in context
+    isLoading,
+    logout,
   };
   const ProtectedRoute = ({ children }) => {
     const { isLogin, isLoading } = useContext(MyContext);

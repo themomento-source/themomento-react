@@ -39,3 +39,24 @@
   .MuiButton-root:hover {
     background-color: rgba(255, 82, 82, 0.1) !important;
   }
+
+
+  /* Add to your style.css */
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+  height: 56px;
+}
+
+.mobile-bottom-nav .MuiIconButton-root {
+  padding: 8px;
+  flex-direction: column;
+}
+
+.mobile-bottom-nav .MuiIconButton-root svg {
+  font-size: 1.5rem;
+}
+
+.mobile-bottom-nav .MuiIconButton-root span {
+  font-size: 0.75rem;
+  margin-top: 2px;
+}

@@ -93,11 +93,21 @@ const Header = () => {
               </Menu>
             </>
           ) : (
-            <div className="hidden md:flex gap-2">
-              <Button component={Link} to="/login" color="inherit">
+            <div className="flex gap-2">
+              <Button
+                component={Link}
+                to="/login"
+                color="inherit"
+                className="!hidden md:!inline-flex"
+              >
                 Login
               </Button>
-              <Button component={Link} to="/register" color="inherit">
+              <Button
+                component={Link}
+                to="/register"
+                color="inherit"
+                className="!hidden md:!inline-flex"
+              >
                 Register
               </Button>
             </div>
