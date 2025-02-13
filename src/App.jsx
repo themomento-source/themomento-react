@@ -26,6 +26,8 @@ import Checkout from "./Pages/Checkout";
 import MyAccount from "./Pages/MyAccount";
 import { fetchDataFromApi } from "./utils/api.js";
 import ChangePassword from "./Pages/ChangePassword/index.jsx";
+import PublicProfile from "./Pages/MyAccount/publicProfile.jsx";
+import Settings from "./Pages/MyAccount/settings.jsx";
 
 export const MyContext = createContext();
 
@@ -98,9 +100,13 @@ function App() {
             <Route path={"/register"} element={<Register />} />
             <Route path={"/verify"} element={<Verify />} />
 
-            <Route path={"/checkout"} element={<Checkout />} />
-            <Route path={"/my-account"} element={<MyAccount />} />
+            <Route path="/user/:userId" element={<PublicProfile />} />
+
+            {/* Protect*/}
+            <Route path="/my-account/settings" element={<Settings />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path={"/my-account"} element={<MyAccount />} />
+            <Route path={"/checkout"} element={<Checkout />} />
           </Routes>
           <Footer />
         </MyContext.Provider>

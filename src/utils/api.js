@@ -1,7 +1,8 @@
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const postData = async (url, FormData) => {
+// api.js
+export const postData = async (url, formData) => {
   try {
     const response = await fetch(apiUrl + url, {
       method: "POST",
@@ -9,18 +10,58 @@ export const postData = async (url, FormData) => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(FormData),
+      body: JSON.stringify(formData),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
-      return errorData;
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      return {
+        error: true,
+        message:
+          responseData.message || `HTTP error! status: ${response.status}`,
+        status: response.status,
+      };
     }
+
+    return responseData;
   } catch (error) {
-    console.log(error);
+    console.error("postData error:", error);
+    return {
+      error: true,
+      message: "Network error or server unreachable",
+    };
+  }
+};
+
+export const uploadPhoto = async (url, formData) => {
+  try {
+    const response = await axios.post(apiUrl + url, formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        // Axios automatically sets 'Content-Type' to 'multipart/form-data'
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("uploadPhoto error:", error);
+    if (error.response) {
+      // Server responded with an error status (4xx, 5xx)
+      return {
+        error: true,
+        message:
+          error.response.data?.message ||
+          `HTTP error! status: ${error.response.status}`,
+        status: error.response.status,
+      };
+    } else {
+      // Network error or server unreachable
+      return {
+        error: true,
+        message: "Network error or server unreachable",
+      };
+    }
   }
 };
 

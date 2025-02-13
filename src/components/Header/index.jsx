@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { 
+import {
   AppBar,
   Toolbar,
   IconButton,
@@ -11,8 +11,7 @@ import {
   Divider,
   useMediaQuery,
   useTheme,
-  Button
-  
+  Button,
 } from "@mui/material";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCart, BsHeart, BsSearch } from "react-icons/bs";
@@ -20,6 +19,7 @@ import { FiChevronDown } from "react-icons/fi";
 import Search from "../Search";
 import { MyContext } from "../../App";
 import Navigation from "./Navigation";
+import { fetchDataFromApi } from "../../utils/api";
 
 const Header = () => {
   const theme = useTheme();
@@ -61,13 +61,13 @@ const Header = () => {
         {/* Action Icons */}
         <div className="flex items-center gap-2 ml-auto">
           {!isMobile && <BsSearch className="text-xl text-gray-600" />}
-          
+
           <IconButton color="inherit">
             <Badge badgeContent={2} color="error">
               <BsCart className="text-xl text-gray-600" />
             </Badge>
           </IconButton>
-          
+
           <IconButton color="inherit">
             <Badge badgeContent={1} color="error">
               <BsHeart className="text-xl text-gray-600" />

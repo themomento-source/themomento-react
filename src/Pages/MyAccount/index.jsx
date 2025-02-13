@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Button,
   CircularProgress,
@@ -6,9 +6,11 @@ import {
   Tab,
   Card,
   CardContent,
-  CardMedia,
   Typography,
   Chip,
+  Box,
+  TextField,
+  Link,
 } from "@mui/material";
 import {
   MdDashboard,
@@ -20,48 +22,23 @@ import {
 } from "react-icons/md";
 import { MyContext } from "../../App.jsx";
 import { useNavigate } from "react-router-dom";
-import { editData } from "../../utils/api.js";
+import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
 
 function MyAccount() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [activeTab, setActiveTab] = useState("selling");
+  const [activeTab, setActiveTab] = useState("submissions");
+  const [userSubmissions, setUserSubmissions] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(true);
+
   const { userData, setUserData, openAlertBox, setIsLogin } =
     useContext(MyContext);
+  const [submissionData, setSubmissionData] = useState({
+    title: "",
+    description: "",
+    file: "",
+  });
   const navigate = useNavigate();
-
-  const sellingPhotos = [
-    {
-      id: 1,
-      title: "Mountain Landscape",
-      price: 49,
-      sales: 12,
-      image: "https://via.placeholder.com/300",
-    },
-    {
-      id: 2,
-      title: "City Night",
-      price: 39,
-      sales: 8,
-      image: "https://via.placeholder.com/300",
-    },
-  ];
-
-  const purchasedPhotos = [
-    {
-      id: 3,
-      title: "Beach Sunset",
-      price: 29,
-      author: "Photographer1",
-      image: "https://via.placeholder.com/300",
-    },
-    {
-      id: 4,
-      title: "Forest Path",
-      price: 35,
-      author: "Photographer2",
-      image: "https://via.placeholder.com/300",
-    },
-  ];
 
   const stats = [
     { title: "Total Sales", value: "$1,240", icon: <MdShoppingBag /> },
@@ -76,7 +53,7 @@ function MyAccount() {
       if (!file) return;
 
       if (!file.type.match(/image\/(jpeg|jpg|png|webp)/)) {
-        openAlertBox("error", "Only JPG/PNG/WEBP images are allowed");
+        openAlertBox("error", "Only jpeg/JPG/PNG/WEBP images are allowed");
         return;
       }
 
@@ -84,7 +61,11 @@ function MyAccount() {
       const formData = new FormData();
       formData.append("avatar", file);
 
-      const response = await editData("/api/user/user-avatar", formData);
+      const response = await editData("/api/user/user-avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response?.data?.avatar) {
         setUserData((prev) => ({ ...prev, avatar: response.data.avatar }));
@@ -97,6 +78,68 @@ function MyAccount() {
       setUploadingAvatar(false);
     }
   };
+
+  const handleSubmissionChange = (e) => {
+    setSubmissionData({
+      ...submissionData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    setSubmissionData((prev) => ({ ...prev, file })); // Directly set the single file
+  };
+
+  const handlePhotoSubmission = async () => {
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("title", submissionData.title);
+      formData.append("description", submissionData.description);
+      formData.append("photo", submissionData.file); // Append the single file
+
+      const response = await uploadPhoto("/api/user/submit-photos", formData);
+
+      if (response?.submission) {
+        setUserSubmissions((prev) => [response.submission, ...prev]);
+        openAlertBox("success", "Photo submitted successfully!");
+        setSubmissionData({ title: "", description: "", file: null }); // Reset file
+      }
+    } catch (error) {
+      console.error("Submission error:", error); // Log the full error for debugging
+      openAlertBox(
+        "error",
+        error.response?.data?.message || "Submission failed"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      setLoadingSubmissions(true);
+      try {
+        const response = await fetchDataFromApi("/api/user/my-submissions");
+        console.log("API Response:", response);
+
+        // Changed from response.data.submissions to response.submissions
+        if (response?.submissions) {
+          setUserSubmissions(response.submissions);
+        } else {
+          console.error("Submissions data not found in response:", response);
+          setUserSubmissions([]);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setUserSubmissions([]);
+      } finally {
+        setLoadingSubmissions(false);
+      }
+    };
+    fetchSubmissions();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -135,6 +178,11 @@ function MyAccount() {
                         <span className="text-gray-500 text-sm">Add Photo</span>
                       </div>
                     )}
+                    {uploadingAvatar && (
+                      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                        <CircularProgress size={24} color="inherit" />
+                      </div>
+                    )}
                   </div>
                 </label>
               </div>
@@ -143,6 +191,22 @@ function MyAccount() {
               </h3>
               <p className="text-sm text-gray-600">{userData?.email}</p>
             </div>
+
+            {userData && (
+              <Box mt={2} textAlign="center">
+                <Typography variant="body2">
+                  Your public profile:{" "}
+                  <Link
+                    href={`/user/${userData?._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {typeof window !== "undefined" &&
+                      `${window.location.origin}/user/${userData?._id}`}
+                  </Link>
+                </Typography>
+              </Box>
+            )}
 
             {/* Navigation */}
             <nav className="space-y-1">
@@ -157,19 +221,21 @@ function MyAccount() {
                 fullWidth
                 startIcon={<MdPhotoLibrary />}
                 className="!justify-start !text-gray-600 hover:!bg-gray-50"
-                onClick={() => setActiveTab("selling")}
+                onClick={() => setActiveTab("submissions")}
               >
-                My Photos
+                My Submissions
               </Button>
               <Button
                 fullWidth
                 startIcon={<MdShoppingBag />}
                 className="!justify-start !text-gray-600 hover:!bg-gray-50"
-                onClick={() => setActiveTab("buying")}
+                onClick={() => setActiveTab("purchases")}
               >
                 Purchases
               </Button>
               <Button
+                component={Link}
+                href="/my-account/settings"
                 fullWidth
                 startIcon={<MdSettings />}
                 className="!justify-start !text-gray-600 hover:!bg-gray-50"
@@ -216,97 +282,194 @@ function MyAccount() {
             <Tabs
               value={activeTab}
               onChange={(e, newValue) => setActiveTab(newValue)}
-              className="border-b border-gray-200"
             >
-              <Tab
-                label="Your Photos for Sale"
-                value="selling"
-                className="!font-medium"
-              />
-              <Tab
-                label="Purchased Photos"
-                value="buying"
-                className="!font-medium"
-              />
+              <Tab label="Photo Submissions" value="submissions" />
+              <Tab label="Purchased Photos" value="purchases" />
             </Tabs>
 
-            {/* Selling Content */}
-            {activeTab === "selling" && (
+            {/* Submissions Content */}
+            {activeTab === "submissions" && (
               <div className="p-6">
                 <div className="mb-6">
-                  <Button
-                    variant="contained"
-                    startIcon={<MdCloudUpload />}
-                    className="!bg-blue-600 !text-white hover:!bg-blue-700"
-                  >
-                    Upload New Photo
-                  </Button>
+                  <div className="space-y-4">
+                    <TextField
+                      fullWidth
+                      label="Submission Title"
+                      name="title"
+                      value={submissionData.title}
+                      onChange={handleSubmissionChange}
+                      variant="outlined"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Description"
+                      name="description"
+                      multiline
+                      rows={3}
+                      value={submissionData.description}
+                      onChange={handleSubmissionChange}
+                      variant="outlined"
+                    />
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="file"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        id="photoSubmission"
+                        accept="image/*"
+                      />
+                      <label htmlFor="photoSubmission">
+                        <Button
+                          variant="outlined"
+                          startIcon={<MdCloudUpload />}
+                          component="span"
+                        >
+                          Select Photos
+                        </Button>
+                      </label>
+                      <Button
+                        variant="contained"
+                        startIcon={<MdCloudUpload />}
+                        onClick={handlePhotoSubmission}
+                        disabled={
+                          isSubmitting ||
+                          !submissionData.title ||
+                          !submissionData.description ||
+                          submissionData.file.length === 0
+                        }
+                      >
+                        {isSubmitting ? (
+                          <CircularProgress size={24} />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </div>
+
+                    {submissionData.file && (
+                      <div className="mt-2">
+                        <div className="mt-2">
+                          <Typography variant="body2" className="text-gray-600">
+                            Selected file:
+                          </Typography>
+                          <Chip
+                            key={submissionData.file.name}
+                            label={submissionData.file.name}
+                            onDelete={() =>
+                              setSubmissionData((prev) => ({
+                                ...prev,
+                                file: null,
+                              }))
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <Typography variant="body2" className="text-gray-600">
+                      Max 5 photos per submission (JPEG/PNG only)
+                    </Typography>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {sellingPhotos.map((photo) => (
-                    <Card
-                      key={photo.id}
-                      className="shadow-sm border border-gray-200"
-                    >
-                      <CardMedia
-                        component="img"
-                        image={photo.image}
-                        alt={photo.title}
-                        className="h-48 object-cover"
-                      />
-                      <CardContent>
-                        <Typography variant="h6" className="font-semibold mb-2">
-                          {photo.title}
-                        </Typography>
-                        <div className="flex justify-between items-center">
-                          <Chip
-                            label={`$${photo.price}`}
-                            className="!bg-green-100 !text-green-800"
-                          />
-                          <span className="text-sm text-gray-600">
-                            {photo.sales} sales
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                {/* Submission List */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                  {loadingSubmissions ? (
+                    <div className="col-span-full text-center">
+                      <CircularProgress />
+                      <Typography variant="body2" className="mt-2">
+                        Loading submissions...
+                      </Typography>
+                    </div>
+                  ) : userSubmissions?.length > 0 ? (
+                    userSubmissions?.map((submission) => (
+                      <Card
+                        key={submission._id}
+                        className="shadow-sm border border-gray-200"
+                      >
+                        <CardContent>
+                          <Typography
+                            variant="h6"
+                            className="font-semibold mb-2"
+                          >
+                            {submission.title || "Untitled Submission"}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            className="mb-2 text-gray-600"
+                          >
+                            {submission.description || "No description"}
+                          </Typography>
+
+                          <div className="grid grid-cols-1">
+                            <div className="relative aspect-square">
+                              <img
+                                src={submission.image.url}
+                                alt="Submission"
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                              {submission.status === "rejected" && (
+                                <Chip
+                                  label="Rejected"
+                                  color="error"
+                                  size="small"
+                                  className="!absolute top-1 right-1"
+                                />
+                              )}
+                            </div>
+                          </div>
+
+                          {submission.rejectionReason && (
+                            <Typography
+                              variant="body2"
+                              className="mt-2 text-red-600"
+                            >
+                              <strong>Reason:</strong>{" "}
+                              {submission.rejectionReason}
+                            </Typography>
+                          )}
+
+                          <div className="mt-3 flex justify-between items-center">
+                            <Chip
+                              label={submission.status || "pending"}
+                              color={
+                                submission.status === "approved"
+                                  ? "success"
+                                  : submission.status === "rejected"
+                                  ? "error"
+                                  : "default"
+                              }
+                              size="small"
+                            />
+                            <Typography
+                              variant="caption"
+                              className="text-gray-500"
+                            >
+                              {new Date(
+                                submission.createdAt
+                              ).toLocaleDateString()}
+                            </Typography>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center p-8">
+                      <Typography variant="h6" className="text-gray-500">
+                        No submissions found
+                      </Typography>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Buying Content */}
-            {activeTab === "buying" && (
+            {/* Purchases Content */}
+            {activeTab === "purchases" && (
               <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {purchasedPhotos.map((photo) => (
-                    <Card
-                      key={photo.id}
-                      className="shadow-sm border border-gray-200"
-                    >
-                      <CardMedia
-                        component="img"
-                        image={photo.image}
-                        alt={photo.title}
-                        className="h-48 object-cover"
-                      />
-                      <CardContent>
-                        <Typography variant="h6" className="font-semibold mb-2">
-                          {photo.title}
-                        </Typography>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">
-                            by {photo.author}
-                          </span>
-                          <Chip
-                            label={`$${photo.price}`}
-                            className="!bg-blue-100 !text-blue-800"
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                <Typography variant="h6" className="mb-4">
+                  Your purchased photos will appear here
+                </Typography>
               </div>
             )}
           </Card>

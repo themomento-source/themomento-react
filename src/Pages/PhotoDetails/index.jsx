@@ -2,9 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 import { Rating, Button, TextField, IconButton } from "@mui/material";
-import { FaHeart, FaRegHeart, FaDownload, FaShoppingCart } from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaDownload,
+  FaShoppingCart,
+} from "react-icons/fa";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { motion } from "framer-motion";
+import { CircularProgress } from "@mui/material";
 
 function PhotoDetails() {
   const { id } = useParams();
@@ -17,6 +23,8 @@ function PhotoDetails() {
   const [isLiked, setIsLiked] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
+  const [juryReviews, setJuryReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
 
   useEffect(() => {
     const fetchPhotoDetails = async () => {
@@ -202,140 +210,53 @@ function PhotoDetails() {
       </div>
 
       {/* Comment Section */}
-      <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <h3 className="text-2xl font-bold text-gray-900 mb-6">
-          Comments ({comments.length})
-        </h3>
-
-        {/* Comment Form */}
-        <div className="mb-8 bg-gray-50 rounded-lg p-4">
-          <TextField
-            fullWidth
-            multiline
-            rows={3}
-            variant="outlined"
-            label="Add a comment..."
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            InputProps={{
-              className: "!text-gray-900 bg-white",
-            }}
-            className="!rounded-lg"
-          />
-          <div className="mt-4 flex justify-end">
-            <Button
-              variant="contained"
-              className="!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-8 !py-2"
-              onClick={handleCommentSubmit}
-              disabled={!commentText.trim()}
-            >
-              Post Comment
-            </Button>
-          </div>
-        </div>
-
-        {/* Comments List */}
-        {comments.length > 0 ? (
-          <div className="space-y-6">
-            {comments.map((comment, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-4 rounded-lg border border-gray-200"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-                  <div>
-                    <div className="font-semibold text-gray-900">
-                      {comment.user}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {new Date(comment.date).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600 mt-4">{comment.text}</p>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-600">No comments yet</p>
-        )}
-      </div>
 
       {/* Reviews Section */}
       <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
         <h3 className="text-2xl font-bold text-gray-900 mb-6">
-          Customer Reviews ({reviews.length})
+          Jury Board Reviews ({juryReviews.length})
         </h3>
 
-        {/* Review Form */}
-        <div className="mb-8 bg-gray-50 rounded-lg p-4">
-          <div className="flex gap-4 items-center">
-            <Rating
-              value={rating}
-              onChange={(e, newValue) => setRating(newValue)}
-              precision={0.5}
-              className="!text-yellow-500"
-            />
-            <TextField
-              fullWidth
-              multiline
-              rows={3}
-              variant="outlined"
-              label="Write a review..."
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              InputProps={{
-                className: "!text-gray-900 bg-white",
-              }}
-              className="!rounded-lg"
-            />
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button
-              variant="contained"
-              className="!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-8 !py-2"
-              onClick={handleReviewSubmit}
-              disabled={!reviewText.trim()}
-            >
-              Submit Review
-            </Button>
+        {/* Average Rating Gauge */}
+        <div className="flex items-center gap-4">
+          <CircularProgress
+            variant="determinate"
+            value={(averageRating / 5) * 100}
+            size={80}
+            thickness={5}
+            className="!text-blue-600"
+          />
+          <div>
+            <p className="text-lg font-semibold text-gray-800">
+              Average Rating:
+            </p>
+            <p className="text-2xl font-bold text-blue-600">
+              {averageRating.toFixed(1)} / 5
+            </p>
           </div>
         </div>
 
-        {/* Reviews List */}
-        {reviews.length > 0 ? (
-          <div className="space-y-6">
-            {reviews.map((review, index) => (
-              <motion.div
+        {/* Jury Reviews */}
+        <div className="space-y-6 mt-6">
+          {juryReviews.length > 0 ? (
+            juryReviews.map((review, index) => (
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-4 rounded-lg border border-gray-200"
+                className="bg-gray-50 p-4 rounded-lg border border-gray-200"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-                  <div>
-                    <div className="font-semibold text-gray-900">
-                      {review.user}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {new Date().toLocaleDateString()}
-                    </div>
+                <div className="flex justify-between items-center">
+                  <div className="font-semibold text-gray-900">
+                    {review.judgeName}
                   </div>
-                </div>
-                <div className="mt-4 text-yellow-500">
-                  <Rating value={review.rating} readOnly precision={0.5} />
+                  <Rating value={review.rating} precision={0.1} readOnly />
                 </div>
                 <p className="text-gray-600 mt-2">{review.comment}</p>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-600">No reviews yet</p>
-        )}
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-600">No jury reviews yet.</p>
+          )}
+        </div>
       </div>
     </div>
   );
