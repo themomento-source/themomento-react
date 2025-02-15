@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
@@ -14,6 +14,7 @@ const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 
 function Register() {
+  const context = useContext(MyContext); // Access the context
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -85,7 +86,6 @@ function Register() {
 
   // Handle Google Authentication
   const authWithGoogle = async () => {
-    
     try {
       setLoading(true);
       const result = await signInWithPopup(auth, googleProvider);
@@ -107,7 +107,7 @@ function Register() {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
-        context.setIsLogin(true);
+        context.setIsLogin(true); // Update context to indicate login
 
         setSuccessMessage("Google sign-in successful! Redirecting...");
         setTimeout(() => {
@@ -126,8 +126,12 @@ function Register() {
 
   return (
     <section className="section py-10">
-      <div className="container">
-        <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-12">
+      <div className="container mx-auto px-4">
+        {" "}
+        {/* Added container with mx-auto and px-4 */}
+        <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
+          {" "}
+          {/* Added responsive width */}
           <h3 className="text-center text-[20px] font-bold text-black">
             Create Your Account
           </h3>
@@ -218,7 +222,7 @@ function Register() {
               {loading ? (
                 <CircularProgress size={24} color="white" />
               ) : (
-                "Register"
+                <span className="text-white">Register</span> // Register text in white
               )}
             </Button>
 

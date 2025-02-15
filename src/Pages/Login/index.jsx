@@ -95,8 +95,12 @@ function Login() {
 
   return (
     <section className="section py-10">
-      <div className="container">
-        <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-12">
+      <div className="container mx-auto px-4">
+        {" "}
+        {/* Container for centering and padding */}
+        <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
+          {" "}
+          {/* Responsive width */}
           <h3 className="text-center text-[20px] font-bold text-black">
             Login to Your Account
           </h3>
@@ -172,7 +176,8 @@ function Login() {
                     "linear-gradient(45deg, #007BFF, #0056b3)")
                 }
               >
-                Login
+                <span className="text-white">Login</span>{" "}
+                {/* Login text in white */}
               </Button>
             </div>
 
