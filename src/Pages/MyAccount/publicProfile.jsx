@@ -419,56 +419,58 @@ const PublicProfile = () => {
       </div>
 
       {/* Gallery Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="mb-16"
-      >
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: 700,
-            mb: 6,
-            textAlign: "center",
+      
 
-            color: "common.black",
-            textShadow: "0 2px 8px rgba(0,0,0,0.3)",
-          }}
-        >
-          My Gallery
-        </Typography>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {profileData.photos.map((photo) => (
-            <GalleryImage
-              key={photo._id}
-              onClick={() => handleImageClick(photo)}
-              whileHover={{ scale: 1.02 }}
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="mb-16"
+>
+  <Typography
+    variant="h3"
+    sx={{
+      fontWeight: 700,
+      mb: 6,
+      textAlign: "center",
+      color: "common.black",
+      textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+    }}
+  >
+    My Gallery
+  </Typography>
+  <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
+    {profileData.photos.map((photo) => (
+      <GalleryImage
+        key={photo._id}
+        onClick={() => handleImageClick(photo)}
+        whileHover={{ scale: 1.02 }}
+      >
+        <img
+          src={photo.url}
+          className="w-full h-[600px] object-cover" // Increased height
+          alt={photo.description}
+          loading="lazy"
+          style={{ border: `1px solid ${alpha("#000000", 0.1)}` }}
+        />
+        <div className="image-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 p-4 flex flex-col justify-end">
+          {photo.description && (
+            <Typography
+              variant="body1"
+              sx={{
+                color: "common.black",
+                fontWeight: 500,
+                textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+              }}
             >
-              <img
-                src={photo.url}
-                className="w-full h-64 object-cover"
-                alt={photo.description}
-                loading="lazy"
-                style={{ border: `1px solid ${alpha("#000000", 0.1)}` }}
-              />
-              <div className="image-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 p-4 flex flex-col justify-end">
-                {photo.description && (
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: "common.black",
-                      fontWeight: 500,
-                      textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                    }}
-                  >
-                    {photo.description}
-                  </Typography>
-                )}
-              </div>
-            </GalleryImage>
-          ))}
+              {photo.description}
+            </Typography>
+          )}
         </div>
-      </motion.div>
+      </GalleryImage>
+    ))}
+  </div>
+</motion.div>
+
 
       <ImageModal
         open={!!selectedImage}
