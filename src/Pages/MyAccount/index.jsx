@@ -11,6 +11,7 @@ import {
   Box,
   TextField,
   Link,
+  Grid,
 } from "@mui/material";
 import {
   MdDashboard,
@@ -91,7 +92,8 @@ function MyAccount() {
     setSubmissionData((prev) => ({ ...prev, file })); // Directly set the single file
   };
 
-  const handlePhotoSubmission = async () => {
+  const handlePhotoSubmission = async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -149,133 +151,145 @@ function MyAccount() {
   };
 
   return (
-    <section className="py-8 w-full bg-gray-50 min-h-screen">
-      <div className="container mx-auto px-4 flex gap-8">
+    <section className="py-8 w-full bg-gray-100 min-h-screen">
+      <div className="container mx-auto px-4 lg:px-8 flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-            {/* Profile Section */}
-            <div className="text-center mb-6">
-              <div className="relative mx-auto w-24 h-24 mb-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                  id="avatarInput"
-                  disabled={uploadingAvatar}
-                />
-                <label htmlFor="avatarInput" className="cursor-pointer">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
-                    {userData?.avatar ? (
-                      <img
-                        src={userData.avatar}
-                        className="w-full h-full object-cover"
-                        alt="Profile"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">Add Photo</span>
-                      </div>
-                    )}
-                    {uploadingAvatar && (
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <CircularProgress size={24} color="inherit" />
-                      </div>
-                    )}
-                  </div>
-                </label>
+        <aside className="w-full lg:w-64 flex-shrink-0 mb-8 lg:mb-0">
+          <Card className="shadow-md border border-gray-200">
+            <CardContent className="p-6">
+              {/* Profile Section */}
+              <div className="text-center mb-8">
+                <div className="relative mx-auto w-24 h-24 mb-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                    id="avatarInput"
+                    disabled={uploadingAvatar}
+                  />
+                  <label htmlFor="avatarInput" className="cursor-pointer">
+                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
+                      {userData?.avatar ? (
+                        <img
+                          src={userData.avatar}
+                          className="w-full h-full object-cover"
+                          alt="Profile"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                          <span className="text-gray-500 text-sm">
+                            Add Photo
+                          </span>
+                        </div>
+                      )}
+                      {uploadingAvatar && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                          <CircularProgress size={24} color="inherit" />
+                        </div>
+                      )}
+                    </div>
+                  </label>
+                </div>
+                <Typography
+                  variant="h6"
+                  className="font-semibold text-gray-800 text-center mb-2"
+                >
+                  {userData?.name || "User Name"}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  className="text-center mb-4"
+                >
+                  {userData?.email}
+                </Typography>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                {userData?.name || "User Name"}
-              </h3>
-              <p className="text-sm text-gray-600">{userData?.email}</p>
-            </div>
 
-            {userData && (
-              <Box mt={2} textAlign="center">
-                <Typography variant="body2">
-                  Your public profile:{" "}
-                  <Link
+              {userData && (
+                <Box mt={2} textAlign="center">
+                  <Button
+                    component={Link}
                     href={`/user/${userData?._id}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    variant="contained"
+                    size="small"
+                    className="!text-white"
                   >
-                    {typeof window !== "undefined" &&
-                      `${window.location.origin}/user/${userData?._id}`}
-                  </Link>
-                </Typography>
-              </Box>
-            )}
-
-            {/* Navigation */}
-            <nav className="space-y-1">
-              <Button
-                fullWidth
-                startIcon={<MdDashboard />}
-                className="!justify-start !text-gray-600 hover:!bg-gray-50"
-              >
-                Dashboard
-              </Button>
-              <Button
-                fullWidth
-                startIcon={<MdPhotoLibrary />}
-                className="!justify-start !text-gray-600 hover:!bg-gray-50"
-                onClick={() => setActiveTab("submissions")}
-              >
-                My Submissions
-              </Button>
-              <Button
-                fullWidth
-                startIcon={<MdShoppingBag />}
-                className="!justify-start !text-gray-600 hover:!bg-gray-50"
-                onClick={() => setActiveTab("purchases")}
-              >
-                Purchases
-              </Button>
-              <Button
-                component={Link}
-                href="/my-account/settings"
-                fullWidth
-                startIcon={<MdSettings />}
-                className="!justify-start !text-gray-600 hover:!bg-gray-50"
-              >
-                Settings
-              </Button>
-              <Button
-                fullWidth
-                startIcon={<MdLogout />}
-                className="!justify-start !text-red-500 hover:!bg-red-50"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
-            </nav>
-          </div>
-        </div>
+                    Your public profile
+                  </Button>
+                </Box>
+              )}
+              {/* Navigation */}
+              <nav className="space-y-2 py-6">
+                <Button
+                  fullWidth
+                  startIcon={<MdDashboard />}
+                  className="!justify-start !text-gray-700 hover:!bg-gray-50 rounded-md py-2"
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  fullWidth
+                  startIcon={<MdPhotoLibrary />}
+                  className="!justify-start !text-gray-600 hover:!bg-gray-50"
+                  onClick={() => setActiveTab("submissions")}
+                >
+                  My Submissions
+                </Button>
+                <Button
+                  fullWidth
+                  startIcon={<MdShoppingBag />}
+                  className="!justify-start !text-gray-600 hover:!bg-gray-50"
+                  onClick={() => setActiveTab("purchases")}
+                >
+                  Purchases
+                </Button>
+                <Button
+                  component={Link}
+                  href="/my-account/settings"
+                  fullWidth
+                  startIcon={<MdSettings />}
+                  className="!capitalize !justify-start !text-gray-600 hover:!bg-gray-50"
+                >
+                  Edit Profile
+                </Button>
+                <Button
+                  fullWidth
+                  startIcon={<MdLogout />}
+                  className="!justify-start !text-red-500 hover:!bg-red-50"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </nav>
+            </CardContent>
+          </Card>
+        </aside>
 
         {/* Main Content */}
-        <div className="flex-1">
+        <main className="flex-1">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Grid container spacing={4} className="mb-8">
             {stats.map((stat, index) => (
-              <Card key={index} className="shadow-sm border border-gray-200">
-                <CardContent className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Card className="shadow-sm border border-gray-200 flex flex-col">
+                  <CardContent className="p-3 bg-blue-50 rounded-lg text-blue-600 flex justify-center items-center">
                     {stat.icon}
-                  </div>
-                  <div>
+                  </CardContent>
+                  <CardContent>
                     <Typography variant="body2" className="text-gray-600">
                       {stat.title}
                     </Typography>
                     <Typography variant="h6" className="font-semibold">
                       {stat.value}
                     </Typography>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Grid>
             ))}
-          </div>
+          </Grid>
 
           {/* Content Tabs */}
           <Card className="shadow-sm border border-gray-200">
@@ -287,193 +301,199 @@ function MyAccount() {
               <Tab label="Purchased Photos" value="purchases" />
             </Tabs>
 
-            {/* Submissions Content */}
-            {activeTab === "submissions" && (
-              <div className="p-6">
-                <div className="mb-6">
-                  <div className="space-y-4">
-                    <TextField
-                      fullWidth
-                      label="Submission Title"
-                      name="title"
-                      value={submissionData.title}
-                      onChange={handleSubmissionChange}
-                      variant="outlined"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Description"
-                      name="description"
-                      multiline
-                      rows={3}
-                      value={submissionData.description}
-                      onChange={handleSubmissionChange}
-                      variant="outlined"
-                    />
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="file"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                        id="photoSubmission"
-                        accept="image/*"
-                      />
-                      <label htmlFor="photoSubmission">
-                        <Button
+            <CardContent className="p-6">
+              {activeTab === "submissions" && (
+                <div>
+                  <Grid container spacing={4} className="mt-8">
+                    <Grid item xs={12}>
+                      <form onSubmit={handlePhotoSubmission}>
+                        <TextField
+                          fullWidth
+                          label="Submission Title"
+                          name="title"
+                          value={submissionData.title}
+                          onChange={handleSubmissionChange}
                           variant="outlined"
-                          startIcon={<MdCloudUpload />}
-                          component="span"
-                        >
-                          Select Photos
-                        </Button>
-                      </label>
-                      <Button
-                        variant="contained"
-                        startIcon={<MdCloudUpload />}
-                        onClick={handlePhotoSubmission}
-                        disabled={
-                          isSubmitting ||
-                          !submissionData.title ||
-                          !submissionData.description ||
-                          submissionData.file.length === 0
-                        }
-                      >
-                        {isSubmitting ? (
-                          <CircularProgress size={24} />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
-                    </div>
-
-                    {submissionData.file && (
-                      <div className="mt-2">
-                        <div className="mt-2">
-                          <Typography variant="body2" className="text-gray-600">
-                            Selected file:
-                          </Typography>
-                          <Chip
-                            key={submissionData.file.name}
-                            label={submissionData.file.name}
-                            onDelete={() =>
-                              setSubmissionData((prev) => ({
-                                ...prev,
-                                file: null,
-                              }))
-                            }
+                          margin="normal"
+                          required
+                        />
+                        <TextField
+                          fullWidth
+                          label="Description"
+                          name="description"
+                          multiline
+                          rows={3}
+                          value={submissionData.description}
+                          onChange={handleSubmissionChange}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                        />
+                        <div className="flex items-center gap-4 mt-4">
+                          <input
+                            type="file"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                            id="photoSubmission"
+                            accept="image/*"
+                            required
                           />
-                        </div>
-                      </div>
-                    )}
-
-                    <Typography variant="body2" className="text-gray-600">
-                      Max 5 photos per submission (JPEG/PNG only)
-                    </Typography>
-                  </div>
-                </div>
-
-                {/* Submission List */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                  {loadingSubmissions ? (
-                    <div className="col-span-full text-center">
-                      <CircularProgress />
-                      <Typography variant="body2" className="mt-2">
-                        Loading submissions...
-                      </Typography>
-                    </div>
-                  ) : userSubmissions?.length > 0 ? (
-                    userSubmissions?.map((submission) => (
-                      <Card
-                        key={submission._id}
-                        className="shadow-sm border border-gray-200"
-                      >
-                        <CardContent>
-                          <Typography
-                            variant="h6"
-                            className="font-semibold mb-2"
+                          <label htmlFor="photoSubmission">
+                            <Button
+                              variant="outlined"
+                              startIcon={<MdCloudUpload />}
+                              component="span"
+                            >
+                              Select Photo
+                            </Button>
+                          </label>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            startIcon={<MdCloudUpload />}
+                            disabled={
+                              isSubmitting ||
+                              !submissionData.title ||
+                              !submissionData.description ||
+                              !submissionData.file
+                            }
                           >
-                            {submission.title || "Untitled Submission"}
-                          </Typography>
+                            {isSubmitting ? (
+                              <CircularProgress size={24} />
+                            ) : (
+                              "Submit"
+                            )}
+                          </Button>
+                        </div>
+                        {submissionData.file && (
+                          <div className="mt-2">
+                            <Typography variant="body2" color="text.secondary">
+                              Selected file: {submissionData.file.name}
+                            </Typography>
+                          </div>
+                        )}
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          className="mt-2"
+                        >
+                          Only 1 photo per submission
+                        </Typography>
+                      </form>
+                    </Grid>
+                    <Grid item xs={12}>
+                      {loadingSubmissions ? (
+                        <div className="text-center">
+                          <CircularProgress />
                           <Typography
                             variant="body2"
-                            className="mb-2 text-gray-600"
+                            color="text.secondary"
+                            className="mt-2"
                           >
-                            {submission.description || "No description"}
+                            Loading submissions...
                           </Typography>
-
-                          <div className="grid grid-cols-1">
-                            <div className="relative aspect-square">
-                              <img
-                                src={submission.image.url}
-                                alt="Submission"
-                                className="w-full h-full object-cover rounded-lg"
-                              />
-                              {submission.status === "rejected" && (
-                                <Chip
-                                  label="Rejected"
-                                  color="error"
-                                  size="small"
-                                  className="!absolute top-1 right-1"
-                                />
-                              )}
-                            </div>
-                          </div>
-
-                          {submission.rejectionReason && (
-                            <Typography
-                              variant="body2"
-                              className="mt-2 text-red-600"
+                        </div>
+                      ) : userSubmissions?.length > 0 ? (
+                        <Grid container spacing={4}>
+                          {userSubmissions.map((submission) => (
+                            <Grid
+                              item
+                              xs={12}
+                              sm={6}
+                              md={4}
+                              key={submission._id}
                             >
-                              <strong>Reason:</strong>{" "}
-                              {submission.rejectionReason}
-                            </Typography>
-                          )}
+                              <Card className="shadow-sm border border-gray-200 h-full flex flex-col">
+                                <CardContent>
+                                  <Typography
+                                    variant="h6"
+                                    className="font-semibold mb-2 py-2"
+                                  >
+                                    {submission.title || "Untitled Submission"}
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    className="mb-2 text-gray-600 py-2"
+                                  >
+                                    {submission.description || "No description"}
+                                  </Typography>
 
-                          <div className="mt-3 flex justify-between items-center">
-                            <Chip
-                              label={submission.status || "pending"}
-                              color={
-                                submission.status === "approved"
-                                  ? "success"
-                                  : submission.status === "rejected"
-                                  ? "error"
-                                  : "default"
-                              }
-                              size="small"
-                            />
-                            <Typography
-                              variant="caption"
-                              className="text-gray-500"
-                            >
-                              {new Date(
-                                submission.createdAt
-                              ).toLocaleDateString()}
-                            </Typography>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center p-8">
-                      <Typography variant="h6" className="text-gray-500">
-                        No submissions found
-                      </Typography>
-                    </div>
-                  )}
+                                  <div className="grid grid-cols-1">
+                                    <div className="relative aspect-square py-4">
+                                      <img
+                                        src={submission.image.url}
+                                        alt="Submission"
+                                        className="w-full h-full object-cover"
+                                      />
+                                      {submission.status === "rejected" && (
+                                        <Chip
+                                          label="Rejected"
+                                          color="error"
+                                          size="small"
+                                          className="!absolute top-1 right-1"
+                                        />
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {submission.rejectionReason && (
+                                    <Typography
+                                      variant="body2"
+                                      className="mt-2 text-red-600"
+                                    >
+                                      <strong>Reason:</strong>{" "}
+                                      {submission.rejectionReason}
+                                    </Typography>
+                                  )}
+
+                                  <div className="mt-3 flex justify-between items-center">
+                                    <Chip
+                                      label={submission.status || "pending"}
+                                      color={
+                                        submission.status === "approved"
+                                          ? "success"
+                                          : submission.status === "rejected"
+                                          ? "error"
+                                          : "default"
+                                      }
+                                      size="small"
+                                    />
+                                    <Typography
+                                      variant="caption"
+                                      className="text-gray-500"
+                                    >
+                                      {new Date(
+                                        submission.createdAt
+                                      ).toLocaleDateString()}
+                                    </Typography>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      ) : (
+                        <div className="text-center p-8">
+                          <Typography variant="h6" color="text.secondary">
+                            No submissions found
+                          </Typography>
+                        </div>
+                      )}
+                    </Grid>
+                  </Grid>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Purchases Content */}
-            {activeTab === "purchases" && (
-              <div className="p-6">
-                <Typography variant="h6" className="mb-4">
-                  Your purchased photos will appear here
-                </Typography>
-              </div>
-            )}
+              {activeTab === "purchases" && (
+                <div className="p-6">
+                  <Typography variant="h6" className="mb-4">
+                    Your purchased photos will appear here
+                  </Typography>
+                </div>
+              )}
+            </CardContent>
           </Card>
-        </div>
+        </main>
       </div>
     </section>
   );
