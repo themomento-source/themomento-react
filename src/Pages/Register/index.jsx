@@ -233,7 +233,7 @@ function Register() {
             <div className="text-center mt-4">
               <span className="text-gray-600">
                 Already have an account?{" "}
-                <a className="text-blue-600 font-semibold" href="#">
+                <a className="text-blue-600 font-semibold" href="/login">
                   Login
                 </a>
               </span>
