@@ -12,7 +12,6 @@ import {
   TextField,
   Link,
   Grid,
-  Grid2,
 } from "@mui/material";
 import {
   MdDashboard,
@@ -271,9 +270,9 @@ function MyAccount() {
         {/* Main Content */}
         <main className="flex-1">
           {/* Stats Cards */}
-          <Grid2 container spacing={4} className="mb-8">
+          <Grid container spacing={4} className="mb-8">
             {stats.map((stat, index) => (
-              <Grid2 item xs={12} sm={6} md={3} key={index}>
+              <Grid item xs={12} sm={6} md={3} key={index}>
                 <Card className="shadow-sm border border-gray-200 flex flex-col">
                   {" "}
                   {/* Added flex column */}
@@ -293,9 +292,9 @@ function MyAccount() {
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid2>
+              </Grid>
             ))}
-          </Grid2>
+          </Grid>
 
           {/* Content Tabs */}
           <Card className="shadow-sm border border-gray-200">
@@ -310,10 +309,10 @@ function MyAccount() {
             <CardContent className="p-6">
               {activeTab === "submissions" && (
                 <div>
-                  <Grid2 container spacing={4} className="mt-8">
+                  <Grid container spacing={4} className="mt-8">
                     {" "}
                     {/* Container for form and submissions */}
-                    <Grid2 item xs={12}>
+                    <Grid item xs={12}>
                       {" "}
                       {/* Form takes full width on all screens */}
                       <form onSubmit={handlePhotoSubmission}>
@@ -394,9 +393,8 @@ function MyAccount() {
                           Only 1 photo per submission
                         </Typography>
                       </form>
-                    </Grid2>
-               
-                    <Grid2 item xs={12}>
+                    </Grid>
+                    <Grid item xs={12}>
                       {loadingSubmissions ? (
                         <div className="text-center">
                           <CircularProgress />
@@ -409,11 +407,11 @@ function MyAccount() {
                           </Typography>
                         </div>
                       ) : userSubmissions?.length > 0 ? (
-                        <Grid2 container spacing={4}>
+                        <Grid container spacing={4}>
                           {" "}
                           {/* Grid for submissions list */}
                           {userSubmissions.map((submission) => (
-                            <Grid2
+                            <Grid
                               item
                               xs={12}
                               sm={6}
@@ -486,9 +484,9 @@ function MyAccount() {
                                   </div>
                                 </CardContent>
                               </Card>
-                            </Grid2>
+                            </Grid>
                           ))}
-                        </Grid2>
+                        </Grid>
                       ) : (
                         <div className="text-center p-8">
                           <Typography variant="h6" color="text.secondary">
@@ -496,20 +494,19 @@ function MyAccount() {
                           </Typography>
                         </div>
                       )}
-                    </Grid2>
-                  </Grid2>
+                    </Grid>
+                  </Grid>
+                </div>
+              )}
+
+              {activeTab === "purchases" && (
+                <div className="p-6">
+                  <Typography variant="h6" className="mb-4">
+                    Your purchased photos will appear here
+                  </Typography>
                 </div>
               )}
             </CardContent>
-
-            {/* Purchases Content */}
-            {activeTab === "purchases" && (
-              <div className="p-6">
-                <Typography variant="h6" className="mb-4">
-                  Your purchased photos will appear here
-                </Typography>
-              </div>
-            )}
           </Card>
         </main>
       </div>
