@@ -350,7 +350,7 @@ function MyAccount() {
                             className="hidden"
                             id="photoSubmission"
                             accept="image/*"
-                            required // Makes file selection required
+                            required 
                           />
                           <label htmlFor="photoSubmission">
                             <Button
@@ -391,7 +391,7 @@ function MyAccount() {
                           color="text.secondary"
                           className="mt-2"
                         >
-                          Only 1 photo per submission (JPEG/PNG only)
+                          Only 1 photo per submission
                         </Typography>
                       </form>
                     </Grid2>
