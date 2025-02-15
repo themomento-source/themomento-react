@@ -1,40 +1,143 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { FaRegHeart } from "react-icons/fa";
 import { fetchDataFromApi } from "../../utils/api";
 import {
-  Box,
   Typography,
   CircularProgress,
   Chip,
-  Alert,
-  Container,
-  Stack,
-  Divider,
-  alpha,
   Button,
+  IconButton,
+  Container,
 } from "@mui/material";
-import { MdPhotoCamera, MdLocationOn, MdBlurOn } from "react-icons/md";
-import { BsCartFill } from "react-icons/bs";
+import { MdPhotoCamera, MdLocationOn, MdBlurOn, MdLink } from "react-icons/md";
+import { FaAward } from "react-icons/fa";
+import { Box } from "@mui/material";
+import { FiInstagram, FiTwitter } from "react-icons/fi";
+import { RiCameraLensFill } from "react-icons/ri";
 import ImageModal from "../../components/ImageModal";
 import { styled } from "@mui/material/styles";
 import { motion } from "framer-motion";
+import { alpha } from "@mui/material/styles";
 
-const GlassBox = styled(Box)(({ theme }) => ({
-  background: alpha(theme.palette.background.paper, 0.7),
-  backdropFilter: "blur(12px)",
-  borderRadius: 16,
-  border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-  boxShadow: `0 8px 32px 0 ${alpha(theme.palette.common.black, 0.1)}`,
+const ProfileContainer = styled(Container)(({ theme }) => ({
+  position: "relative",
+  paddingTop: "64px",
+  paddingBottom: "64px",
+  minHeight: "100vh",
+  backgroundImage: `url('https://res.cloudinary.com/dgob9antb/image/upload/v1739284115/submissions/67aa4612ad68d426b18dda28/approved/mnmzn82tmemtpsohs2c1.jpg')`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundAttachment: "fixed",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: alpha(theme.palette.background.default, 0.6),
+    zIndex: 0,
+  },
 }));
 
-const ProfileAvatar = styled(motion.img)(({ theme }) => ({
-  width: 200,
-  height: 200,
+const ProfileHeader = styled(motion.div)(({ theme }) => ({
+  position: "relative",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginBottom: "64px",
+  padding: "40px",
+  background: `linear-gradient(45deg, ${alpha(
+    theme.palette.background.paper,
+    0.15
+  )} 0%, ${alpha(theme.palette.background.paper, 0.05)} 100%)`,
+  borderRadius: "24px",
+  boxShadow: `0 8px 32px 0 ${alpha(theme.palette.common.black, 0.37)}`,
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
+  border: `1px solid ${alpha(theme.palette.divider, 0.15)}`,
+  zIndex: 1,
+}));
+
+const GlassCard = styled(motion.div)(({ theme }) => ({
+  position: "relative",
+  padding: "32px",
+  borderRadius: "16px",
+  background: `linear-gradient(45deg, ${alpha(
+    theme.palette.background.paper,
+    0.15
+  )} 0%, ${alpha(theme.palette.background.paper, 0.05)} 100%)`,
+  backdropFilter: "blur(10px)",
+  WebkitBackdropFilter: "blur(10px)",
+  border: `1px solid ${alpha(theme.palette.divider, 0.15)}`,
+  boxShadow: `0 4px 24px ${alpha(theme.palette.common.black, 0.1)}`,
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-5px)",
+    boxShadow: `0 8px 32px ${alpha(theme.palette.common.black, 0.2)}`,
+  },
+}));
+
+const AvatarWrapper = styled(motion.div)(({ theme }) => ({
+  position: "relative",
+  width: "200px",
+  height: "200px",
+  borderRadius: "50%",
+  marginBottom: "32px",
+  backdropFilter: "blur(8px)",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: "50%",
+    boxShadow: `0 0 48px ${alpha(theme.palette.primary.main, 0.3)}`,
+    opacity: 0,
+    transition: "opacity 0.3s ease",
+  },
+  "&:hover::after": {
+    opacity: 1,
+  },
+}));
+
+const ProfileAvatar = styled("img")({
+  width: "100%",
+  height: "100%",
   borderRadius: "50%",
   objectFit: "cover",
-  border: `4px solid ${alpha(theme.palette.background.paper, 0.3)}`,
-  boxShadow: theme.shadows[10],
+  border: `2px solid ${alpha("#fff", 0.2)}`,
+  backdropFilter: "blur(4px)",
+});
+
+const SocialLink = styled(IconButton)(({ theme }) => ({
+  width: "48px",
+  height: "48px",
+  background: alpha(theme.palette.background.paper, 0.2),
+  backdropFilter: "blur(8px)",
+  border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-4px)",
+    background: alpha(theme.palette.background.paper, 0.3),
+  },
+}));
+
+const GalleryImage = styled(motion.div)(({ theme }) => ({
+  position: "relative",
+  borderRadius: "16px",
+  overflow: "hidden",
+  cursor: "pointer",
+  background: alpha(theme.palette.background.paper, 0.1),
+  backdropFilter: "blur(8px)",
+  border: `1px solid ${alpha(theme.palette.divider, 0.15)}`,
+  "&:hover": {
+    "& .image-overlay": {
+      opacity: 1,
+    },
+    transform: "translateY(-4px)",
+  },
 }));
 
 const PublicProfile = () => {
@@ -112,175 +215,267 @@ const PublicProfile = () => {
   }
 
   return (
-    <Container maxWidth="xl" className="mt-8 relative m-10">
-      {/* Profile Header */}
-      <GlassBox className="p-4 mb-6 text-center relative overflow-hidden">
-        <ProfileAvatar
-          src={profileData.user?.avatar || "/default-avatar.jpg"}
-          alt={`${profileData.user?.name}'s avatar`}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 100 }}
-        />
+    <ProfileContainer maxWidth="xl">
+      <ProfileHeader
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <AvatarWrapper whileHover={{ scale: 1.05 }}>
+          <ProfileAvatar
+            src={profileData.user?.avatar || "/default-avatar.jpg"}
+            alt={`${profileData.user?.name}'s avatar`}
+          />
+        </AvatarWrapper>
+
         <Typography
-          variant="h3"
-          className="mt-3 font-extrabold bg-gradient-to-r from-[#fe6b8b] to-[#ff8e53] bg-clip-text text-transparent"
+          variant="h2"
+          sx={{
+            fontWeight: 700,
+            mb: 2,
+            color: "common.black",
+            textShadow: "0 2px 8px rgba(0,0,0,0.2)",
+          }}
         >
-          {`Hello, I am ${profileData.user?.name || "Anonymous Photographer"}`}
+          {profileData.user?.name || "Visual Storyteller"}
         </Typography>
 
-        <div className="flex flex-wrap justify-center gap-2 mt-4">
+        <div className="flex flex-wrap gap-3 mb-4">
           {profileData.user.location && (
             <Chip
               icon={<MdLocationOn />}
               label={profileData.user.location}
-              className="bg-blue-100/10 text-blue-600 backdrop-blur-sm"
+              sx={{
+                bgcolor: alpha("#000000", 0.1),
+                color: "common.black",
+                backdropFilter: "blur(8px)",
+                "& .MuiChip-icon": { color: "primary.light" },
+              }}
             />
           )}
           {profileData.user.genres && (
             <Chip
               icon={<MdBlurOn />}
               label={profileData.user.genres}
-              className="bg-green-100/10 text-green-600 backdrop-blur-sm"
+              sx={{
+                bgcolor: alpha("#000000", 0.1),
+                color: "common.black",
+                backdropFilter: "blur(8px)",
+                "& .MuiChip-icon": { color: "secondary.light" },
+              }}
             />
           )}
           <Chip
             icon={<MdPhotoCamera />}
-            label={`${profileData.photos.length} works`}
-            className="bg-purple-100/10 text-purple-600 backdrop-blur-sm"
+            label={`${profileData.photos.length} Works`}
+            sx={{
+              bgcolor: alpha("#000000", 0.1),
+              color: "common.black",
+              backdropFilter: "blur(8px)",
+              "& .MuiChip-icon": { color: "success.light" },
+            }}
           />
         </div>
-      </GlassBox>
 
-      {/* About Section */}
-      {profileData.user?.about && (
-        <GlassBox className="p-4 mb-6">
-          <Typography variant="h5" className="font-bold mb-3">
-            About Me
-          </Typography>
-          <Typography className="text-lg leading-relaxed text-gray-600">
-            {profileData.user.about}
-          </Typography>
-        </GlassBox>
-      )}
+        <div className="flex gap-3">
+          {profileData.user.socialLinks?.instagram && (
+            <SocialLink
+              href={`https://instagram.com/${profileData.user.socialLinks.instagram}`}
+              target="_blank"
+            >
+              <FiInstagram style={{ fontSize: "2rem", color: "#000000" }} />
+            </SocialLink>
+          )}
+          {profileData.user.socialLinks?.twitter && (
+            <SocialLink
+              href={`https://twitter.com/${profileData.user.socialLinks.twitter}`}
+              target="_blank"
+            >
+              <FiTwitter style={{ fontSize: "2rem", color: "#000000" }} />
+            </SocialLink>
+          )}
+          {profileData.user.socialLinks?.websites && (
+            <SocialLink
+              href={profileData.user.socialLinks.websites}
+              target="_blank"
+            >
+              <MdLink style={{ fontSize: "2rem", color: "#000000" }} />
+            </SocialLink>
+          )}
+        </div>
+      </ProfileHeader>
 
-      {/* Social Links */}
-      {(profileData.user.socialLinks?.websites ||
-        profileData.user.socialLinks?.instagram ||
-        profileData.user.socialLinks?.twitter) && (
-        <GlassBox className="p-4 mb-6">
-          <Typography variant="h5" className="font-bold mb-3">
-            Connect With Me
-          </Typography>
-          <div className="flex gap-4">
-            {profileData.user.socialLinks.websites && (
-              <Button
-                variant="contained"
-                href={profileData.user.socialLinks.websites}
-                target="_blank"
-                rel="noopener"
-              >
-                Website
-              </Button>
-            )}
-            {profileData.user.socialLinks.instagram && (
-              <Button
-                variant="contained"
-                color="secondary"
-                href={`https://instagram.com/${profileData.user.socialLinks.instagram}`}
-                target="_blank"
-                rel="noopener"
-              >
-                Instagram
-              </Button>
-            )}
-            {profileData.user.socialLinks.twitter && (
-              <Button
-                variant="contained"
-                color="info"
-                href={`https://twitter.com/${profileData.user.socialLinks.twitter}`}
-                target="_blank"
-                rel="noopener"
-              >
-                Twitter
-              </Button>
-            )}
-          </div>
-        </GlassBox>
-      )}
-
-      {/* Info Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        {profileData.user?.favouriteEquipement && (
-          <div className="h-full">
-            <GlassBox className="p-3 h-full">
-              <Typography variant="h6" className="font-semibold mb-2">
-                🛠 Favorite Gear
-              </Typography>
-              <Typography className="text-gray-600 whitespace-pre-wrap">
-                {profileData.user.favouriteEquipement}
-              </Typography>
-            </GlassBox>
-          </div>
+      {/* Content Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        {profileData.user?.about && (
+          <GlassCard
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 600,
+                mb: 3,
+                display: "flex",
+                gap: 2,
+                color: "common.black",
+                textShadow: "0 2px 4px rgba(0,0,0,0.2)",
+              }}
+            >
+              <RiCameraLensFill className="text-primary" />
+              About
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: alpha("#000000", 0.85),
+                lineHeight: 1.7,
+                textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+              }}
+            >
+              {profileData.user.about}
+            </Typography>
+          </GlassCard>
         )}
 
-        {profileData.user?.award && (
-          <div className="h-full">
-            <GlassBox className="p-3 h-full">
-              <Typography variant="h6" className="font-semibold mb-2">
-                � Awards & Recognition
+        <div className="space-y-8">
+          {profileData.user?.favouriteEquipement && (
+            <GlassCard
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                  mb: 3,
+                  display: "flex",
+                  gap: 2,
+                  color: "common.black",
+                  textShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                }}
+              >
+                <RiCameraLensFill className="text-secondary" />
+                Creative Tools
               </Typography>
-              <div className="space-y-2">
+              <Typography
+                variant="body1"
+                sx={{
+                  color: alpha("#000000", 0.85),
+                  whiteSpace: "pre-wrap",
+                  textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                }}
+              >
+                {profileData.user.favouriteEquipement}
+              </Typography>
+            </GlassCard>
+          )}
+
+          {profileData.user?.award && (
+            <GlassCard
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                  mb: 3,
+                  display: "flex",
+                  gap: 2,
+                  color: "common.black",
+                  textShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                }}
+              >
+                <FaAward className="text-warning" />
+                Achievements
+              </Typography>
+              <div className="space-y-3">
                 {profileData.user.award.split(",").map((award, index) => (
-                  <div key={index} className="p-3 bg-yellow-100/10 rounded-xl">
-                    <Typography variant="body2">
-                      {award.trim() || "No awards listed"}
+                  <div
+                    key={index}
+                    className="p-3 rounded-xl"
+                    style={{
+                      background: alpha("#000000", 0.1),
+                      backdropFilter: "blur(8px)",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: 500,
+                        color: "common.black",
+                      }}
+                    >
+                      {award.trim()}
                     </Typography>
                   </div>
                 ))}
               </div>
-            </GlassBox>
-          </div>
-        )}
+            </GlassCard>
+          )}
+        </div>
       </div>
 
-      {/* Photo Gallery */}
-      <div className="px-0 md:px-4">
-        <Typography variant="h4" className="font-extrabold mb-4">
-          Portfolio
+      {/* Gallery Section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="mb-16"
+      >
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: 700,
+            mb: 6,
+            textAlign: "center",
+
+            color: "common.black",
+            textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+          }}
+        >
+          My Gallery
         </Typography>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {profileData.photos.map((photo) => (
-            <motion.div
+            <GalleryImage
               key={photo._id}
               onClick={() => handleImageClick(photo)}
               whileHover={{ scale: 1.02 }}
-              className="relative rounded-xl overflow-hidden cursor-pointer"
             >
               <img
                 src={photo.url}
-                className="w-full h-full object-cover aspect-square"
-                alt={photo.description || "Photography work"}
+                className="w-full h-64 object-cover"
+                alt={photo.description}
                 loading="lazy"
+                style={{ border: `1px solid ${alpha("#000000", 0.1)}` }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+              <div className="image-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 p-4 flex flex-col justify-end">
                 {photo.description && (
-                  <Typography className="text-white font-medium">
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "common.black",
+                      fontWeight: 500,
+                      textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                    }}
+                  >
                     {photo.description}
                   </Typography>
                 )}
               </div>
-            </motion.div>
+            </GalleryImage>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       <ImageModal
         open={!!selectedImage}
         onClose={() => setSelectedImage(null)}
         image={selectedImage}
       />
-    </Container>
+    </ProfileContainer>
   );
 };
 

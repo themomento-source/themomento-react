@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { blogAPI } from "../../utils/api"; // Make sure this points to your API functions
+import { blogAPI } from "../../utils/api";
 import SafeHTML from ".././../components/SafeHTML";
 
 const BlogDetails = () => {
@@ -12,11 +12,7 @@ const BlogDetails = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        console.log("Fetching blog with ID:", id); // Debugging
-
         const response = await blogAPI.getById(id);
-        console.log("API Response:", response); // Debugging
-
         if (response && response._id) {
           setBlog(response);
         } else {
@@ -32,31 +28,59 @@ const BlogDetails = () => {
     fetchBlog();
   }, [id]);
 
-  if (loading) return <p className="text-center">Loading...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (loading) return <p className="text-center py-4">Loading...</p>;
+  if (error) return <p className="text-center text-red-500 py-4">{error}</p>;
+
+  if (!blog) return null; // Handle the case where blog is still null after loading
 
   return (
-    <div className="container mx-auto px-4 md:px-8">
-      <h1 className="text-3xl font-bold my-4">
-        {blog?.title || "Untitled Blog"}
-      </h1>
+    <div className="bg-white py-12">
+      {" "}
+      {/* White background and padding */}
+      <div className="container mx-auto px-4 md:px-8">
+        {/* Title */}
+        <h1 className="text-4xl font-bold mb-4 text-gray-800 leading-tight">
+          {blog.title}
+        </h1>
 
-      {/* Blog Cover Image */}
-      <img
-        src={blog.image || "https://via.placeholder.com/600"}
-        alt={blog.title || "Blog Cover"}
-        className="w-[1200]] h-[800px] object-cover rounded-lg shadow-lg"
-      />
+        {/* Meta Information (Author & Date if available) */}
+        <div className="flex items-center justify-between mb-6 text-gray-600">
+          <div className="flex items-center">
+            <span className="mr-2">By:</span>
+            <span className="font-medium">
+              {blog.author?.name || "Unknown"}
+            </span>
+          </div>
+          {/* Add date if available in your API response */}
+          {blog.createdAt && ( // Assuming your API returns a createdAt field
+            <div>
+              {new Date(blog.createdAt).toLocaleDateString()}{" "}
+              {/* Format the date */}
+            </div>
+          )}
+        </div>
 
-      {/* Blog Author */}
-      <p className="text-lg font-semibold my-2">
-        By: {blog.author?.name || "Unknown"}
-      </p>
+        {/* Cover Image with better responsiveness and aspect ratio */}
+        <div className="relative mb-8 overflow-hidden rounded-lg shadow-lg aspect-[16/9]">
+          {" "}
+          {/* Aspect ratio */}
+          <img
+            src={blog.image || "https://via.placeholder.com/1200x675"} // Higher res placeholder
+            alt={blog.title}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-      {/* Blog Description */}
-      <p className="text-gray-700 leading-relaxed">
-        <SafeHTML html={blog.description} />
-      </p>
+        {/* Blog Content */}
+        <div className="prose lg:prose-xl max-w-prose mx-auto">
+          {" "}
+          {/* Use prose class for styling */}
+          <SafeHTML html={blog.description} />
+        </div>
+
+        {/* Optional: Social Sharing Icons */}
+        {/* Optional: Related Posts Section */}
+      </div>
     </div>
   );
 };
