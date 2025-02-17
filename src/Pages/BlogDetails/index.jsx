@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { blogAPI } from "../../utils/api";
 import SafeHTML from ".././../components/SafeHTML";
+import { Helmet } from "react-helmet";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -33,8 +34,48 @@ const BlogDetails = () => {
 
   if (!blog) return null; // Handle the case where blog is still null after loading
 
+
+
+
+
+
+  // Function to strip HTML tags from the blog description
+const stripHtmlTags = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+};
+
+// Define Meta Variables
+const metaTitle = blog?.title || "Default Blog Title"; // Fallback title
+const metaDescription = blog?.description
+  ? stripHtmlTags(blog.description).substring(0, 150) + "..."
+  : "Read this amazing blog post!";
+const metaImage = blog?.image || "https://via.placeholder.com/1200x675";
+
   return (
     <div className="bg-white py-12">
+
+
+{/* React Helmet for Facebook Preview */}
+<Helmet>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        
+        {/* Facebook Open Graph Meta Tags */}
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={metaImage} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={metaImage} />
+      </Helmet>
+
       {" "}
       {/* White background and padding */}
       <div className="container mx-auto px-4 md:px-8">
