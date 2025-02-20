@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { blogAPI } from "../../utils/api";
 import SafeHTML from ".././../components/SafeHTML";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const BlogDetails = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -29,58 +30,66 @@ const BlogDetails = () => {
     fetchBlog();
   }, [id]);
 
-  if (loading) return <p className="text-center py-4">Loading...</p>;
-  if (error) return <p className="text-center text-red-500 py-4">{error}</p>;
+  if (loading)
+    return <p className="text-center py-4 text-gray-500 animate-pulse">Loading blog post...</p>;
 
-  if (!blog) return null; // Handle the case where blog is still null after loading
+  if (error)
+    return (
+      <div className="text-center text-red-500 py-4">
+        <p>{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Retry
+        </button>
+      </div>
+    );
+
+  if (!blog) return null;
 
   return (
     <div className="bg-white py-12">
-      {" "}
-      {/* White background and padding */}
-      <div className="container mx-auto px-4 md:px-8">
-        {/* Title */}
-        <h1 className="text-4xl font-bold mb-4 text-gray-800 leading-tight">
-          {blog.title}
-        </h1>
+      {/* Dynamic SEO Metadata */}
+      <Helmet>
+        <title>{blog.title || "Blog Post"} | My Website</title>
+        <meta name="description" content={blog.description || "Read the latest blog post on our site."} />
+        <meta property="og:title" content={blog.title || "Blog Post"} />
+        <meta property="og:description" content={blog.description || "Check out this blog post!"} />
+        <meta property="og:image" content={blog.image || "https://via.placeholder.com/1200x675"} />
+        <meta property="og:url" content={`https://themomento.co.uk${location.pathname}`} />
+      </Helmet>
 
-        {/* Meta Information (Author & Date if available) */}
+      <div className="container mx-auto px-4 md:px-8">
+        <h1 className="text-4xl font-bold mb-4 text-gray-800 leading-tight">{blog.title}</h1>
+
         <div className="flex items-center justify-between mb-6 text-gray-600">
           <div className="flex items-center">
             <span className="mr-2">By:</span>
-            <span className="font-medium">
-              {blog.author?.name || "Unknown"}
-            </span>
+            <span className="font-medium">{blog.author?.name || "Unknown"}</span>
           </div>
-          {/* Add date if available in your API response */}
-          {blog.createdAt && ( // Assuming your API returns a createdAt field
+          {blog.createdAt && (
             <div>
-              {new Date(blog.createdAt).toLocaleDateString()}{" "}
-              {/* Format the date */}
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }).format(new Date(blog.createdAt))}
             </div>
           )}
         </div>
 
-        {/* Cover Image with better responsiveness and aspect ratio */}
         <div className="relative mb-8 overflow-hidden rounded-lg shadow-lg aspect-[16/9]">
-          {" "}
-          {/* Aspect ratio */}
           <img
-            src={blog.image || "https://via.placeholder.com/1200x675"} // Higher res placeholder
+            src={blog.image || "https://via.placeholder.com/1200x675"}
             alt={blog.title}
             className="w-full h-full object-cover"
           />
         </div>
 
-        {/* Blog Content */}
         <div className="prose lg:prose-xl max-w-prose mx-auto">
-          {" "}
-          {/* Use prose class for styling */}
           <SafeHTML html={blog.description} />
         </div>
-
-        {/* Optional: Social Sharing Icons */}
-        {/* Optional: Related Posts Section */}
       </div>
     </div>
   );
