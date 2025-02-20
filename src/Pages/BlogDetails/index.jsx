@@ -54,10 +54,20 @@ const BlogDetails = () => {
       <Helmet>
         <title>{blog.title || "Blog Post"} | My Website</title>
         <meta name="description" content={blog.description || "Read the latest blog post on our site."} />
+
+        {/* Open Graph (Facebook, LinkedIn, etc.) */}
         <meta property="og:title" content={blog.title || "Blog Post"} />
         <meta property="og:description" content={blog.description || "Check out this blog post!"} />
         <meta property="og:image" content={blog.image || "https://via.placeholder.com/1200x675"} />
         <meta property="og:url" content={`https://themomento.co.uk${location.pathname}`} />
+        <meta property="og:type" content="article" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={blog.title || "Blog Post"} />
+        <meta name="twitter:description" content={blog.description || "Check out this blog post!"} />
+        <meta name="twitter:image" content={blog.image || "https://via.placeholder.com/1200x675"} />
+
       </Helmet>
 
       <div className="container mx-auto px-4 md:px-8">
