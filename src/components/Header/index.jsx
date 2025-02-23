@@ -4,7 +4,6 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Badge,
   Avatar,
   Menu,
   MenuItem,
@@ -14,12 +13,8 @@ import {
   Button,
 } from "@mui/material";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { BsCart, BsHeart, BsSearch } from "react-icons/bs";
-import { FiChevronDown } from "react-icons/fi";
-import Search from "../Search";
 import { MyContext } from "../../App";
 import Navigation from "./Navigation";
-import { fetchDataFromApi } from "../../utils/api";
 
 const Header = () => {
   const theme = useTheme();
@@ -45,36 +40,14 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex-grow md:flex-grow-0">
           <img
-            src="https://res.cloudinary.com/db5yniogx/image/upload/t_momentologomain/v1737386751/momentologo1_hssill.jpg"
-            className="h-8 lg:h-10 w-auto"
+            src="https://res.cloudinary.com/dgob9antb/image/upload/v1740274717/momentomainlogo_eyqct2.jpg"
+            className="h-24 lg:h-24 w-auto"
             alt="Logo"
           />
         </Link>
 
-        {/* Desktop Search */}
-        {!isMobile && (
-          <div className="flex-grow max-w-2xl mx-8">
-            <Search />
-          </div>
-        )}
-
-        {/* Action Icons */}
+        {/* User Profile */}
         <div className="flex items-center gap-2 ml-auto">
-          {!isMobile && <BsSearch className="text-xl text-gray-600" />}
-
-          <IconButton color="inherit">
-            <Badge badgeContent={2} color="error">
-              <BsCart className="text-xl text-gray-600" />
-            </Badge>
-          </IconButton>
-
-          <IconButton color="inherit">
-            <Badge badgeContent={1} color="error">
-              <BsHeart className="text-xl text-gray-600" />
-            </Badge>
-          </IconButton>
-
-          {/* User Profile */}
           {context.isLogin ? (
             <>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
@@ -98,7 +71,7 @@ const Header = () => {
                 component={Link}
                 to="/login"
                 color="inherit"
-                className="!hidden md:!inline-flex"
+                className="!hidden md:!inline-flex !capitalize"
               >
                 Login
               </Button>
@@ -106,7 +79,7 @@ const Header = () => {
                 component={Link}
                 to="/register"
                 color="inherit"
-                className="!hidden md:!inline-flex"
+                className="!hidden md:!inline-flex !capitalize"
               >
                 Register
               </Button>
@@ -114,13 +87,6 @@ const Header = () => {
           )}
         </div>
       </Toolbar>
-
-      {/* Mobile Search */}
-      {isMobile && (
-        <div className="px-4 pb-3">
-          <Search />
-        </div>
-      )}
 
       <Navigation />
     </AppBar>

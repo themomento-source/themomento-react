@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { BsCartFill } from "react-icons/bs";
-import { FaRegHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 
@@ -32,13 +30,20 @@ function HomeImageGallery() {
   const handleImageClick = (id) => {
     // Handle left-click logic (e.g., navigate to product details page)
     console.log(`Left-clicked on image with ID: ${id}`);
-    navigate(`/photodetails/${id}`);// Example navigation to a product details page
+    navigate(`/photodetails/${id}`); // Example navigation to a product details page
   };
 
   return (
     <div className="my-10 flex flex-col items-center px-4 sm:px-6 lg:px-8">
-      <h2 className="mb-8 text-4xl font-bold text-gray-900 font-serif">
-        Discover Premium Photography
+      {/* Import Google Fonts */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif&display=swap"
+        rel="stylesheet"
+      />
+
+      {/* Section Title */}
+      <h2 className="mb-8 text-4xl font-bold text-gray-900 font-marcellus">
+        Just-in Gallery
       </h2>
 
       {/* Masonry-style Grid */}
@@ -46,7 +51,7 @@ function HomeImageGallery() {
         {featuredPhotos.map((photo) => (
           <div key={photo._id} className="relative group break-inside-avoid">
             <div
-              className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-zoom-in"
+              className="relative overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-zoom-in"
               onContextMenu={handleContextMenu}
               onClick={() => handleImageClick(photo._id)} // Left-click functionality
             >
@@ -59,27 +64,12 @@ function HomeImageGallery() {
               {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                 <div className="text-white">
-                  <h3 className="text-xl font-bold mb-1">{photo.title}</h3>
-                  <p className="text-sm opacity-90">by {photo.author}</p>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-lg font-semibold">
-                      ${photo.price}
-                    </span>
-                    <div className="flex gap-3">
-                      <button
-                        className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <BsCartFill className="text-xl" />
-                      </button>
-                      <button
-                        className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <FaRegHeart className="text-xl text-red-400" />
-                      </button>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold mb-1 font-marcellus">
+                    {photo.title}
+                  </h3>
+                  <p className="text-sm opacity-90 font-pt-serif">
+                    by {photo.author}
+                  </p>
                 </div>
               </div>
             </div>

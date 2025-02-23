@@ -52,7 +52,7 @@ const BlogDetails = () => {
     <div className="bg-white py-12">
       {/* Dynamic SEO Metadata */}
       <Helmet>
-        <title>{blog.title || "Blog Post"} | My Website</title>
+        <title>{blog.title} | My Website</title>
         <meta name="description" content={blog.description || "Read the latest blog post on our site."} />
 
         {/* Open Graph (Facebook, LinkedIn, etc.) */}

@@ -3,12 +3,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
-
 import { EffectFade, Pagination, Autoplay } from "swiper/modules";
 
 function HomeSlider() {
   return (
     <>
+      {/* Import Google Fonts */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif&display=swap"
+        rel="stylesheet"
+      />
+
       <Swiper
         spaceBetween={30}
         effect={"fade"}
@@ -20,8 +25,6 @@ function HomeSlider() {
         modules={[EffectFade, Pagination, Autoplay]}
         className="mySwiper"
       >
-  
-
         {/* Slide 1 */}
         <SwiperSlide>
           <div className="relative w-full">
@@ -31,18 +34,20 @@ function HomeSlider() {
               className="w-full h-[800px] object-cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Make Money With Your Photos
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 font-marcellus">
+                Make Money With Your Photos
               </h2>
-              <p className="text-lg md:text-xl mb-6">
+              <p className="text-lg md:text-xl mb-6 font-pt-serif">
                 A journey through breathtaking landscapes captured by
                 professionals.
               </p>
               <div className="flex gap-4">
-                <button className="px-6 py-3 bg-gray-800 hover:bg-gray-900 transition rounded-md text-white">
+                <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
+            transition-colors duration-300">
                   Submit Photo
                 </button>
-                <button className="px-6 py-3 bg-gray-800 hover:bg-gray-900 transition rounded-md text-white">
+                <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
+            transition-colors duration-300">
                   Blog
                 </button>
               </div>
@@ -59,17 +64,19 @@ function HomeSlider() {
               className="w-full h-[800px] object-cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 font-marcellus">
                 Explore the Urban Jungle
               </h2>
-              <p className="text-lg md:text-xl mb-6">
+              <p className="text-lg md:text-xl mb-6 font-pt-serif">
                 A collection of stunning cityscapes capturing modern life.
               </p>
               <div className="flex gap-4">
-                <button className="px-6 py-3 bg-gray-800 hover:bg-gray-900 transition rounded-md text-white">
+                <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
+            transition-colors duration-300">
                   Submit Photo
                 </button>
-                <button className="px-6 py-3 bg-gray-800 hover:bg-gray-900 transition rounded-md text-white">
+                <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
+            transition-colors duration-300">
                   Blog
                 </button>
               </div>

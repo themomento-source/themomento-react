@@ -35,10 +35,10 @@ const Navigation = () => {
 
   const mainMenuItems = [
     { name: "Home", path: "/" },
-    { name: "Nature & Landscape", path: "/nature", hasSubmenu: true },
-    { name: "People", path: "/people" },
-    { name: "Tribal Heritage", path: "/tribal" },
-    { name: "Architecture", path: "/architecture" },
+    { name: "Photographer's Gallery", path: "/gallery", hasSubmenu: true },
+    { name: "Event", path: "/Event" },
+    { name: "About", path: "/about" },
+    { name: "Become a Member", path: "/become-member" },
     { name: "Festivals", path: "/festivals" },
   ];
 

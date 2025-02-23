@@ -1,20 +1,25 @@
 import React from "react";
 import HomeSlider from "../../components/HomeSlider";
-import HomeCatSlider from "../../components/HomeCatSlider";
+
 import HomeImageGallery from "../../components/HomeImageGallery";
 import HomeBlogSection from "../../components/HomeBlogSection";
-import Footer from "../../components/Footer";
+
+import PhotoOfTheDay from "../../components/PhotoOfTheDay";
+import BecomeMemberPromo from "../../components/PromotionBecomeAMember";
+import CreateGalleryPromo from "../../components/PromotionCreateGallerry";
+import EventsSection from "../../components/EventSectionHomepage";
 
 function Home() {
   return (
     <>
       <HomeSlider />
-      <br />
+
       {/* <HomeCatSlider /> */}
-
+      <PhotoOfTheDay />
+      <BecomeMemberPromo />
+      <CreateGalleryPromo />
+      <EventsSection />
       <HomeImageGallery />
-
-      <HomeBlogSection />
 
       <br />
       <br />

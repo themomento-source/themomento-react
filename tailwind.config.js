@@ -6,15 +6,17 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        marcellus: ["Marcellus", "serif"], // Fixed syntax here
+        "pt-serif": ["PT Serif", "serif"],
+      },
       colors: {
-        primary: '#ff5252'
-      }, 
+        primary: "#FFCB00",
+      },
       backgroundColor: {
-        primary: '#ff5252'
-      }
-
+        primary: "#FFCB00",
+      },
     },
   },
   plugins: [],
-}
-
+};
