@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { MyContext } from "../../App";
 import { editData } from "../../utils/api";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Settings = () => {
   const { userData, setUserData, openAlertBox } = useContext(MyContext);
@@ -43,6 +45,10 @@ const Settings = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleQuillChange = (value) => {
+    setFormData({ ...formData, about: value });
   };
 
   const handleSubmit = async (e) => {
@@ -105,16 +111,23 @@ const Settings = () => {
             variant="outlined"
           />
 
-          <TextField
-            fullWidth
-            label="About You"
-            name="about"
-            multiline
-            rows={12}
+          <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
+            About You
+          </Typography>
+          <ReactQuill
+            theme="snow"
             value={formData.about}
-            onChange={handleChange}
-            margin="normal"
-            variant="outlined"
+            onChange={handleQuillChange}
+            modules={{
+              toolbar: [
+                [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                [{size: []}],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                ['link', 'image', 'video'],
+                ['clean']
+              ],
+            }}
           />
 
           <TextField

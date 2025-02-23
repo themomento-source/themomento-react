@@ -24,6 +24,7 @@ import {
 import { MyContext } from "../../App.jsx";
 import { useNavigate } from "react-router-dom";
 import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
+import EventsSection from "../../components/EventSectionHomepage/index.jsx";
 
 function MyAccount() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -493,6 +494,11 @@ function MyAccount() {
               )}
             </CardContent>
           </Card>
+
+          {/* Add EventsSection Here */}
+          <div className="mt-12">
+            <EventsSection />
+          </div>
         </main>
       </div>
     </section>
