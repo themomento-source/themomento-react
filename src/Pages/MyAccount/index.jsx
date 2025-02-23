@@ -40,6 +40,13 @@ function MyAccount() {
     description: "",
     file: "",
   });
+  const [photoOfTheDayData, setPhotoOfTheDayData] = useState({
+    title: "",
+    description: "",
+    file: "",
+  });
+  const [isSubmittingPhotoOfTheDay, setIsSubmittingPhotoOfTheDay] =
+    useState(false);
   const navigate = useNavigate();
 
   const stats = [
@@ -88,9 +95,21 @@ function MyAccount() {
     });
   };
 
+  const handlePhotoOfTheDayChange = (e) => {
+    setPhotoOfTheDayData({
+      ...photoOfTheDayData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     setSubmissionData((prev) => ({ ...prev, file })); // Directly set the single file
+  };
+
+  const handlePhotoOfTheDayFileSelect = (e) => {
+    const file = e.target.files[0];
+    setPhotoOfTheDayData((prev) => ({ ...prev, file })); // Directly set the single file
   };
 
   const handlePhotoSubmission = async (e) => {
@@ -117,6 +136,35 @@ function MyAccount() {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handlePhotoOfTheDaySubmission = async (e) => {
+    e.preventDefault();
+    setIsSubmittingPhotoOfTheDay(true);
+    try {
+      const formData = new FormData();
+      formData.append("title", photoOfTheDayData.title);
+      formData.append("description", photoOfTheDayData.description);
+      formData.append("image", photoOfTheDayData.file); // Append the single file
+
+      const response = await uploadPhoto(
+        "/api/dayphoto/upload",
+        formData
+      );
+
+      if (response?.submission) {
+        openAlertBox("success", "Photo submitted for Photo of the Day!");
+        setPhotoOfTheDayData({ title: "", description: "", file: null }); // Reset file
+      }
+    } catch (error) {
+      console.error("Photo of the Day submission error:", error);
+      openAlertBox(
+        "error",
+        error.response?.data?.message || "Submission failed"
+      );
+    } finally {
+      setIsSubmittingPhotoOfTheDay(false);
     }
   };
 
@@ -306,7 +354,11 @@ function MyAccount() {
               {activeTab === "submissions" && (
                 <div>
                   <Grid container spacing={4} className="mt-8">
+                    {/* Submit Photo for Sale */}
                     <Grid item xs={12}>
+                      <Typography variant="h6" className="mb-4">
+                        Submit Photo for Sale
+                      </Typography>
                       <form onSubmit={handlePhotoSubmission}>
                         <TextField
                           fullWidth
@@ -382,6 +434,89 @@ function MyAccount() {
                         </Typography>
                       </form>
                     </Grid>
+
+                    {/* Submit Photo for Photo of the Day */}
+                    <Grid item xs={12}>
+                      <Typography variant="h6" className="mb-4">
+                        Submit Photo for Photo of the Day
+                      </Typography>
+                      <form onSubmit={handlePhotoOfTheDaySubmission}>
+                        <TextField
+                          fullWidth
+                          label="Photo Title"
+                          name="title"
+                          value={photoOfTheDayData.title}
+                          onChange={handlePhotoOfTheDayChange}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                        />
+                        <TextField
+                          fullWidth
+                          label="Description"
+                          name="description"
+                          multiline
+                          rows={3}
+                          value={photoOfTheDayData.description}
+                          onChange={handlePhotoOfTheDayChange}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                        />
+                        <div className="flex items-center gap-4 mt-4">
+                          <input
+                            type="file"
+                            onChange={handlePhotoOfTheDayFileSelect}
+                            className="hidden"
+                            id="photoOfTheDaySubmission"
+                            accept="image/*"
+                            required
+                          />
+                          <label htmlFor="photoOfTheDaySubmission">
+                            <Button
+                              variant="outlined"
+                              startIcon={<MdCloudUpload />}
+                              component="span"
+                            >
+                              Select Photo
+                            </Button>
+                          </label>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            startIcon={<MdCloudUpload />}
+                            disabled={
+                              isSubmittingPhotoOfTheDay ||
+                              !photoOfTheDayData.title ||
+                              !photoOfTheDayData.description ||
+                              !photoOfTheDayData.file
+                            }
+                          >
+                            {isSubmittingPhotoOfTheDay ? (
+                              <CircularProgress size={24} />
+                            ) : (
+                              "Submit"
+                            )}
+                          </Button>
+                        </div>
+                        {photoOfTheDayData.file && (
+                          <div className="mt-2">
+                            <Typography variant="body2" color="text.secondary">
+                              Selected file: {photoOfTheDayData.file.name}
+                            </Typography>
+                          </div>
+                        )}
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          className="mt-2"
+                        >
+                          Only 1 photo per submission
+                        </Typography>
+                      </form>
+                    </Grid>
+
+                    {/* Display Submissions */}
                     <Grid item xs={12}>
                       {loadingSubmissions ? (
                         <div className="text-center">
