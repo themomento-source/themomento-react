@@ -41,7 +41,7 @@ const Header = () => {
         <Link to="/" className="flex-grow md:flex-grow-0">
           <img
             src="https://res.cloudinary.com/dgob9antb/image/upload/v1740274717/momentomainlogo_eyqct2.jpg"
-            className="h-24 lg:h-24 w-auto"
+            className="h-14 lg:h-18 w-auto"
             alt="Logo"
           />
         </Link>
