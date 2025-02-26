@@ -39,7 +39,6 @@ const Navigation = () => {
     { name: "Event", path: "/Event" },
     { name: "About", path: "/about" },
     { name: "Become a Member", path: "/become-member" },
-    { name: "Festivals", path: "/festivals" },
   ];
 
   const mobileMenuItems = [

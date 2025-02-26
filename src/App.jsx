@@ -33,7 +33,7 @@ const ProtectedRoute = ({ children }) => {
   const { isLogin, isLoading } = useContext(MyContext);
 
   if (isLoading) {
-    return <div className="text-center py-4">Loading...</div>; // Improved loading UI
+    return <div className="text-center py-4">Loading...</div>; 
   }
 
   if (!isLogin) {
