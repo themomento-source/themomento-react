@@ -81,8 +81,10 @@ function Login() {
           localStorage.setItem("refreshToken", response.data.refreshToken);
 
           context.setIsLogin(true);
+          
 
           navigate("/");
+          window.location.reload()
         } else {
           console.error("Tokens missing in response:", response);
         }

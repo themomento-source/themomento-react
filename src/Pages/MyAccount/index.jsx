@@ -11,7 +11,7 @@ import {
   Box,
   TextField,
   Link,
-  Grid,
+  Grid2,
 } from "@mui/material";
 import {
   MdDashboard,
@@ -148,10 +148,7 @@ function MyAccount() {
       formData.append("description", photoOfTheDayData.description);
       formData.append("image", photoOfTheDayData.file); // Append the single file
 
-      const response = await uploadPhoto(
-        "/api/dayphoto/upload",
-        formData
-      );
+      const response = await uploadPhoto("/api/dayphoto/upload", formData);
 
       if (response?.submission) {
         openAlertBox("success", "Photo submitted for Photo of the Day!");
@@ -175,9 +172,9 @@ function MyAccount() {
         const response = await fetchDataFromApi("/api/user/my-submissions");
         console.log("API Response:", response);
 
-        // Changed from response.data.submissions to response.submissions
         if (response?.submissions) {
           setUserSubmissions(response.submissions);
+          
         } else {
           console.error("Submissions data not found in response:", response);
           setUserSubmissions([]);
@@ -320,9 +317,9 @@ function MyAccount() {
         {/* Main Content */}
         <main className="flex-1">
           {/* Stats Cards */}
-          <Grid container spacing={4} className="mb-8">
+          <Grid2 container spacing={4} className="mb-8">
             {stats.map((stat, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid2 item xs={12} sm={6} md={3} key={index}>
                 <Card className="shadow-sm border border-gray-200 flex flex-col">
                   <CardContent className="p-3 bg-blue-50 rounded-lg text-blue-600 flex justify-center items-center">
                     {stat.icon}
@@ -336,9 +333,9 @@ function MyAccount() {
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
 
           {/* Content Tabs */}
           <Card className="shadow-sm border border-gray-200">
@@ -353,9 +350,9 @@ function MyAccount() {
             <CardContent className="p-6">
               {activeTab === "submissions" && (
                 <div>
-                  <Grid container spacing={4} className="mt-8">
+                  <Grid2 container spacing={4} className="mt-8">
                     {/* Submit Photo for Sale */}
-                    <Grid item xs={12}>
+                    <Grid2 item xs={12}>
                       <Typography variant="h6" className="mb-4">
                         Submit Photo for Sale
                       </Typography>
@@ -433,10 +430,10 @@ function MyAccount() {
                           Only 1 photo per submission
                         </Typography>
                       </form>
-                    </Grid>
+                    </Grid2>
 
                     {/* Submit Photo for Photo of the Day */}
-                    <Grid item xs={12}>
+                    <Grid2 item xs={12}>
                       <Typography variant="h6" className="mb-4">
                         Submit Photo for Photo of the Day
                       </Typography>
@@ -514,10 +511,10 @@ function MyAccount() {
                           Only 1 photo per submission
                         </Typography>
                       </form>
-                    </Grid>
+                    </Grid2>
 
                     {/* Display Submissions */}
-                    <Grid item xs={12}>
+                    <Grid2 item xs={12}>
                       {loadingSubmissions ? (
                         <div className="text-center">
                           <CircularProgress />
@@ -530,9 +527,9 @@ function MyAccount() {
                           </Typography>
                         </div>
                       ) : userSubmissions?.length > 0 ? (
-                        <Grid container spacing={4}>
+                        <Grid2 container spacing={4}>
                           {userSubmissions.map((submission) => (
-                            <Grid
+                            <Grid2
                               item
                               xs={12}
                               sm={6}
@@ -605,9 +602,9 @@ function MyAccount() {
                                   </div>
                                 </CardContent>
                               </Card>
-                            </Grid>
+                            </Grid2>
                           ))}
-                        </Grid>
+                        </Grid2>
                       ) : (
                         <div className="text-center p-8">
                           <Typography variant="h6" color="text.secondary">
@@ -615,8 +612,8 @@ function MyAccount() {
                           </Typography>
                         </div>
                       )}
-                    </Grid>
-                  </Grid>
+                    </Grid2>
+                  </Grid2>
                 </div>
               )}
 

@@ -59,6 +59,7 @@ const Header = () => {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem component={Link} to="/my-account">
+                
                   My Account
                 </MenuItem>
                 <Divider />
