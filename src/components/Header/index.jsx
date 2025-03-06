@@ -30,7 +30,7 @@ const Header = () => {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={context?.toggleMobileMenu}
+            onClick={() => setIsOpenCatPanel(true)} // Open category panel instead
             className="!mr-2"
           >
             <GiHamburgerMenu />

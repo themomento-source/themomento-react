@@ -3,35 +3,22 @@ import { Link } from "react-router-dom";
 import {
   Box,
   Button,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Divider,
-  IconButton,
   useMediaQuery,
   useTheme,
+  IconButton,
 } from "@mui/material";
 import { BsPerson } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { TfiAngleDown } from "react-icons/tfi";
-import { MdClose } from "react-icons/md";
 import { BsCamera, BsGrid, BsNewspaper } from "react-icons/bs";
-import CategoryPanel from "./CategoryPanel";
-import "../Navigation/style.css";
+
 import { MyContext } from "../../../App";
+import "../Navigation/style.css";
 
 const Navigation = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const context = useContext(MyContext);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const mainMenuItems = [
     { name: "Home", path: "/" },
@@ -42,70 +29,11 @@ const Navigation = () => {
   ];
 
   const mobileMenuItems = [
-    { name: "Menu", icon: <GiHamburgerMenu />, action: handleDrawerToggle },
-    {
-      name: "Categories",
-      icon: <BsGrid />,
-      action: () => setIsOpenCatPanel(true),
-    },
+  
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
     { name: "Blog", icon: <BsNewspaper />, path: "/bloglisting" },
     { name: "Account", icon: <BsPerson />, path: "/login" },
   ];
-
-  const drawerContent = (
-    <Box sx={{ width: 280 }} role="presentation">
-      <div className="flex items-center justify-between p-4">
-        <h3 className="text-xl font-bold">Menu</h3>
-        <IconButton onClick={handleDrawerToggle}>
-          <MdClose className="text-2xl" />
-        </IconButton>
-      </div>
-      <Divider />
-      <List>
-        {mainMenuItems.map((item) => (
-          <ListItem key={item.name} disablePadding>
-            <ListItemButton
-              component={Link}
-              to={item.path}
-              onClick={handleDrawerToggle}
-              sx={{
-                "&:hover": { backgroundColor: "rgba(255,82,82,0.1)" },
-              }}
-            >
-              <ListItemText
-                primary={item.name}
-                primaryTypographyProps={{ fontWeight: 500 }}
-              />
-              {item.hasSubmenu && <TfiAngleDown className="ml-auto" />}
-            </ListItemButton>
-          </ListItem>
-        ))}
-        {!context.isLogin && (
-          <>
-            <ListItem disablePadding>
-              <ListItemButton
-                component={Link}
-                to="/login"
-                onClick={handleDrawerToggle}
-              >
-                <ListItemText primary="Login" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton
-                component={Link}
-                to="/register"
-                onClick={handleDrawerToggle}
-              >
-                <ListItemText primary="Register" />
-              </ListItemButton>
-            </ListItem>
-          </>
-        )}
-      </List>
-    </Box>
-  );
 
   return (
     <>
@@ -113,14 +41,7 @@ const Navigation = () => {
       <nav className="hidden md:block py-2 bg-white shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <Button
-              onClick={() => setIsOpenCatPanel(true)}
-              className="!text-gray-700 !capitalize hover:!bg-gray-50 !px-4 !py-2"
-              startIcon={<GiHamburgerMenu />}
-              endIcon={<TfiAngleDown />}
-            >
-              Categories
-            </Button>
+           
 
             <div className="flex-1 flex justify-center">
               <ul className="flex items-center gap-4">
@@ -184,26 +105,8 @@ const Navigation = () => {
         </div>
       )}
 
-      {/* Mobile Drawer */}
-      <Drawer
-        anchor="left"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: 280,
-            boxSizing: "border-box",
-          },
-        }}
-      >
-        {drawerContent}
-      </Drawer>
-
-      <CategoryPanel
-        isOpenCatPanel={isOpenCatPanel}
-        setIsOpenCatPanel={setIsOpenCatPanel}
-      />
+      {/* Category Panel */}
+      
     </>
   );
 };

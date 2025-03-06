@@ -35,12 +35,12 @@ function HomeSlider() {
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
               <h2 className="text-3xl md:text-5xl font-bold mb-4 font-marcellus">
-                Make Money With Your Photos
+              Your Daily Shot of Inspiration: Submit Now for Today's Best Click!
               </h2>
-              <p className="text-lg md:text-xl mb-6 font-pt-serif">
+              {/* <p className="text-lg md:text-xl mb-6 font-pt-serif">
                 A journey through breathtaking landscapes captured by
                 professionals.
-              </p>
+              </p> */}
               <div className="flex gap-4">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
@@ -65,10 +65,10 @@ function HomeSlider() {
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
               <h2 className="text-3xl md:text-5xl font-bold mb-4 font-marcellus">
-                Explore the Urban Jungle
+              Elevate Your Photography Journey: Join Momento Now!
               </h2>
               <p className="text-lg md:text-xl mb-6 font-pt-serif">
-                A collection of stunning cityscapes capturing modern life.
+            
               </p>
               <div className="flex gap-4">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 

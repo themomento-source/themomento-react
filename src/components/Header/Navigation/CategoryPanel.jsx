@@ -1,10 +1,8 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import { MdOutlineClose } from "react-icons/md";  // React Icon instead of MUI
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { MdOutlineClose } from "react-icons/md"; // React Icon instead of MUI
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { Box, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -20,12 +18,19 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
     },
   ];
 
-  const drawerContent = (
+  if (!isOpenCatPanel) return null; // Don't render if the panel is closed
+
+  return (
     <Box
       sx={{
-        width: isMobile ? "100vw" : 320,
-        height: "100%",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: isMobile ? "100vw" : "320px",
+        height: isMobile ? "70vh" : "100vh",
         bgcolor: "background.paper",
+        zIndex: 1300, // Ensure it appears above other content
+        boxShadow: 3, // Add shadow for better visibility
       }}
     >
       {/* Header */}
@@ -83,23 +88,6 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
         ))}
       </div>
     </Box>
-  );
-
-  return (
-    <Drawer
-      anchor={isMobile ? "bottom" : "left"}
-      open={isOpenCatPanel}
-      onClose={() => setIsOpenCatPanel(false)}
-      ModalProps={{ keepMounted: true }}
-      sx={{
-        "& .MuiDrawer-paper": {
-          height: isMobile ? "70vh" : "100%",
-          overflow: "visible",
-        },
-      }}
-    >
-      {drawerContent}
-    </Drawer>
   );
 };
 
