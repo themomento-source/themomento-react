@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   AppBar,
   Toolbar,
@@ -21,6 +21,13 @@ const Header = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [anchorEl, setAnchorEl] = useState(null);
   const context = useContext(MyContext);
+  const navigate = useNavigate(); // Use the useNavigate hook
+
+  // Function to handle My Account click
+  const handleMyAccountClick = () => {
+    navigate("/my-account"); // Navigate to the My Account page
+    window.location.reload(); // Reload the page
+  };
 
   return (
     <AppBar position="sticky" color="inherit" elevation={1}>
@@ -58,7 +65,7 @@ const Header = () => {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
               >
-                <MenuItem component={Link} to="/my-account">
+                <MenuItem onClick={handleMyAccountClick}> {/* Use onClick instead of component */}
                   My Account
                 </MenuItem>
                 <Divider />

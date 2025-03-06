@@ -7,7 +7,7 @@ import HomeBlogSection from "../../components/HomeBlogSection";
 import PhotoOfTheDay from "../../components/PhotoOfTheDay";
 import BecomeMemberPromo from "../../components/PromotionBecomeAMember";
 import CreateGalleryPromo from "../../components/PromotionCreateGallerry";
-import EventsSection from "../../components/EventSectionHomepage";
+// import EventsSection from "../../components/EventSectionHomepage";
 
 function Home() {
   return (
@@ -18,7 +18,7 @@ function Home() {
       <PhotoOfTheDay />
       <BecomeMemberPromo />
       <CreateGalleryPromo />
-      <EventsSection />
+      {/* <EventsSection /> */}
       <HomeImageGallery />
 
       <br />

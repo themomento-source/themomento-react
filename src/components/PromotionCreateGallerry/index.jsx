@@ -120,7 +120,7 @@ const CreateGalleryPromo = () => {
           <Link
             to="/register"
             className="inline-block px-8 py-3 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
-            transition-colors duration-300 rounded-lg"
+            transition-colors duration-300"
           >
             Join Now
           </Link>

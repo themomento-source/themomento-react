@@ -12,6 +12,9 @@ import {
   TextField,
   Link,
   Grid2,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import {
   MdDashboard,
@@ -20,6 +23,7 @@ import {
   MdPhotoLibrary,
   MdShoppingBag,
   MdCloudUpload,
+  MdExpandMore,
 } from "react-icons/md";
 import { MyContext } from "../../App.jsx";
 import { useNavigate } from "react-router-dom";
@@ -48,13 +52,6 @@ function MyAccount() {
   const [isSubmittingPhotoOfTheDay, setIsSubmittingPhotoOfTheDay] =
     useState(false);
   const navigate = useNavigate();
-
-  const stats = [
-    { title: "Total Sales", value: "$1,240", icon: <MdShoppingBag /> },
-    { title: "Total Earnings", value: "$620", icon: <MdPhotoLibrary /> },
-    { title: "Purchases", value: "24 Photos", icon: <MdCloudUpload /> },
-    { title: "Wallet Balance", value: "$150", icon: <MdCloudUpload /> },
-  ];
 
   const handleAvatarUpload = async (e) => {
     try {
@@ -174,7 +171,6 @@ function MyAccount() {
 
         if (response?.submissions) {
           setUserSubmissions(response.submissions);
-          
         } else {
           console.error("Submissions data not found in response:", response);
           setUserSubmissions([]);
@@ -316,27 +312,6 @@ function MyAccount() {
 
         {/* Main Content */}
         <main className="flex-1">
-          {/* Stats Cards */}
-          <Grid2 container spacing={4} className="mb-8">
-            {stats.map((stat, index) => (
-              <Grid2 item xs={12} sm={6} md={3} key={index}>
-                <Card className="shadow-sm border border-gray-200 flex flex-col">
-                  <CardContent className="p-3 bg-blue-50 rounded-lg text-blue-600 flex justify-center items-center">
-                    {stat.icon}
-                  </CardContent>
-                  <CardContent>
-                    <Typography variant="body2" className="text-gray-600">
-                      {stat.title}
-                    </Typography>
-                    <Typography variant="h6" className="font-semibold">
-                      {stat.value}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid2>
-            ))}
-          </Grid2>
-
           {/* Content Tabs */}
           <Card className="shadow-sm border border-gray-200">
             <Tabs
@@ -434,84 +409,184 @@ function MyAccount() {
 
                     {/* Submit Photo for Photo of the Day */}
                     <Grid2 item xs={12}>
-                      <Typography variant="h6" className="mb-4">
-                        Submit Photo for Photo of the Day
-                      </Typography>
-                      <form onSubmit={handlePhotoOfTheDaySubmission}>
-                        <TextField
-                          fullWidth
-                          label="Photo Title"
-                          name="title"
-                          value={photoOfTheDayData.title}
-                          onChange={handlePhotoOfTheDayChange}
-                          variant="outlined"
-                          margin="normal"
-                          required
-                        />
-                        <TextField
-                          fullWidth
-                          label="Description"
-                          name="description"
-                          multiline
-                          rows={3}
-                          value={photoOfTheDayData.description}
-                          onChange={handlePhotoOfTheDayChange}
-                          variant="outlined"
-                          margin="normal"
-                          required
-                        />
-                        <div className="flex items-center gap-4 mt-4">
-                          <input
-                            type="file"
-                            onChange={handlePhotoOfTheDayFileSelect}
-                            className="hidden"
-                            id="photoOfTheDaySubmission"
-                            accept="image/*"
-                            required
-                          />
-                          <label htmlFor="photoOfTheDaySubmission">
-                            <Button
-                              variant="outlined"
-                              startIcon={<MdCloudUpload />}
-                              component="span"
-                            >
-                              Select Photo
-                            </Button>
-                          </label>
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            startIcon={<MdCloudUpload />}
-                            disabled={
-                              isSubmittingPhotoOfTheDay ||
-                              !photoOfTheDayData.title ||
-                              !photoOfTheDayData.description ||
-                              !photoOfTheDayData.file
-                            }
-                          >
-                            {isSubmittingPhotoOfTheDay ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              "Submit"
-                            )}
-                          </Button>
-                        </div>
-                        {photoOfTheDayData.file && (
-                          <div className="mt-2">
-                            <Typography variant="body2" color="text.secondary">
-                              Selected file: {photoOfTheDayData.file.name}
-                            </Typography>
-                          </div>
-                        )}
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          className="mt-2"
-                        >
-                          Only 1 photo per submission
-                        </Typography>
-                      </form>
-                    </Grid2>
+  <Typography variant="h6" className="mb-4">
+    Submit Photo for Photo of the Day
+  </Typography>
+  <Accordion className="mb-4">
+    <AccordionSummary
+      expandIcon={<MdExpandMore />}
+      aria-controls="photo-of-the-day-rules"
+      id="photo-of-the-day-rules-header"
+      sx={{
+        backgroundColor: "#FFCB00", // Yellow background
+        color: "#000", // Black text
+        "&:hover": {
+          backgroundColor: "#e6b800", // Darker yellow on hover
+        },
+      }}
+    >
+      <Typography variant="subtitle1">
+        How It Works & Submission Rules
+      </Typography>
+    </AccordionSummary>
+    <AccordionDetails>
+      <Typography variant="body2" className="mb-4">
+        Today's Best Click is where creativity takes center stage! Every day, we
+        spotlight one extraordinary photo that captures a moment, a feeling, or a
+        story that stands out. From breathtaking landscapes to intimate
+        snapshots, each featured photo is a testament to the power of daily
+        practice and the beauty found in the world around us. We believe that
+        every click has the potential to inspire. So, whether you're a seasoned
+        pro or just starting out, share your shots with us—your next photo might
+        be the one that becomes Today's Best Click!
+      </Typography>
+      <Typography variant="body2" className="mb-4">
+        <strong>Submit Your Today’s Best Click:</strong> How It Works
+      </Typography>
+      <ol className="list-decimal pl-6">
+        <li>
+          <strong>One Photo Per Day:</strong> You can submit up to three photos
+          per day, with each photo taken within the current week (Monday to
+          Sunday). The photo must be an original, captured during the week you
+          submit it, showcasing your unique perspective and creative vision.
+        </li>
+        <li>
+          <strong>High-Quality Image:</strong> Your photo should have a minimum
+          resolution of 2500px on the longest side. We recommend submitting in
+          JPEG or PNG format.
+        </li>
+        <li>
+          <strong>No Watermarks, Logos, or Frames:</strong> To keep the focus on
+          your photography, please avoid adding watermarks, logos, or frames to
+          your image. Your photo should be as natural as possible, ready for
+          display.
+        </li>
+        <li>
+          <strong>Keep Edits Simple:</strong> We encourage you to capture your
+          photos in-camera without relying heavily on post-editing. Extreme
+          edits, heavy filters, or drastic alterations will not be accepted. You
+          can make basic edits (such as adjusting brightness, contrast, or
+          cropping) to enhance your photo, but try to keep the image true to what
+          you captured.
+        </li>
+        <li>
+          <strong>Tell Your Story:</strong> When submitting your photo, include a
+          brief description. Why did you take the photo? When and where did you
+          capture the moment? How did you take the shot? This helps our reviewers
+          select the best submissions and allows your story to shine through.
+        </li>
+        <li>
+          <strong>Respectful Content:</strong> We strive to maintain a positive,
+          inclusive space. Please ensure your photo is respectful and appropriate
+          for all audiences.
+        </li>
+        <li>
+          <strong>Feature on Our Social Media:</strong> By submitting your photo
+          weekly, you could be featured as Today's Best Click on our website and
+          social media channels! We review all submissions and select the
+          standout shots to showcase.
+        </li>
+        <li>
+          <strong>Create Your Own Gallery:</strong> With each photo you submit,
+          you’ll build your personal gallery on our website. Over time, you’ll be
+          able to look back and see how your skills have evolved through daily
+          practice.
+        </li>
+        <li>
+          <strong>Engage with the Community:</strong> Feel free to comment, like,
+          and interact with other photographers. Sharing experiences, providing
+          feedback, and engaging with the community is an inspiring part of this
+          journey.
+        </li>
+        <li>
+          <strong>Use #momento_bestclick:</strong> Want to increase your chances
+          of being noticed? Use the hashtag #momento_bestclick on social media
+          and tag us to get featured on our platforms!
+        </li>
+      </ol>
+      <Typography variant="body2" className="mt-4">
+        By practicing daily and submitting your photos, you’ll not only improve
+        your craft but also be part of a creative and supportive community.
+        Capture your moments authentically, submit your photos, and see how your
+        skills grow!
+      </Typography>
+    </AccordionDetails>
+  </Accordion>
+  <form onSubmit={handlePhotoOfTheDaySubmission}>
+    <TextField
+      fullWidth
+      label="Photo Title"
+      name="title"
+      value={photoOfTheDayData.title}
+      onChange={handlePhotoOfTheDayChange}
+      variant="outlined"
+      margin="normal"
+      required
+    />
+    <TextField
+      fullWidth
+      label="Description"
+      name="description"
+      multiline
+      rows={3}
+      value={photoOfTheDayData.description}
+      onChange={handlePhotoOfTheDayChange}
+      variant="outlined"
+      margin="normal"
+      required
+    />
+    <div className="flex items-center gap-4 mt-4">
+      <input
+        type="file"
+        onChange={handlePhotoOfTheDayFileSelect}
+        className="hidden"
+        id="photoOfTheDaySubmission"
+        accept="image/*"
+        required
+      />
+      <label htmlFor="photoOfTheDaySubmission">
+        <Button
+          variant="outlined"
+          startIcon={<MdCloudUpload />}
+          component="span"
+        >
+          Select Photo
+        </Button>
+      </label>
+      <Button
+        type="submit"
+        variant="contained"
+        startIcon={<MdCloudUpload />}
+        disabled={
+          isSubmittingPhotoOfTheDay ||
+          !photoOfTheDayData.title ||
+          !photoOfTheDayData.description ||
+          !photoOfTheDayData.file
+        }
+      >
+        {isSubmittingPhotoOfTheDay ? (
+          <CircularProgress size={24} />
+        ) : (
+          "Submit"
+        )}
+      </Button>
+    </div>
+    {photoOfTheDayData.file && (
+      <div className="mt-2">
+        <Typography variant="body2" color="text.secondary">
+          Selected file: {photoOfTheDayData.file.name}
+        </Typography>
+      </div>
+    )}
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      className="mt-2"
+    >
+      Only 1 photo per submission
+    </Typography>
+  </form>
+</Grid2>
 
                     {/* Display Submissions */}
                     <Grid2 item xs={12}>
@@ -626,11 +701,6 @@ function MyAccount() {
               )}
             </CardContent>
           </Card>
-
-          {/* Add EventsSection Here */}
-          <div className="mt-12">
-            <EventsSection />
-          </div>
         </main>
       </div>
     </section>

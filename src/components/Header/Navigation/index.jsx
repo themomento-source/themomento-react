@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   Box,
   Button,
@@ -19,6 +19,7 @@ const Navigation = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
   const context = useContext(MyContext);
+  const navigate = useNavigate(); // Use the useNavigate hook
 
   const mainMenuItems = [
     { name: "Home", path: "/" },
@@ -29,11 +30,16 @@ const Navigation = () => {
   ];
 
   const mobileMenuItems = [
-  
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
     { name: "Blog", icon: <BsNewspaper />, path: "/bloglisting" },
     { name: "Account", icon: <BsPerson />, path: "/login" },
   ];
+
+  // Function to handle Home button click
+  const handleHomeClick = () => {
+    navigate("/"); // Navigate to the home page
+    window.location.reload(); // Reload the page
+  };
 
   return (
     <>
@@ -41,19 +47,28 @@ const Navigation = () => {
       <nav className="hidden md:block py-2 bg-white shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-           
-
             <div className="flex-1 flex justify-center">
               <ul className="flex items-center gap-4">
                 {mainMenuItems.map((item) => (
                   <li key={item.name} className="relative group">
-                    <Button
-                      component={Link}
-                      to={item.path}
-                      className="!text-gray-700 !capitalize hover:!text-red-500"
-                    >
-                      {item.name}
-                    </Button>
+                    {item.name === "Home" ? (
+                      // Use a Button with onClick for Home
+                      <Button
+                        onClick={handleHomeClick}
+                        className="!text-gray-700 !capitalize hover:!text-red-500"
+                      >
+                        {item.name}
+                      </Button>
+                    ) : (
+                      // Use Link for other buttons
+                      <Button
+                        component={Link}
+                        to={item.path}
+                        className="!text-gray-700 !capitalize hover:!text-red-500"
+                      >
+                        {item.name}
+                      </Button>
+                    )}
                     {item.hasSubmenu && (
                       <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-white shadow-lg rounded-lg py-2">
                         {/* Submenu items */}
@@ -104,9 +119,6 @@ const Navigation = () => {
           </div>
         </div>
       )}
-
-      {/* Category Panel */}
-      
     </>
   );
 };
