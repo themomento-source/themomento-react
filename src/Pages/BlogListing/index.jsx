@@ -52,7 +52,7 @@ function BlogListing() {
       {/* Hero Section */}
       <div className="bg-white shadow-md py-10 text-center">
         <Typography variant="h3" className="text-gray-800 font-bold">
-          Blog & Articles
+          Community
         </Typography>
         <Breadcrumbs
           aria-label="breadcrumb"

@@ -31,7 +31,7 @@ const Navigation = () => {
 
   const mobileMenuItems = [
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
-    { name: "Blog", icon: <BsNewspaper />, path: "/bloglisting" },
+    { name: "Community", icon: <BsNewspaper />, path: "/bloglisting" },
     { name: "Account", icon: <BsPerson />, path: "/login" },
   ];
 
@@ -85,7 +85,7 @@ const Navigation = () => {
                 to="/bloglisting"
                 className="!text-gray-700 !capitalize hover:!text-red-500"
               >
-                Blog
+                Community
               </Button>
               <Button
                 component={Link}

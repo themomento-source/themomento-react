@@ -29,6 +29,12 @@ const Header = () => {
     window.location.reload(); // Reload the page
   };
 
+  const handleLogoClick = () => {
+    navigate("/"); // Navigate to the home page
+    window.location.reload(); // Reload the page
+  };
+
+
   return (
     <AppBar position="sticky" color="inherit" elevation={1}>
       <Toolbar className="!px-4 !py-3">
@@ -46,12 +52,12 @@ const Header = () => {
 
         {/* Logo */}
         <Link to="/" className="flex-grow md:flex-grow-0">
-          <img
+          <img onClick={handleLogoClick}
             src="https://res.cloudinary.com/dgob9antb/image/upload/v1740274717/momentomainlogo_eyqct2.jpg"
             className="h-14 lg:h-18 w-auto"
-            alt="Logo"
+            alt="Logo" 
           />
-        </Link>
+          </Link>
 
         {/* User Profile */}
         <div className="flex items-center gap-2 ml-auto">
