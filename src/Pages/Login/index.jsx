@@ -68,11 +68,14 @@ function Login() {
         });
 
         if (response?.error === true) {
-          context.openAlertBox(
-            "error",
-            response.message || "Invalid credentials"
-          );
-          setErrors({ password: "Incorrect password" }); // Show error under password field
+          if (response.message === "Invalid email") {
+            setErrors({ email: "Invalid email address" });
+          } else if (response.message === "Invalid password") {
+            setErrors({ password: "Incorrect password" });
+          } else {
+            setErrors({ email: "Invalid credentials", password: "Invalid credentials" });
+          }
+          context.openAlertBox("error", response.message || "Invalid credentials");
         } else if (
           response?.data?.accessToken &&
           response?.data?.refreshToken
@@ -81,16 +84,15 @@ function Login() {
           localStorage.setItem("refreshToken", response.data.refreshToken);
 
           context.setIsLogin(true);
-          
-
           navigate("/");
-          window.location.reload()
+          window.location.reload();
         } else {
           console.error("Tokens missing in response:", response);
         }
       } catch (error) {
         console.error("Login failed:", error);
         context.openAlertBox("error", "Invalid credentials or server error");
+        setErrors({ email: "Invalid credentials", password: "Invalid credentials" });
       }
     }
   };
