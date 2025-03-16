@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   Button,
   CircularProgress,
@@ -11,10 +11,16 @@ import {
   Box,
   TextField,
   Link,
-  Grid2,
+  Grid,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   MdDashboard,
@@ -28,7 +34,6 @@ import {
 import { MyContext } from "../../App.jsx";
 import { useNavigate } from "react-router-dom";
 import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
-import EventsSection from "../../components/EventSectionHomepage/index.jsx";
 
 function MyAccount() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -36,22 +41,67 @@ function MyAccount() {
   const [userSubmissions, setUserSubmissions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingSubmissions, setLoadingSubmissions] = useState(true);
-
-  const { userData, setUserData, openAlertBox, setIsLogin } =
-    useContext(MyContext);
+  const [categories, setCategories] = useState([]);
   const [submissionData, setSubmissionData] = useState({
     title: "",
     description: "",
-    file: "",
+    categoryId: "",
+    size: "",
+    resolution: "",
+    file: null,
+    preview: "",
   });
   const [photoOfTheDayData, setPhotoOfTheDayData] = useState({
     title: "",
     description: "",
-    file: "",
+    file: null,
+    preview: "",
   });
-  const [isSubmittingPhotoOfTheDay, setIsSubmittingPhotoOfTheDay] =
-    useState(false);
+  const [isSubmittingPhotoOfTheDay, setIsSubmittingPhotoOfTheDay] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const { userData, setUserData, openAlertBox, setIsLogin } = useContext(MyContext);
   const navigate = useNavigate();
+
+  // Add a ref for the photoSubmission file input
+  const photoSubmissionRef = useRef(null);
+
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      setLoadingSubmissions(true);
+      try {
+        const response = await fetchDataFromApi("/api/user/my-submissions");
+        if (response?.submissions) {
+          setUserSubmissions(response.submissions);
+        } else {
+          setUserSubmissions([]);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setUserSubmissions([]);
+      } finally {
+        setLoadingSubmissions(false);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response = await fetchDataFromApi("/api/category");
+        if (response?.categories) {
+          setCategories(response.categories);
+        }
+      } catch (error) {
+        console.error("Fetch categories error:", error);
+      }
+    };
+
+    fetchSubmissions();
+    fetchCategories();
+  }, []);
 
   const handleAvatarUpload = async (e) => {
     try {
@@ -74,18 +124,34 @@ function MyAccount() {
       });
 
       if (response?.data?.avatar) {
-        setUserData((prev) => ({ ...prev, avatar: response.data.avatar }));
-        openAlertBox("success", "Avatar updated successfully!");
+        // Update user data and force re-render
+        setUserData(prev => ({ 
+          ...prev, 
+          avatar: `${response.data.avatar}?ts=${Date.now()}`
+        }));
+        setSnackbar({
+          open: true,
+          message: "Avatar uploaded successfully!",
+          severity: "success",
+        });
+        setUploadingAvatar((prev) => !prev);
       }
     } catch (error) {
       console.error("Upload failed:", error);
-      openAlertBox("error", error.response?.data?.message || "Upload failed");
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Upload failed",
+        severity: "error",
+      });
     } finally {
       setUploadingAvatar(false);
     }
   };
 
   const handleSubmissionChange = (e) => {
+    if (e.target.name === "description" && e.target.value.length > 400) {
+      return;
+    }
     setSubmissionData({
       ...submissionData,
       [e.target.name]: e.target.value,
@@ -93,6 +159,9 @@ function MyAccount() {
   };
 
   const handlePhotoOfTheDayChange = (e) => {
+    if (e.target.name === "description" && e.target.value.length > 400) {
+      return;
+    }
     setPhotoOfTheDayData({
       ...photoOfTheDayData,
       [e.target.name]: e.target.value,
@@ -101,12 +170,18 @@ function MyAccount() {
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
-    setSubmissionData((prev) => ({ ...prev, file })); // Directly set the single file
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setSubmissionData((prev) => ({ ...prev, file, preview }));
+    }
   };
 
   const handlePhotoOfTheDayFileSelect = (e) => {
     const file = e.target.files[0];
-    setPhotoOfTheDayData((prev) => ({ ...prev, file })); // Directly set the single file
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setPhotoOfTheDayData((prev) => ({ ...prev, file, preview }));
+    }
   };
 
   const handlePhotoSubmission = async (e) => {
@@ -116,21 +191,42 @@ function MyAccount() {
       const formData = new FormData();
       formData.append("title", submissionData.title);
       formData.append("description", submissionData.description);
-      formData.append("photo", submissionData.file); // Append the single file
+      formData.append("categoryId", submissionData.categoryId);
+      formData.append("size", submissionData.size);
+      formData.append("resolution", submissionData.resolution);
+      formData.append("photo", submissionData.file);
 
       const response = await uploadPhoto("/api/user/submit-photos", formData);
 
       if (response?.submission) {
         setUserSubmissions((prev) => [response.submission, ...prev]);
-        openAlertBox("success", "Photo submitted successfully!");
-        setSubmissionData({ title: "", description: "", file: null }); // Reset file
+        setSnackbar({
+          open: true,
+          message: "Photo submitted successfully!",
+          severity: "success",
+        });
+        setSubmissionData({
+          title: "",
+          description: "",
+          categoryId: "",
+          size: "",
+          resolution: "",
+          file: null,
+          preview: "",
+        });
+
+        // Clear file input using ref
+        if (photoSubmissionRef.current) {
+          photoSubmissionRef.current.value = "";
+        }
       }
     } catch (error) {
-      console.error("Submission error:", error); // Log the full error for debugging
-      openAlertBox(
-        "error",
-        error.response?.data?.message || "Submission failed"
-      );
+      console.error("Submission error:", error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Submission failed",
+        severity: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -143,53 +239,41 @@ function MyAccount() {
       const formData = new FormData();
       formData.append("title", photoOfTheDayData.title);
       formData.append("description", photoOfTheDayData.description);
-      formData.append("image", photoOfTheDayData.file); // Append the single file
+      formData.append("image", photoOfTheDayData.file);
 
       const response = await uploadPhoto("/api/dayphoto/upload", formData);
 
       if (response?.submission) {
-        openAlertBox("success", "Photo submitted for Photo of the Day!");
-        setPhotoOfTheDayData({ title: "", description: "", file: null }); // Reset file
+        setSnackbar({
+          open: true,
+          message: "Photo submitted for Photo of the Day!",
+          severity: "success",
+        });
+        setPhotoOfTheDayData({ title: "", description: "", file: null, preview: "" });
+        // Clear file input
+        document.getElementById("photoOfTheDaySubmission").value = "";
       }
     } catch (error) {
       console.error("Photo of the Day submission error:", error);
-      openAlertBox(
-        "error",
-        error.response?.data?.message || "Submission failed"
-      );
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Submission failed",
+        severity: "error",
+      });
     } finally {
       setIsSubmittingPhotoOfTheDay(false);
     }
   };
-
-  useEffect(() => {
-    const fetchSubmissions = async () => {
-      setLoadingSubmissions(true);
-      try {
-        const response = await fetchDataFromApi("/api/user/my-submissions");
-        console.log("API Response:", response);
-
-        if (response?.submissions) {
-          setUserSubmissions(response.submissions);
-        } else {
-          console.error("Submissions data not found in response:", response);
-          setUserSubmissions([]);
-        }
-      } catch (error) {
-        console.error("Fetch error:", error);
-        setUserSubmissions([]);
-      } finally {
-        setLoadingSubmissions(false);
-      }
-    };
-    fetchSubmissions();
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setIsLogin(false);
     navigate("/login");
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
@@ -213,16 +297,14 @@ function MyAccount() {
                   <label htmlFor="avatarInput" className="cursor-pointer">
                     <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
                       {userData?.avatar ? (
-                        <img
-                          src={userData.avatar}
-                          className="w-full h-full object-cover"
-                          alt="Profile"
-                        />
+                       <img
+                       src={`${userData.avatar}?ts=${new Date().getTime()}`} // Add timestamp query parameter
+                       className="w-full h-full object-cover"
+                       alt="Profile"
+                     />
                       ) : (
                         <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                          <span className="text-gray-500 text-sm">
-                            Add Photo
-                          </span>
+                          <span className="text-gray-500 text-sm">Add Photo</span>
                         </div>
                       )}
                       {uploadingAvatar && (
@@ -233,17 +315,10 @@ function MyAccount() {
                     </div>
                   </label>
                 </div>
-                <Typography
-                  variant="h6"
-                  className="font-semibold text-gray-800 text-center mb-2"
-                >
+                <Typography variant="h6" className="font-semibold text-gray-800 text-center mb-2">
                   {userData?.name || "User Name"}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  className="text-center mb-4"
-                >
+                <Typography variant="body2" color="text.secondary" className="text-center mb-4">
                   {userData?.email}
                 </Typography>
               </div>
@@ -263,6 +338,7 @@ function MyAccount() {
                   </Button>
                 </Box>
               )}
+
               {/* Navigation */}
               <nav className="space-y-2 py-6">
                 <Button
@@ -312,12 +388,8 @@ function MyAccount() {
 
         {/* Main Content */}
         <main className="flex-1">
-          {/* Content Tabs */}
           <Card className="shadow-sm border border-gray-200">
-            <Tabs
-              value={activeTab}
-              onChange={(e, newValue) => setActiveTab(newValue)}
-            >
+            <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
               <Tab label="Photo Submissions" value="submissions" />
               <Tab label="Purchased Photos" value="purchases" />
             </Tabs>
@@ -325,16 +397,16 @@ function MyAccount() {
             <CardContent className="p-6">
               {activeTab === "submissions" && (
                 <div>
-                  <Grid2 container spacing={4} className="mt-8">
+                  <Grid container spacing={4} className="mt-8">
                     {/* Submit Photo for Sale */}
-                    <Grid2 item xs={12}>
+                    <Grid item xs={12}>
                       <Typography variant="h6" className="mb-4">
                         Submit Photo for Sale
                       </Typography>
                       <form onSubmit={handlePhotoSubmission}>
                         <TextField
                           fullWidth
-                          label="Submission Title"
+                          label="Title"
                           name="title"
                           value={submissionData.title}
                           onChange={handleSubmissionChange}
@@ -353,15 +425,51 @@ function MyAccount() {
                           variant="outlined"
                           margin="normal"
                           required
+                          inputProps={{ maxLength: 400 }}
+                          helperText={`${submissionData.description.length}/400`}
+                        />
+                        <FormControl fullWidth margin="normal" required>
+                          <InputLabel>Category</InputLabel>
+                          <Select
+                            name="categoryId"
+                            value={submissionData.categoryId}
+                            onChange={handleSubmissionChange}
+                            label="Category"
+                          >
+                            {categories.map((category) => (
+                              <MenuItem key={category._id} value={category._id}>
+                                {category.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          fullWidth
+                          label="Size"
+                          name="size"
+                          value={submissionData.size}
+                          onChange={handleSubmissionChange}
+                          variant="outlined"
+                          margin="normal"
+                        />
+                        <TextField
+                          fullWidth
+                          label="Resolution"
+                          name="resolution"
+                          value={submissionData.resolution}
+                          onChange={handleSubmissionChange}
+                          variant="outlined"
+                          margin="normal"
                         />
                         <div className="flex items-center gap-4 mt-4">
                           <input
                             type="file"
                             onChange={handleFileSelect}
-                            className="hidden"
+                            className="hidden-file-input" // Use the new CSS class
                             id="photoSubmission"
                             accept="image/*"
                             required
+                            ref={photoSubmissionRef}
                           />
                           <label htmlFor="photoSubmission">
                             <Button
@@ -380,6 +488,7 @@ function MyAccount() {
                               isSubmitting ||
                               !submissionData.title ||
                               !submissionData.description ||
+                              !submissionData.categoryId ||
                               !submissionData.file
                             }
                           >
@@ -395,237 +504,121 @@ function MyAccount() {
                             <Typography variant="body2" color="text.secondary">
                               Selected file: {submissionData.file.name}
                             </Typography>
+                            <img
+                              src={submissionData.preview}
+                              alt="Preview"
+                              className="mt-2 w-32 h-32 object-cover"
+                            />
                           </div>
                         )}
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          className="mt-2"
-                        >
+                      </form>
+                    </Grid>
+
+                    {/* Submit Photo for Photo of the Day */}
+                    <Grid item xs={12}>
+                      <Typography variant="h6" className="mb-4">
+                        Submit Photo for Photo of the Day
+                      </Typography>
+                      <form onSubmit={handlePhotoOfTheDaySubmission}>
+                        <TextField
+                          fullWidth
+                          label="Photo Title"
+                          name="title"
+                          value={photoOfTheDayData.title}
+                          onChange={handlePhotoOfTheDayChange}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                        />
+                        <TextField
+                          fullWidth
+                          label="Description"
+                          name="description"
+                          multiline
+                          rows={3}
+                          value={photoOfTheDayData.description}
+                          onChange={handlePhotoOfTheDayChange}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          inputProps={{ maxLength: 400 }}
+                          helperText={`${photoOfTheDayData.description.length}/400`}
+                        />
+                        <div className="flex items-center gap-4 mt-4">
+                          <input
+                            type="file"
+                            onChange={handlePhotoOfTheDayFileSelect}
+                            className="hidden-file-input" // Use the new CSS class
+                            id="photoOfTheDaySubmission"
+                            accept="image/*"
+                            required
+                          />
+                          <label htmlFor="photoOfTheDaySubmission">
+                            <Button
+                              variant="outlined"
+                              startIcon={<MdCloudUpload />}
+                              component="span"
+                            >
+                              Select Photo
+                            </Button>
+                          </label>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            startIcon={<MdCloudUpload />}
+                            disabled={
+                              isSubmittingPhotoOfTheDay ||
+                              !photoOfTheDayData.title ||
+                              !photoOfTheDayData.description ||
+                              !photoOfTheDayData.file
+                            }
+                          >
+                            {isSubmittingPhotoOfTheDay ? (
+                              <CircularProgress size={24} />
+                            ) : (
+                              "Submit"
+                            )}
+                          </Button>
+                        </div>
+                        {photoOfTheDayData.file && (
+                          <div className="mt-2">
+                            <Typography variant="body2" color="text.secondary">
+                              Selected file: {photoOfTheDayData.file.name}
+                            </Typography>
+                            <img
+                              src={photoOfTheDayData.preview}
+                              alt="Preview"
+                              className="mt-2 w-32 h-32 object-cover"
+                            />
+                          </div>
+                        )}
+                        <Typography variant="body2" color="text.secondary" className="mt-2">
                           Only 1 photo per submission
                         </Typography>
                       </form>
-                    </Grid2>
-
-                    {/* Submit Photo for Photo of the Day */}
-                    <Grid2 item xs={12}>
-  <Typography variant="h6" className="mb-4">
-    Submit Photo for Photo of the Day
-  </Typography>
-  <Accordion className="mb-4">
-    <AccordionSummary
-      expandIcon={<MdExpandMore />}
-      aria-controls="photo-of-the-day-rules"
-      id="photo-of-the-day-rules-header"
-      sx={{
-        backgroundColor: "#FFCB00", // Yellow background
-        color: "#000", // Black text
-        "&:hover": {
-          backgroundColor: "#e6b800", // Darker yellow on hover
-        },
-      }}
-    >
-      <Typography variant="subtitle1">
-        How It Works & Submission Rules
-      </Typography>
-    </AccordionSummary>
-    <AccordionDetails>
-      <Typography variant="body2" className="mb-4">
-        Today's Best Click is where creativity takes center stage! Every day, we
-        spotlight one extraordinary photo that captures a moment, a feeling, or a
-        story that stands out. From breathtaking landscapes to intimate
-        snapshots, each featured photo is a testament to the power of daily
-        practice and the beauty found in the world around us. We believe that
-        every click has the potential to inspire. So, whether you're a seasoned
-        pro or just starting out, share your shots with us—your next photo might
-        be the one that becomes Today's Best Click!
-      </Typography>
-      <Typography variant="body2" className="mb-4">
-        <strong>Submit Your Today’s Best Click:</strong> How It Works
-      </Typography>
-      <ol className="list-decimal pl-6">
-        <li>
-          <strong>One Photo Per Day:</strong> You can submit up to three photos
-          per day, with each photo taken within the current week (Monday to
-          Sunday). The photo must be an original, captured during the week you
-          submit it, showcasing your unique perspective and creative vision.
-        </li>
-        <li>
-          <strong>High-Quality Image:</strong> Your photo should have a minimum
-          resolution of 2500px on the longest side. We recommend submitting in
-          JPEG or PNG format.
-        </li>
-        <li>
-          <strong>No Watermarks, Logos, or Frames:</strong> To keep the focus on
-          your photography, please avoid adding watermarks, logos, or frames to
-          your image. Your photo should be as natural as possible, ready for
-          display.
-        </li>
-        <li>
-          <strong>Keep Edits Simple:</strong> We encourage you to capture your
-          photos in-camera without relying heavily on post-editing. Extreme
-          edits, heavy filters, or drastic alterations will not be accepted. You
-          can make basic edits (such as adjusting brightness, contrast, or
-          cropping) to enhance your photo, but try to keep the image true to what
-          you captured.
-        </li>
-        <li>
-          <strong>Tell Your Story:</strong> When submitting your photo, include a
-          brief description. Why did you take the photo? When and where did you
-          capture the moment? How did you take the shot? This helps our reviewers
-          select the best submissions and allows your story to shine through.
-        </li>
-        <li>
-          <strong>Respectful Content:</strong> We strive to maintain a positive,
-          inclusive space. Please ensure your photo is respectful and appropriate
-          for all audiences.
-        </li>
-        <li>
-          <strong>Feature on Our Social Media:</strong> By submitting your photo
-          weekly, you could be featured as Today's Best Click on our website and
-          social media channels! We review all submissions and select the
-          standout shots to showcase.
-        </li>
-        <li>
-          <strong>Create Your Own Gallery:</strong> With each photo you submit,
-          you’ll build your personal gallery on our website. Over time, you’ll be
-          able to look back and see how your skills have evolved through daily
-          practice.
-        </li>
-        <li>
-          <strong>Engage with the Community:</strong> Feel free to comment, like,
-          and interact with other photographers. Sharing experiences, providing
-          feedback, and engaging with the community is an inspiring part of this
-          journey.
-        </li>
-        <li>
-          <strong>Use #momento_bestclick:</strong> Want to increase your chances
-          of being noticed? Use the hashtag #momento_bestclick on social media
-          and tag us to get featured on our platforms!
-        </li>
-      </ol>
-      <Typography variant="body2" className="mt-4">
-        By practicing daily and submitting your photos, you’ll not only improve
-        your craft but also be part of a creative and supportive community.
-        Capture your moments authentically, submit your photos, and see how your
-        skills grow!
-      </Typography>
-    </AccordionDetails>
-  </Accordion>
-  <form onSubmit={handlePhotoOfTheDaySubmission}>
-    <TextField
-      fullWidth
-      label="Photo Title"
-      name="title"
-      value={photoOfTheDayData.title}
-      onChange={handlePhotoOfTheDayChange}
-      variant="outlined"
-      margin="normal"
-      required
-    />
-    <TextField
-      fullWidth
-      label="Description"
-      name="description"
-      multiline
-      rows={3}
-      value={photoOfTheDayData.description}
-      onChange={handlePhotoOfTheDayChange}
-      variant="outlined"
-      margin="normal"
-      required
-    />
-    <div className="flex items-center gap-4 mt-4">
-      <input
-        type="file"
-        onChange={handlePhotoOfTheDayFileSelect}
-        className="hidden"
-        id="photoOfTheDaySubmission"
-        accept="image/*"
-        required
-      />
-      <label htmlFor="photoOfTheDaySubmission">
-        <Button
-          variant="outlined"
-          startIcon={<MdCloudUpload />}
-          component="span"
-        >
-          Select Photo
-        </Button>
-      </label>
-      <Button
-        type="submit"
-        variant="contained"
-        startIcon={<MdCloudUpload />}
-        disabled={
-          isSubmittingPhotoOfTheDay ||
-          !photoOfTheDayData.title ||
-          !photoOfTheDayData.description ||
-          !photoOfTheDayData.file
-        }
-      >
-        {isSubmittingPhotoOfTheDay ? (
-          <CircularProgress size={24} />
-        ) : (
-          "Submit"
-        )}
-      </Button>
-    </div>
-    {photoOfTheDayData.file && (
-      <div className="mt-2">
-        <Typography variant="body2" color="text.secondary">
-          Selected file: {photoOfTheDayData.file.name}
-        </Typography>
-      </div>
-    )}
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      className="mt-2"
-    >
-      Only 1 photo per submission
-    </Typography>
-  </form>
-</Grid2>
+                    </Grid>
 
                     {/* Display Submissions */}
-                    <Grid2 item xs={12}>
+                    <Grid item xs={12}>
                       {loadingSubmissions ? (
                         <div className="text-center">
                           <CircularProgress />
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            className="mt-2"
-                          >
+                          <Typography variant="body2" color="text.secondary" className="mt-2">
                             Loading submissions...
                           </Typography>
                         </div>
                       ) : userSubmissions?.length > 0 ? (
-                        <Grid2 container spacing={4}>
+                        <Grid container spacing={4}>
                           {userSubmissions.map((submission) => (
-                            <Grid2
-                              item
-                              xs={12}
-                              sm={6}
-                              md={4}
-                              key={submission._id}
-                            >
+                            <Grid item xs={12} sm={6} md={4} key={submission._id}>
                               <Card className="shadow-sm border border-gray-200 h-full flex flex-col">
                                 <CardContent>
-                                  <Typography
-                                    variant="h6"
-                                    className="font-semibold mb-2 py-2"
-                                  >
+                                  <Typography variant="h6" className="font-semibold mb-2 py-2">
                                     {submission.title || "Untitled Submission"}
                                   </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    className="mb-2 text-gray-600 py-2"
-                                  >
+                                  <Typography variant="body2" className="mb-2 text-gray-600 py-2">
                                     {submission.description || "No description"}
                                   </Typography>
-
                                   <div className="grid grid-cols-1">
                                     <div className="relative aspect-square py-4">
                                       <img
@@ -643,17 +636,11 @@ function MyAccount() {
                                       )}
                                     </div>
                                   </div>
-
                                   {submission.rejectionReason && (
-                                    <Typography
-                                      variant="body2"
-                                      className="mt-2 text-red-600"
-                                    >
-                                      <strong>Reason:</strong>{" "}
-                                      {submission.rejectionReason}
+                                    <Typography variant="body2" className="mt-2 text-red-600">
+                                      <strong>Reason:</strong> {submission.rejectionReason}
                                     </Typography>
                                   )}
-
                                   <div className="mt-3 flex justify-between items-center">
                                     <Chip
                                       label={submission.status || "pending"}
@@ -666,20 +653,15 @@ function MyAccount() {
                                       }
                                       size="small"
                                     />
-                                    <Typography
-                                      variant="caption"
-                                      className="text-gray-500"
-                                    >
-                                      {new Date(
-                                        submission.createdAt
-                                      ).toLocaleDateString()}
+                                    <Typography variant="caption" className="text-gray-500">
+                                      {new Date(submission.createdAt).toLocaleDateString()}
                                     </Typography>
                                   </div>
                                 </CardContent>
                               </Card>
-                            </Grid2>
+                            </Grid>
                           ))}
-                        </Grid2>
+                        </Grid>
                       ) : (
                         <div className="text-center p-8">
                           <Typography variant="h6" color="text.secondary">
@@ -687,8 +669,8 @@ function MyAccount() {
                           </Typography>
                         </div>
                       )}
-                    </Grid2>
-                  </Grid2>
+                    </Grid>
+                  </Grid>
                 </div>
               )}
 
@@ -703,6 +685,22 @@ function MyAccount() {
           </Card>
         </main>
       </div>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </section>
   );
 }
