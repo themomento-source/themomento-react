@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -42,14 +43,18 @@ function HomeSlider() {
                 professionals.
               </p> */}
               <div className="flex gap-4">
+                <Link to="/my-account">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
                   Submit Photo
                 </button>
+                </Link>
+                <Link to="/bloglisting">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
                   Blog
                 </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -71,14 +76,18 @@ function HomeSlider() {
             
               </p>
               <div className="flex gap-4">
+                <Link to="/my-account">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
                   Submit Photo
                 </button>
+                </Link>
+                <Link to="/bloglisting">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
                   Blog
                 </button>
+                </Link>
               </div>
             </div>
           </div>
