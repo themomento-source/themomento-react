@@ -1,12 +1,13 @@
 import React from "react";
 import HomeSlider from "../../components/HomeSlider";
 
-import HomeImageGallery from "../../components/HomeImageGallery";
-import HomeBlogSection from "../../components/HomeBlogSection";
+// import HomeImageGallery from "../../components/HomeImageGallery";
+// import HomeBlogSection from "../../components/HomeBlogSection";
 
 import PhotoOfTheDay from "../../components/PhotoOfTheDay";
 import BecomeMemberPromo from "../../components/PromotionBecomeAMember";
-import CreateGalleryPromo from "../../components/PromotionCreateGallerry";
+
+// import MembershipPromo from "../../components/PromotionCreateGallerry";
 // import EventsSection from "../../components/EventSectionHomepage";
 
 function Home() {
@@ -17,12 +18,11 @@ function Home() {
       {/* <HomeCatSlider /> */}
       <PhotoOfTheDay />
       <BecomeMemberPromo />
-      <CreateGalleryPromo />
+     {/* <MembershipPromo/> */}
       {/* <EventsSection /> */}
-      <HomeImageGallery />
+      {/* <HomeImageGallery /> */}
 
-      <br />
-      <br />
+      
     </>
   );
 }

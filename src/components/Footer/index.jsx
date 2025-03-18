@@ -47,27 +47,7 @@ function Footer() {
           </ul>
         </div>
 
-        {/* Services / Categories */}
-        <div className="md:col-span-1">
-          <h3 className="text-white font-semibold mb-4">Services</h3>
-          <ul className="space-y-3 text-sm">
-            <li>
-              <a href="#" className="hover:text-white transition text-gray-300">
-                Portrait Photography
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-white transition text-gray-300">
-                Wedding Photography
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-white transition text-gray-300">
-                Commercial Photography
-              </a>
-            </li>
-          </ul>
-        </div>
+     
 
         {/* Contact/Newsletter Section */}
         <div className="md:col-span-1">

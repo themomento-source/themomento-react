@@ -6,6 +6,20 @@ import { Pagination } from "swiper/modules";
 import { Link } from "react-router-dom";
 
 function HomeCatSlider() {
+  const [sliderImages, setSliderImages] = useState([]);
+
+  useEffect(() => {
+    const fetchSliderImages = async () => {
+      try {
+        const response = await axios.get("/api/slider?published=true");
+        setSliderImages(response.data.data);
+      } catch (error) {
+        console.error("Error fetching slider images:", error);
+      }
+    };
+
+    fetchSliderImages();
+  }, []);
   return (
     <div className="homeCatSlider">
       <div className="container">

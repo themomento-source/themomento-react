@@ -25,7 +25,7 @@ const PhotoOfTheDay = () => {
   }, []);
 
   return (
-    <div className="bg-black py-16 px-4 md:px-8 mb-16">
+    <div className="bg-black px-4 py-16 md:px-8">
       {loading ? (
         <p className="text-white text-center text-xl">Loading Photo of the Day...</p>
       ) : photoOfTheDay ? (

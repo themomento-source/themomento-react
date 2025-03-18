@@ -35,9 +35,12 @@ function HomeSlider() {
               className="w-full h-[800px] object-cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4 font-marcellus">
-              Your Daily Shot of Inspiration: Submit Now for Today's Best Click!
-              </h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-2 font-marcellus">
+  Your Daily Shot of Inspiration:
+</h2>
+<h3 className="text-lg md:text-2xl font-semibold mb-4 font-marcellus">
+  Submit Now for Today's Best Click!
+</h3>
               {/* <p className="text-lg md:text-xl mb-6 font-pt-serif">
                 A journey through breathtaking landscapes captured by
                 professionals.
@@ -46,15 +49,10 @@ function HomeSlider() {
                 <Link to="/my-account">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
-                  Submit Photo
+                  Join Now
                 </button>
                 </Link>
-                <Link to="/bloglisting">
-                <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
-            transition-colors duration-300">
-                  Blog
-                </button>
-                </Link>
+               
               </div>
             </div>
           </div>
@@ -69,9 +67,13 @@ function HomeSlider() {
               className="w-full h-[800px] object-cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4 font-marcellus">
-              Elevate Your Photography Journey: Join Momento Now!
-              </h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-2 font-marcellus">
+  Elevate Your Photography Journey:
+</h2>
+<h3 className="text-lg md:text-2xl font-semibold mb-4 font-marcellus">
+  Join Momento Now!
+</h3>
+
               <p className="text-lg md:text-xl mb-6 font-pt-serif">
             
               </p>
@@ -79,15 +81,10 @@ function HomeSlider() {
                 <Link to="/my-account">
                 <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
             transition-colors duration-300">
-                  Submit Photo
+                  Join Now
                 </button>
                 </Link>
-                <Link to="/bloglisting">
-                <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] 
-            transition-colors duration-300">
-                  Blog
-                </button>
-                </Link>
+                
               </div>
             </div>
           </div>

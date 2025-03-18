@@ -17,11 +17,15 @@ function BlogListing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Categorize blogs
+  const learningBlogs = blogs.filter(blog => blog.categories?.includes('Learning'));
+  const interviewBlogs = blogs.filter(blog => blog.categories?.includes('Interviews'));
+  const generalBlogs = blogs.filter(blog => blog.categories?.includes('Blog'));
+
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const response = await blogAPI.getAll("?limit=6");
-        console.log(response); // Debugging the API response structure
         if (response?.success) {
           setBlogs(response.data.blogs);
         } else {
@@ -71,26 +75,82 @@ function BlogListing() {
       </div>
 
       <div className="container mx-auto mt-8 flex flex-col lg:flex-row gap-8 px-4">
-        {/* Blog Grid */}
-        <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogs.map((blog) => (
-            <div
-              key={blog._id}
-              className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition duration-300"
-            >
-              <BlogCard
-                img={blog.image}
-                title={blog.title}
-                author={blog.author?.name || "Unknown Author"}
-                intro={
-                  <SafeHTML
-                    html={(blog.description || "").substring(0, 100) + "..."}
-                  />
-                }
-                id={blog._id}
-              />
+        {/* Main Content */}
+        <div className="w-full lg:w-3/4 space-y-12">
+          {/* Learning Section */}
+          <div className="bg-white shadow-lg rounded-xl p-6">
+            <div className="mb-6 border-b pb-4">
+              <Typography variant="h4" className="text-gray-800 font-bold">
+                Learning Resources
+                <span className="ml-2 text-emerald-500">•</span>
+              </Typography>
+              <Typography variant="body1" className="text-gray-600 mt-2">
+                Educational content and tutorials
+              </Typography>
             </div>
-          ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {learningBlogs.map(blog => (
+                <BlogCard
+                  key={blog._id}
+                  img={blog.image}
+                  title={blog.title}
+                  author={blog.author?.name || "Unknown Author"}
+                  intro={<SafeHTML html={(blog.description || "").substring(0, 100) + "..."} />}
+                  id={blog._id}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Interviews Section */}
+          <div className="bg-white shadow-lg rounded-xl p-6">
+            <div className="mb-6 border-b pb-4">
+              <Typography variant="h4" className="text-gray-800 font-bold">
+                Interview Preparation
+                <span className="ml-2 text-blue-500">•</span>
+              </Typography>
+              <Typography variant="body1" className="text-gray-600 mt-2">
+                Career advice and interview tips
+              </Typography>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {interviewBlogs.map(blog => (
+                <BlogCard
+                  key={blog._id}
+                  img={blog.image}
+                  title={blog.title}
+                  author={blog.author?.name || "Unknown Author"}
+                  intro={<SafeHTML html={(blog.description || "").substring(0, 100) + "..."} />}
+                  id={blog._id}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* General Blogs Section */}
+          <div className="bg-white shadow-lg rounded-xl p-6">
+            <div className="mb-6 border-b pb-4">
+              <Typography variant="h4" className="text-gray-800 font-bold">
+                Latest Stories
+                <span className="ml-2 text-purple-500">•</span>
+              </Typography>
+              <Typography variant="body1" className="text-gray-600 mt-2">
+                Recent updates and articles
+              </Typography>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {generalBlogs.map(blog => (
+                <BlogCard
+                  key={blog._id}
+                  img={blog.image}
+                  title={blog.title}
+                  author={blog.author?.name || "Unknown Author"}
+                  intro={<SafeHTML html={(blog.description || "").substring(0, 100) + "..."} />}
+                  id={blog._id}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Sidebar */}

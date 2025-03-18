@@ -19,14 +19,15 @@ const Navigation = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
   const context = useContext(MyContext);
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate(); 
 
   const mainMenuItems = [
     { name: "Home", path: "/" },
-    { name: "Photographer's Gallery", path: "/gallery", hasSubmenu: true },
-    { name: "Event", path: "/Event" },
-    { name: "About", path: "/about" },
+    
     { name: "Become a Member", path: "/become-member" },
+    { name: "Submit Photo", path: "/my-account" },
+    { name: "Community", path: "/bloglisting" },
+    { name: "About Us", path: "/about" },
   ];
 
   const mobileMenuItems = [
@@ -79,22 +80,7 @@ const Navigation = () => {
               </ul>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                component={Link}
-                to="/bloglisting"
-                className="!text-gray-700 !capitalize hover:!text-red-500"
-              >
-                Community
-              </Button>
-              <Button
-                component={Link}
-                to="/photolisting"
-                className="!text-gray-700 !capitalize hover:!text-red-500"
-              >
-                Photos
-              </Button>
-            </div>
+         
           </div>
         </div>
       </nav>

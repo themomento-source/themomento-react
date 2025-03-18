@@ -27,6 +27,7 @@ import { IoCloseSharp } from "react-icons/io5";
 
 import { fetchDataFromApi } from "./utils/api.js";
 import AboutMomento from "./Pages/About/index.jsx";
+import MembershipPromo from "./Pages/BecomeAMember/index.jsx";
 
 export const MyContext = createContext();
 
@@ -111,6 +112,7 @@ function App() {
               <Route path="/verify" element={<Verify />} />
               <Route path="/user/:userId" element={<PublicProfile />} />
               <Route path="/about" element={<AboutMomento />} />
+              <Route path="/become-member" element={<MembershipPromo/>} />
 
               {/* Protected Routes */}
               <Route
