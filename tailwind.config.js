@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        marcellus: ["Marcellus", "serif"], // Fixed syntax here
+        marcellus: ["Marcellus", "serif"], 
         "pt-serif": ["PT Serif", "serif"],
       },
       colors: {
