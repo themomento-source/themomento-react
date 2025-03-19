@@ -29,8 +29,8 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
         width: isMobile ? "100vw" : "320px",
         height: isMobile ? "70vh" : "100vh",
         bgcolor: "background.paper",
-        zIndex: 1300, // Ensure it appears above other content
-        boxShadow: 3, // Add shadow for better visibility
+        zIndex: 1300, 
+        boxShadow: 3, 
       }}
     >
       {/* Header */}
@@ -55,7 +55,7 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                 justifyContent: "space-between",
                 padding: "12px 16px",
                 color: "gray",
-                "&:hover": { backgroundColor: "#f5f5f5" },
+                "&:hover": { backgroundColor: "#FFCB00" },
               }}
             >
               {category.name}
@@ -75,8 +75,8 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                       display: "flex",
                       justifyContent: "start",
                       padding: "8px 16px",
-                      color: "#555",
-                      "&:hover": { backgroundColor: "#eaeaea" },
+                      color: "#FFCB00",
+                      "&:hover": { backgroundColor: "#FFCB00" },
                     }}
                   >
                     {sub}

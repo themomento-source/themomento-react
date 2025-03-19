@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         marcellus: ["Marcellus", "serif"], 
+        optima: ['Optima', 'sans-serif'],
         "pt-serif": ["PT Serif", "serif"],
       },
       colors: {
