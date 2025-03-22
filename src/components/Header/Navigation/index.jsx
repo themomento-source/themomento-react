@@ -45,7 +45,7 @@ const Navigation = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block py-2 bg-white shadow-sm">
+      <nav className="hidden md:block py-2 bg-gradient-to-r from-gray-900 to-black shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex-1 flex justify-center">
@@ -56,7 +56,7 @@ const Navigation = () => {
                       // Use a Button with onClick for Home
                       <Button
                         onClick={handleHomeClick}
-                        className="!text-gray-700 !capitalize hover:!text-red-500"
+                        className="!text-white !capitalize hover:!bg-amber-200"
                       >
                         {item.name}
                       </Button>
@@ -65,13 +65,13 @@ const Navigation = () => {
                       <Button
                         component={Link}
                         to={item.path}
-                        className="!text-gray-700 !capitalize hover:!text-red-500"
+                        className="!text-white !capitalize hover:!bg-amber-200"
                       >
                         {item.name}
                       </Button>
                     )}
                     {item.hasSubmenu && (
-                      <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-white shadow-lg rounded-lg py-2">
+                      <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-black shadow-lg rounded-lg py-2">
                         {/* Submenu items */}
                       </div>
                     )}

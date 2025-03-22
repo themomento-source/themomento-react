@@ -1,108 +1,103 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  Divider,
-  useMediaQuery,
-  useTheme,
-  Button,
-} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MyContext } from "../../App";
 import Navigation from "./Navigation";
 
 const Header = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
   const context = useContext(MyContext);
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate();
 
-  // Function to handle My Account click
+  // Handle "My Account" click
   const handleMyAccountClick = () => {
-    navigate("/my-account"); // Navigate to the My Account page
-    window.location.reload(); // Reload the page
+    navigate("/my-account");
+    window.location.reload();
   };
 
   const handleLogoClick = () => {
-    navigate("/"); // Navigate to the home page
-    window.location.reload(); // Reload the page
+    navigate("/");
+    window.location.reload();
   };
 
-
   return (
-    <AppBar position="sticky" color="inherit" elevation={1}>
-      <Toolbar className="!px-4 !py-3">
+    <header className="sticky top-0 bg-gradient-to-r from-gray-900 to-black shadow-md z-50">
+      <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile Menu Button */}
-        {isMobile && (
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={() => setIsOpenCatPanel(true)} // Open category panel instead
-            className="!mr-2"
+        <div className="md:hidden">
+          <button
+            onClick={() => setAnchorEl(!anchorEl)}
+            className="text-gray-700 hover:text-black"
           >
-            <GiHamburgerMenu />
-          </IconButton>
-        )}
+            <GiHamburgerMenu size={24} />
+          </button>
+        </div>
 
         {/* Logo */}
         <Link to="/" className="flex-grow md:flex-grow-0">
-          <img onClick={handleLogoClick}
-            src="https://res.cloudinary.com/dgob9antb/image/upload/v1740274717/momentomainlogo_eyqct2.jpg"
-            className="h-14 lg:h-18 w-auto"
-            alt="Logo" 
+          <img
+            onClick={handleLogoClick}
+            src="https://res.cloudinary.com/dgob9antb/image/upload/v1742666727/momentoresizeblackbglogo_ucawai.jpg"
+            className="h-6 lg:h-8 w-auto cursor-pointer"
+            alt="Logo"
           />
-          </Link>
+        </Link>
 
         {/* User Profile */}
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-4 ml-auto">
           {context.isLogin ? (
-            <>
-              <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-                <Avatar className="!h-8 !w-8" src={context.userData?.avatar} />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}
+            <div className="relative">
+              <button
+                onClick={() => setAnchorEl(!anchorEl)}
+                className="focus:outline-none"
               >
-                <MenuItem onClick={handleMyAccountClick}> {/* Use onClick instead of component */}
-                  My Account
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={context.logout}>Logout</MenuItem>
-              </Menu>
-            </>
+                <img
+                  src={context.userData?.avatar}
+                  alt="User Avatar"
+                  className="h-8 w-8 rounded-full"
+                />
+              </button>
+
+              {anchorEl && (
+                <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md overflow-hidden z-10">
+                  <button
+                    onClick={handleMyAccountClick}
+                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                  >
+                    My Account
+                  </button>
+                  <hr className="border-gray-200" />
+                  <button
+                    onClick={context.logout}
+                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="flex gap-2">
-              <Button
-                component={Link}
+              <Link
                 to="/login"
-                color="inherit"
-                className="!hidden md:!inline-flex !capitalize"
+                className="hidden md:inline-block px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
               >
                 Login
-              </Button>
-              <Button
-                component={Link}
+              </Link>
+              <Link
                 to="/register"
-                color="inherit"
-                className="!hidden md:!inline-flex !capitalize"
+                className="hidden md:inline-block px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
               >
                 Register
-              </Button>
+              </Link>
             </div>
           )}
         </div>
-      </Toolbar>
+      </div>
 
+      {/* Navigation Component */}
       <Navigation />
-    </AppBar>
+    </header>
   );
 };
 

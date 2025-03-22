@@ -25,7 +25,7 @@ const PhotoOfTheDay = () => {
   }, []);
 
   return (
-    <div className="bg-black px-4 py-16 md:px-8">
+    <div className="bg-gradient-to-r from-gray-900 to-black px-4 py-16 md:px-8">
       {loading ? (
         <p className="text-white text-center text-xl">Loading Photo of the Day...</p>
       ) : photoOfTheDay ? (
@@ -43,7 +43,7 @@ const PhotoOfTheDay = () => {
               <img
                 src={photoOfTheDay.image.url}
                 alt={photoOfTheDay.title}
-                className="w-full h-full object-contain shadow-2xl"
+                className="w-full h-full object-contain"
               />
             </div>
 
@@ -57,7 +57,7 @@ const PhotoOfTheDay = () => {
                   {photoOfTheDay.description}
                 </p>
                 <p className="text-gray-400 text-xs italic font-pt-serif">
-                  Photo by {photoOfTheDay.user?.name || "Unknown Photographer"}
+                  Photo by {photoOfTheDay.user?.name || "Momento User"}
                 </p>
               </div>
             </div>
