@@ -45,7 +45,7 @@ const Navigation = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block py-2 bg-gradient-to-r from-gray-900 to-black shadow-sm">
+      <nav className="hidden md:block py-2 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex-1 flex justify-center">

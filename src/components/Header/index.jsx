@@ -21,7 +21,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 bg-gradient-to-r from-gray-900 to-black shadow-md z-50">
+    <header className="sticky top-0 bg-gray-900 z-50">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -78,18 +78,24 @@ const Header = () => {
             </div>
           ) : (
             <div className="flex gap-2">
+              <button className="text-white font-semi-bold">
               <Link
+              
                 to="/login"
-                className="hidden md:inline-block px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
+                className="hidden md:inline-block px-4 py-2"
               >
                 Login
+                
               </Link>
+              </button>
+              <button className="text-white font-semi-bold">
               <Link
                 to="/register"
-                className="hidden md:inline-block px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
+                className="hidden md:inline-block px-4 py-2"
               >
                 Register
               </Link>
+              </button>
             </div>
           )}
         </div>
