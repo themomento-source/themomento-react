@@ -42,7 +42,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 bg-gray-900 z-50">
+    <header className="sticky top-0 bg-gray-900 z-10">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile Menu Button */}
         <div className="md:hidden">
