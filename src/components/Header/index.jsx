@@ -1,13 +1,34 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { MdOutlineClose } from "react-icons/md";
 import { MyContext } from "../../App";
 import Navigation from "./Navigation";
 
+const mainMenuItems = [
+  { name: "Home", path: "/" },
+  { name: "Become a Member", path: "/become-member" },
+  { name: "Submit Photo", path: "/my-account" },
+  { name: "Community", path: "/bloglisting" },
+  { name: "About Us", path: "/about" },
+];
+
 const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(false);
   const context = useContext(MyContext);
   const navigate = useNavigate();
+
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMobileLinkClick = () => {
+    setIsMobileMenuOpen(false);
+    window.location.reload();
+  };
+
+
 
   // Handle "My Account" click
   const handleMyAccountClick = () => {
@@ -25,14 +46,13 @@ const Header = () => {
       <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button
-            onClick={() => setAnchorEl(!anchorEl)}
-            className="text-gray-700 hover:text-black"
-          >
-            <GiHamburgerMenu size={24} />
-          </button>
-        </div>
-
+  <button
+    onClick={handleMobileMenuToggle} // Changed from setAnchorEl
+    className="text-white hover:text-gray-300 px-2 py-4"
+  >
+    <GiHamburgerMenu size={24} />
+  </button>
+</div>
         {/* Logo */}
         <Link to="/" className="flex-grow md:flex-grow-0">
           <img
@@ -100,9 +120,66 @@ const Header = () => {
           )}
         </div>
       </div>
+      {isMobileMenuOpen && (
+  <div className="md:hidden fixed inset-0 bg-gray-900 z-50 pt-16">
+    <div className="container mx-auto px-4">
+      {/* Menu Header with Close Icon */}
+      <div className="flex justify-between items-center pb-4 border-b border-gray-700">
+        <h2 className="text-white text-xl font-bold">Menu</h2>
+        <button
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="text-white text-2xl p-2 hover:bg-gray-800 rounded-full"
+        >
+          <MdOutlineClose />
+        </button>
+      </div>
+
+      {/* Menu Items */}
+      <ul className="space-y-4 pt-4">
+        {mainMenuItems.map((item) => (
+          <li key={item.name}>
+            <Link
+              to={item.path}
+              className="text-white font-serif block py-3 text-lg hover:bg-gray-800 px-4 rounded"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          </li>
+        ))}
+        {context.isLogin && (
+          <>
+            <li>
+              <Link
+                to="/my-account"
+                className="text-white block py-3 text-lg hover:bg-gray-800 px-4 rounded"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                My Account
+              </Link>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  context.logout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-white block w-full py-3 text-lg hover:bg-gray-800 px-4 rounded text-left"
+              >
+                Logout
+              </button>
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
+  </div>
+)}
+
+
 
       {/* Navigation Component */}
-      <Navigation />
+      <Navigation mainMenuItems={mainMenuItems} />
     </header>
   );
 };

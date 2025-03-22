@@ -53,3 +53,12 @@ button {
   font-size: 0.75rem;
   margin-top: 2px;
 }
+
+.mobile-menu-overlay {
+  transition: all 0.3s ease-in-out;
+  transform: translateY(-100%);
+}
+
+.mobile-menu-overlay.open {
+  transform: translateY(0);
+}

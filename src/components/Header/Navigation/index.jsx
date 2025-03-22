@@ -14,21 +14,14 @@ import { BsCamera, BsGrid, BsNewspaper } from "react-icons/bs";
 import { MyContext } from "../../../App";
 import "../Navigation/style.css";
 
-const Navigation = () => {
+const Navigation = ({ mainMenuItems}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
   const context = useContext(MyContext);
   const navigate = useNavigate(); 
 
-  const mainMenuItems = [
-    { name: "Home", path: "/" },
-    
-    { name: "Become a Member", path: "/become-member" },
-    { name: "Submit Photo", path: "/my-account" },
-    { name: "Community", path: "/bloglisting" },
-    { name: "About Us", path: "/about" },
-  ];
+
 
   const mobileMenuItems = [
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
