@@ -57,7 +57,7 @@ const Header = () => {
         <Link to="/" className="flex-grow md:flex-grow-0">
           <img
             onClick={handleLogoClick}
-            src="https://res.cloudinary.com/dgob9antb/image/upload/v1742666727/momentoresizeblackbglogo_ucawai.jpg"
+            src="https://res.cloudinary.com/dgob9antb/image/upload/v1742842629/momentoGraylogo_tqsw7v.jpg"
             className="h-6 lg:h-8 w-auto cursor-pointer"
             alt="Logo"
           />

@@ -54,13 +54,13 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
       const response = await editData(
         `/api/user/update-user/${userData._id}`,
         formData
       );
-
+  
       if (response.user) {
         setUserData((prev) => ({
           ...prev,
@@ -70,9 +70,11 @@ const Settings = () => {
             ...response.user.socialLinks,
           },
         }));
+  
         setTimeout(() => {
-          navigate("/my-account");
+          navigate(`/user/${response.user._id}`); // Use updated ID from response
         }, 1000);
+  
         openAlertBox("success", "Profile updated successfully!");
       }
     } catch (error) {
@@ -81,6 +83,7 @@ const Settings = () => {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>

@@ -334,7 +334,7 @@ function MyAccount() {
                     size="small"
                     className="!text-white"
                   >
-                    Your public profile
+                    Switch to Your public profile
                   </Button>
                 </Box>
               )}
