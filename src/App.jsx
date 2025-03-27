@@ -28,6 +28,9 @@ import { IoCloseSharp } from "react-icons/io5";
 import { fetchDataFromApi } from "./utils/api.js";
 import AboutMomento from "./Pages/About/index.jsx";
 import MembershipPromo from "./Pages/BecomeAMember/index.jsx";
+import Learning from "./Pages/BlogListing/Learning.jsx";
+import Interview from "./Pages/BlogListing/Interview.jsx";
+import GeneralBlog from "./Pages/BlogListing/GeneralBlog.jsx";
 
 export const MyContext = createContext();
 
@@ -104,6 +107,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/bloglisting" element={<BlogListing />} />
+              <Route path="/learning" element={<Learning />} />
+              <Route path="/interview" element={<Interview />} />
+              <Route path="/general-blog" element={<GeneralBlog />} />
               <Route path="/photolisting" element={<PhotoListing />} />
               <Route path="/photodetails/:id" element={<PhotoDetails />} />
               <Route path="/blog/:id" element={<BlogDetails />} />
