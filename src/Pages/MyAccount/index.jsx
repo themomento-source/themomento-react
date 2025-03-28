@@ -409,7 +409,7 @@ function MyAccount() {
                     {/* Submit Photo for Sale */}
                     <Grid item xs={12}>
                       <Typography variant="h6" className="mb-4">
-                        Submit Photo for Sale
+                        Submit Photo for your portfolio
                       </Typography>
                       <form onSubmit={handlePhotoSubmission}>
                         <TextField

@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
-import ImageModal from "../../components/ImageModal";
-import { motion } from "framer-motion";
-import { MdLocationOn, MdBlurOn, MdPhotoCamera, MdLink } from "react-icons/md";
+import { MdLocationOn, MdBlurOn, MdPhotoCamera, MdLink, MdClose } from "react-icons/md";
 import { FaAward } from "react-icons/fa";
 import { FiInstagram, FiTwitter } from "react-icons/fi";
-import { RiCameraLensFill } from "react-icons/ri";
 import SafeHTML from "../../components/SafeHTML";
 
 const PublicProfile = () => {
   const { userId } = useParams();
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [profileData, setProfileData] = useState({
     user: {},
     photos: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchPublicProfile = async () => {
@@ -30,13 +27,12 @@ const PublicProfile = () => {
         const photos =
           photosResponse?.data?.flatMap((submission) =>
             submission.image
-              ? [
-                  {
-                    url: submission.image.url,
-                    description: submission.description,
-                    _id: submission.image.public_id,
-                  },
-                ]
+              ? [{
+                  url: submission.image.url,
+                  description: submission.description,
+                  _id: submission._id,
+                  title: submission.title || "Untitled"
+                }]
               : []
           ) || [];
 
@@ -55,13 +51,9 @@ const PublicProfile = () => {
     fetchPublicProfile();
   }, [userId]);
 
-  const handleImageClick = (photo) => {
-    setSelectedImage(photo);
-  };
-
   if (loading) {
     return (
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-4 min-h-screen">
         <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" />
       </div>
     );
@@ -81,46 +73,112 @@ const PublicProfile = () => {
   }
 
   return (
-    <div className="container mx-auto py-16 min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <div className="relative flex flex-col items-center mb-16 p-10 bg-white  dark:bg-gray-800 rounded-lg shadow-lg">
-        <div className="w-48 h-48 relative mb-8">
+    <div className="container mx-auto py-16 min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Photo Modal */}
+      {selectedPhoto && (
+  <div 
+    className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+    onClick={() => setSelectedPhoto(null)}
+  >
+    <div 
+      className="bg-white dark:bg-gray-800 rounded-xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={() => setSelectedPhoto(null)}
+        className="absolute top-6 right-6 text-gray-600 dark:text-gray-200 hover:text-gray-800 dark:hover:text-white z-10"
+      >
+        <MdClose className="text-4xl" />
+      </button>
+
+      {/* Image Section - 70% width */}
+      <div className="md:w-2/3 p-2 flex items-center justify-center bg-gray-100 dark:bg-gray-900 h-[80vh]">
+        <img
+          src={selectedPhoto.url}
+          alt={selectedPhoto.title}
+          className="max-h-[80vh] w-auto object-scale-down"
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      </div>
+
+      {/* Details Section - 30% width */}
+      <div className="md:w-1/3 p-8 dark:text-white overflow-y-auto min-h-[80vh]">
+        <h2 className="text-3xl font-bold mb-6">{selectedPhoto.title}</h2>
+        {selectedPhoto.description && (
+          <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg whitespace-pre-line leading-relaxed">
+            {selectedPhoto.description}
+          </p>
+        )}
+        <div className="space-y-4 text-base">
+          <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+            <p className="font-semibold">Author:</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              {profileData.user?.name || "Unknown Artist"}
+            </p>
+          </div>
+          <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+            <p className="font-semibold">Uploaded:</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              {new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </p>
+          </div>
+          <div className="pb-4">
+            <p className="font-semibold">Dimensions:</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              {/* Add actual dimensions if available */}
+              6000 × 4000 pixels
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      )}
+
+      {/* Profile Header Section */}
+      <div className="flex flex-col items-center mb-16 p-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+        <div className="w-32 h-32 relative mb-6">
           <img
             src={profileData.user?.avatar || "/default-avatar.jpg"}
             alt={`${profileData.user?.name}'s avatar`}
-            className="w-full h-full object-cover rounded-full"
+            className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
           />
         </div>
 
-        <h2 className="text-3xl font-bold mb-4">
+        <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
           {profileData.user?.name || "Visual Storyteller"}
-        </h2>
-
-        <div className="flex flex-wrap gap-3 mb-4">
+        </h1>
+        
+        <div className="flex flex-wrap gap-3 mb-6 justify-center">
           {profileData.user.location && (
-            <span className="flex items-center gap-2 px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded-full">
-              <MdLocationOn />
+            <span className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-sm">
+              <MdLocationOn className="text-blue-500" />
               {profileData.user.location}
             </span>
           )}
           {profileData.user.genres && (
-            <span className="flex items-center gap-2 px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded-full">
-              <MdBlurOn />
+            <span className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-sm">
+              <MdBlurOn className="text-purple-500" />
               {profileData.user.genres}
             </span>
           )}
-          <span className="flex items-center gap-2 px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded-full">
-            <MdPhotoCamera />
+          <span className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-sm">
+            <MdPhotoCamera className="text-green-500" />
             {`${profileData.photos.length} Works`}
           </span>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-4 mb-6">
           {profileData.user.socialLinks?.instagram && (
             <a
               href={`https://instagram.com/${profileData.user.socialLinks.instagram}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 flex items-center justify-center bg-gray-300 dark:bg-gray-700 rounded-full"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
             >
               <FiInstagram className="text-2xl" />
             </a>
@@ -130,7 +188,7 @@ const PublicProfile = () => {
               href={`https://twitter.com/${profileData.user.socialLinks.twitter}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 flex items-center justify-center bg-gray-300 dark:bg-gray-700 rounded-full"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
             >
               <FiTwitter className="text-2xl" />
             </a>
@@ -140,7 +198,7 @@ const PublicProfile = () => {
               href={profileData.user.socialLinks.websites}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 flex items-center justify-center bg-gray-300 dark:bg-gray-700 rounded-full"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
             >
               <MdLink className="text-2xl" />
             </a>
@@ -148,32 +206,38 @@ const PublicProfile = () => {
         </div>
       </div>
 
+      {/* Bio Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
         {profileData.user?.about && (
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg">
-            <h5 className="text-xl font-semibold mb-3">About</h5>
-            <SafeHTML html={profileData.user.about} />
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Biography</h3>
+            <SafeHTML 
+              html={profileData.user.about} 
+              className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300"
+            />
           </div>
         )}
 
+        {/* Details Section */}
         <div className="space-y-8">
           {profileData.user?.favouriteEquipement && (
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg">
-              <h5 className="text-xl font-semibold mb-3">Creative Tools</h5>
-              <p>{profileData.user.favouriteEquipement}</p>
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm">
+              <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Gear & Equipment</h3>
+              <p className="text-gray-600 dark:text-gray-300">{profileData.user.favouriteEquipement}</p>
             </div>
           )}
 
           {profileData.user?.award && (
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg">
-              <h5 className="text-xl font-semibold mb-3">Achievements</h5>
-              <div className="space-y-3">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm">
+              <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Achievements</h3>
+              <div className="grid gap-3">
                 {profileData.user.award.split(",").map((award, index) => (
                   <div
                     key={index}
-                    className="p-3 rounded-lg bg-gray-100 dark:bg-gray-700"
+                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700"
                   >
-                    <p>{award.trim()}</p>
+                    <FaAward className="flex-shrink-0 text-yellow-500" />
+                    <p className="text-gray-600 dark:text-gray-300">{award.trim()}</p>
                   </div>
                 ))}
               </div>
@@ -182,37 +246,40 @@ const PublicProfile = () => {
         </div>
       </div>
 
+      {/* Gallery Section */}
       <div className="mb-16">
-        <h3 className="text-3xl font-bold mb-6 text-center">My Gallery</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
-          {profileData.photos.map((photo) => (
-            <motion.div
-              key={photo._id}
-              onClick={() => handleImageClick(photo)}
-              whileHover={{ scale: 1.02 }}
-              className="relative rounded-lg overflow-hidden cursor-pointer bg-gray-200 dark:bg-gray-800"
-            >
-              <img
-                src={photo.url}
-                className="w-full object-cover"
-                alt={photo.description}
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 p-4 flex flex-col justify-end">
-                {photo.description && (
-                  <p className="text-white">{photo.description}</p>
-                )}
+        <h3 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">
+          Creative Portfolio
+        </h3>
+        <div className="container mx-auto px-4">
+          <div className="columns-1 sm:columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
+            {profileData.photos.map((photo) => (
+              <div
+                key={photo._id}
+                className="relative group break-inside-avoid cursor-pointer"
+                onClick={() => setSelectedPhoto(photo)}
+              >
+                <div className="relative overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                  <img
+                    src={photo.url}
+                    alt={photo.description || photo.title}
+                    className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                    <div className="text-white">
+                      <h3 className="text-xl font-bold mb-1">{photo.title}</h3>
+                      <p className="text-sm opacity-90">
+                        by {profileData.user?.name || "Unknown Artist"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-
-      <ImageModal
-        open={!!selectedImage}
-        onClose={() => setSelectedImage(null)}
-        image={selectedImage}
-      />
     </div>
   );
 };

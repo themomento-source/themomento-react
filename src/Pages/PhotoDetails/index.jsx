@@ -21,7 +21,6 @@ function PhotoDetails() {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
-  const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
   const [juryReviews, setJuryReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
@@ -29,11 +28,33 @@ function PhotoDetails() {
   useEffect(() => {
     const fetchPhotoDetails = async () => {
       try {
-        const data = await fetchDataFromApi(`/api/product/${id}`);
-        setPhoto(data.product);
-        setLoading(false);
+        // First try products endpoint
+        const productData = await fetchDataFromApi(`/api/product/${id}`);
+        if (productData?.product) {
+          setPhoto(productData.product);
+        } else {
+          // If product not found, try submissions endpoint
+          const submissionData = await fetchDataFromApi(`/api/submissions/${id}`);
+          if (submissionData?.submission) {
+            // Map submission data to match product structure
+            setPhoto({
+              _id: submissionData.submission._id,
+              name: submissionData.submission.title,
+              imageUrl: submissionData.submission.image?.url,
+              description: submissionData.submission.description,
+              price: submissionData.submission.price || 49.99, // Default price
+              rating: submissionData.submission.rating || 4.5,
+              resolution: submissionData.submission.resolution || "4000x6000",
+              formats: submissionData.submission.formats || ["JPEG", "PNG"],
+              licenseId: submissionData.submission.licenseId || `SUB-${id.slice(0,6).toUpperCase()}`
+            });
+          } else {
+            setError("Photo not found");
+          }
+        }
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -83,7 +104,7 @@ function PhotoDetails() {
         >
           Photos
         </Link>
-        <span className="text-gray-900">{photo.title}</span>
+        <span className="text-gray-900">{photo.name}</span>
       </Breadcrumbs>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -97,8 +118,9 @@ function PhotoDetails() {
             >
               <img
                 src={photo.imageUrl}
-                alt={photo.title}
+                alt={photo.name}
                 className="w-full h-auto max-h-[80vh] object-contain cursor-zoom-in"
+                onContextMenu={(e) => e.preventDefault()}
               />
             </motion.div>
 
@@ -146,7 +168,7 @@ function PhotoDetails() {
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-3xl font-bold text-gray-900">
-                      {photo.price}
+                      ${photo.price}
                     </p>
                     <p className="text-gray-600 text-sm">
                       Commercial license included
@@ -208,8 +230,6 @@ function PhotoDetails() {
           </div>
         </div>
       </div>
-
-      {/* Comment Section */}
 
       {/* Reviews Section */}
       <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-200">

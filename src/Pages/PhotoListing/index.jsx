@@ -13,7 +13,7 @@ function PhotoListing() {
       try {
         const data = await fetchDataFromApi("/api/product/all-product");
         if (data && data.products) {
-          setAllPhotos(data.products); // Assuming API returns products in the "products" key
+          setAllPhotos(data.products); // API returns products in the "products" key
         } else {
           console.error("Invalid data structure:", data);
         }
