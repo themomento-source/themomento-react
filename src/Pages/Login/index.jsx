@@ -98,7 +98,7 @@ function Login() {
   };
 
   return (
-    <section className="section py-10">
+    <section className="section py-10 bg-gradient-to-b from-gray-900 to-black min-h-screen">
       <div className="container mx-auto px-4">
         {" "}
         {/* Container for centering and padding */}

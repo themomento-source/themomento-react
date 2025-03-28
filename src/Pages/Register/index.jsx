@@ -2,10 +2,10 @@ import React, { useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc"; // Google Icon
+import { FcGoogle } from "react-icons/fc";
 import { postData } from "../../utils/api.js";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
+import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from "../../firebase.jsx";
 import { MyContext } from "../../App";
@@ -14,7 +14,7 @@ const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 
 function Register() {
-  const context = useContext(MyContext); // Access the context
+  const context = useContext(MyContext);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -28,6 +28,7 @@ function Register() {
     name: false,
     email: false,
     password: false,
+    passwordStrength: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,29 @@ function Register() {
     if (e.target.value.trim() !== "") {
       setErrors({ ...errors, [e.target.name]: false });
     }
+
+    // Validate password while typing
+    if (e.target.name === "password") {
+      const passwordValidation = validatePassword(e.target.value);
+      setErrors({
+        ...errors,
+        passwordStrength: passwordValidation,
+        password: e.target.value.trim() === "" ? true : false,
+      });
+    }
+  };
+
+  // Password validation
+  const validatePassword = (password) => {
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+    const symbol = /[!@#$%^&*(),.?":{}|<>]/;
+    const minLength = 6;
+
+    if (!uppercase.test(password) || !lowercase.test(password) || !symbol.test(password) || password.length < minLength) {
+      return "Password must be at least 6 characters long, include uppercase, lowercase, and a symbol.";
+    }
+    return "";
   };
 
   // Handle form submission
@@ -54,6 +78,15 @@ function Register() {
       email: formData.email.trim() === "",
       password: formData.password.trim() === "",
     };
+
+    // Password validation
+    const passwordValidation = validatePassword(formData.password);
+    if (passwordValidation) {
+      newErrors.password = true;
+      setErrors({ ...newErrors, passwordStrength: passwordValidation });
+    } else {
+      setErrors({ ...newErrors, passwordStrength: "" });
+    }
 
     setErrors(newErrors);
 
@@ -125,13 +158,9 @@ function Register() {
   };
 
   return (
-    <section className="section py-10">
+    <section className="section bg-gradient-to-b from-gray-900 to-black min-h-screen py-10">
       <div className="container mx-auto px-4">
-        {" "}
-        {/* Added container with mx-auto and px-4 */}
         <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
-          {" "}
-          {/* Added responsive width */}
           <h3 className="text-center text-[20px] font-bold text-black">
             Create Your Account
           </h3>
@@ -209,6 +238,10 @@ function Register() {
               </button>
             </div>
 
+            {errors.passwordStrength && (
+              <div className="text-center text-red-500">{errors.passwordStrength}</div>
+            )}
+
             {errorMessage && (
               <div className="text-center text-red-500">{errorMessage}</div>
             )}
@@ -222,7 +255,7 @@ function Register() {
               {loading ? (
                 <CircularProgress size={24} color="white" />
               ) : (
-                <span className="text-white">Register</span> // Register text in white
+                <span className="text-white">Register</span>
               )}
             </Button>
 
