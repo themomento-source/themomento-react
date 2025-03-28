@@ -32,7 +32,7 @@ const Header = () => {
 
   // Handle "My Account" click
   const handleMyAccountClick = () => {
-    navigate("/my-account");
+    navigate("/my-account/${userData?._id}");
     window.location.reload();
   };
 

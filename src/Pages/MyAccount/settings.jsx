@@ -13,7 +13,6 @@ import { editData } from "../../utils/api";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-
 const Settings = () => {
   const { userData, setUserData, openAlertBox } = useContext(MyContext);
   const [formData, setFormData] = useState({
@@ -24,14 +23,11 @@ const Settings = () => {
     instagram: "",
     twitter: "",
   });
-
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-  
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -81,7 +77,7 @@ const Settings = () => {
         }));
   
         setTimeout(() => {
-          navigate(`/user/${response.user._id}`); // Use updated ID from response
+          navigate(`/user/${response.user._id}`);
         }, 1000);
   
         openAlertBox("success", "Profile updated successfully!");
@@ -94,7 +90,10 @@ const Settings = () => {
   };
 
   const handlePasswordChange = (e) => {
-    setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
+    setPasswordForm({ 
+      ...passwordForm, 
+      [e.target.name]: e.target.value 
+    });
   };
 
   const handlePasswordSubmit = async (e) => {
@@ -123,7 +122,6 @@ const Settings = () => {
       openAlertBox("error", error.response?.data?.message || "Password change failed");
     }
   };
-  
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -265,63 +263,61 @@ const Settings = () => {
       </Paper>
 
       <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-  <Typography variant="h5" gutterBottom>
-    Change Password
-  </Typography>
-  <form onSubmit={handlePasswordSubmit}>
-    <TextField
-      fullWidth
-      label="Current Password"
-      type="password"
-      name="currentPassword"
-      value={passwordForm.currentPassword}
-      onChange={handlePasswordChange}
-      margin="normal"
-      required
-    />
-    <TextField
-      fullWidth
-      label="New Password"
-      type="password"
-      name="newPassword"
-      value={passwordForm.newPassword}
-      onChange={handlePasswordChange}
-      margin="normal"
-      required
-    />
-    <TextField
-      fullWidth
-      label="Confirm New Password"
-      type="password"
-      name="confirmPassword"
-      value={passwordForm.confirmPassword}
-      onChange={handlePasswordChange}
-      margin="normal"
-      error={passwordForm.newPassword !== passwordForm.confirmPassword}
-      helperText={
-        passwordForm.newPassword !== passwordForm.confirmPassword 
-        ? "Passwords do not match" 
-        : ""
-      }
-      required
-    />
-    <Button
-      type="submit"
-      variant="contained"
-      color="primary"
-      sx={{ mt: 2 }}
-      disabled={
-        !passwordForm.currentPassword ||
-        !passwordForm.newPassword ||
-        !passwordForm.confirmPassword
-      }
-    >
-      Change Password
-    </Button>
-  </form>
-</Paper>
-
-
+        <Typography variant="h5" gutterBottom>
+          Change Password
+        </Typography>
+        <form onSubmit={handlePasswordSubmit}>
+          <TextField
+            fullWidth
+            label="Current Password"
+            type="password"
+            name="currentPassword"
+            value={passwordForm.currentPassword}
+            onChange={handlePasswordChange}
+            margin="normal"
+            required
+          />
+          <TextField
+            fullWidth
+            label="New Password"
+            type="password"
+            name="newPassword"
+            value={passwordForm.newPassword}
+            onChange={handlePasswordChange}
+            margin="normal"
+            required
+          />
+          <TextField
+            fullWidth
+            label="Confirm New Password"
+            type="password"
+            name="confirmPassword"
+            value={passwordForm.confirmPassword}
+            onChange={handlePasswordChange}
+            margin="normal"
+            error={passwordForm.newPassword !== passwordForm.confirmPassword}
+            helperText={
+              passwordForm.newPassword !== passwordForm.confirmPassword 
+              ? "Passwords do not match" 
+              : ""
+            }
+            required
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            disabled={
+              !passwordForm.currentPassword ||
+              !passwordForm.newPassword ||
+              !passwordForm.confirmPassword
+            }
+          >
+            Change Password
+          </Button>
+        </form>
+      </Paper>
     </Container>
   );
 };

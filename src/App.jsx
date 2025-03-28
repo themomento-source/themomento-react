@@ -124,7 +124,7 @@ function App() {
 
               {/* Protected Routes */}
               <Route
-                path="/my-account/settings"
+                path="/my-account/:userId/settings"
                 element={
                   <ProtectedRoute>
                     <Settings />
@@ -133,7 +133,7 @@ function App() {
               />
              
               <Route
-                path="/my-account"
+                path="/my-account/:userId"
                 element={
                   <ProtectedRoute>
                     <MyAccount />

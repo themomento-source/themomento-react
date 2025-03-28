@@ -32,10 +32,12 @@ import {
   MdExpandMore,
 } from "react-icons/md";
 import { MyContext } from "../../App.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
 
 function MyAccount() {
+  const { userId } = useParams();
+  
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [activeTab, setActiveTab] = useState("submissions");
   const [userSubmissions, setUserSubmissions] = useState([]);
@@ -66,6 +68,12 @@ function MyAccount() {
 
   const { userData, setUserData, openAlertBox, setIsLogin } = useContext(MyContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userData && userId !== userData._id) {
+      navigate(`/my-account/${userData._id}`);
+    }
+  }, [userId, userData, navigate]);
 
   // Add a ref for the photoSubmission file input
   const photoSubmissionRef = useRef(null);
@@ -366,7 +374,7 @@ function MyAccount() {
                 </Button>
                 <Button
                   component={Link}
-                  href="/my-account/settings"
+                  href={`/my-account/${userData?._id}/settings`}
                   fullWidth
                   startIcon={<MdSettings />}
                   className="!capitalize !justify-start !text-gray-600 hover:!bg-gray-50"
