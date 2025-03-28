@@ -10,7 +10,7 @@ const BecomeMemberPromo = () => {
         <h2 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-wide">
           CAPTURE<br />CONNECT<br />GROW
         </h2>
-        <Link to="/my-account">  
+        <Link to="/my-account/:userId">  
         <button className="border border-yellow-400 text-yellow-400 px-8 py-3 text-lg font-semibold tracking-wide
          hover:bg-yellow-400 hover:text-black transition duration-300 font-pt-serif mt-6">
           JOIN MOMENTO NOW

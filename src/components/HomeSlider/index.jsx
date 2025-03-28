@@ -95,7 +95,7 @@ function HomeSlider() {
                 </h3> */}
 
                 <div className="flex gap-4">
-                  <Link to="/my-account">
+                  <Link to="/my-account/:userId">
                     <button className="inline-block px-4 py-2 mt-4 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] transition-colors duration-300">
                       Join Momento Now
                     </button>

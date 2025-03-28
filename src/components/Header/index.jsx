@@ -8,7 +8,7 @@ import Navigation from "./Navigation";
 const mainMenuItems = [
   { name: "Home", path: "/" },
   { name: "Become a Member", path: "/become-member" },
-  { name: "Submit Photo", path: "/my-account" },
+  { name: "Submit Photo", path: "/my-account/:userId" },
   { name: "Community", path: "/bloglisting" },
   { name: "About Us", path: "/about" },
 ];
