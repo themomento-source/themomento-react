@@ -42,7 +42,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 bg-gray-900 z-10">
+    <header className="sticky top-0 bg-gradient-to-r from-gray-900 to-black z-10">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -74,7 +74,7 @@ const Header = () => {
                 <img
                   src={context.userData?.avatar}
                   alt="User Avatar"
-                  className="h-8 w-8 rounded-full"
+                  className="h-8 w-8 rounded-full border-white border-[2px]"
                 />
               </button>
 

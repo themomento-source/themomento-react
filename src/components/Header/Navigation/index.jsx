@@ -38,7 +38,7 @@ const Navigation = ({ mainMenuItems}) => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block py-2 bg-gray-900">
+      <nav className="hidden md:block py-2 bg-gradient-to-r from-gray-900 to-black">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex-1 flex justify-center">
@@ -88,7 +88,7 @@ const Navigation = ({ mainMenuItems}) => {
                   component={item.path ? Link : "button"}
                   to={item.path}
                   onClick={item.action}
-                  className="!text-gray-600 hover:!text-red-500"
+                  className="!text-gray-600 hover:!text-amber-200"
                 >
                   {item.icon}
                 </IconButton>
