@@ -53,6 +53,3 @@ const BecomeMemberPromo = () => {
 };
 
 export default BecomeMemberPromo;
-
-
-
