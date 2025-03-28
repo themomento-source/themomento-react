@@ -119,6 +119,8 @@ function App() {
               <Route path="/user/:userId" element={<PublicProfile />} />
               <Route path="/about" element={<AboutMomento />} />
               <Route path="/become-member" element={<MembershipPromo/>} />
+              
+              
 
               {/* Protected Routes */}
               <Route
@@ -129,14 +131,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/change-password"
-                element={
-                  <ProtectedRoute>
-                    <ChangePassword />
-                  </ProtectedRoute>
-                }
-              />
+             
               <Route
                 path="/my-account"
                 element={

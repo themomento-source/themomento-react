@@ -23,30 +23,30 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const forgotPassword = async () => {
-    if (!formData.email.trim()) {
-      context.openAlertBox("error", "Email is required");
-      return;
-    }
+ 
 
+ const forgotPassword = async () => {
     try {
       const response = await postData("/api/user/forgot-password", {
         email: formData.email,
       });
-
+  
+      console.log("Forgot password response:", response); // Add this
+  
       if (response.success) {
         context.openAlertBox("success", `OTP sent to ${formData.email}`);
         localStorage.setItem("userEmail", formData.email);
         localStorage.setItem("actionType", "forgot-password");
         navigate("/verify");
       } else {
-        context.openAlertBox("error", response.message || "Failed to send OTP");
+        console.error("Failed to send OTP:", response.message);
       }
     } catch (error) {
-      console.error("Error sending OTP:", error);
-      context.openAlertBox("error", "An error occurred while sending OTP");
+      console.error("Forgot password error:", error.response?.data || error);
     }
   };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

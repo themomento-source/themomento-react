@@ -37,11 +37,8 @@ function Verify() {
       let response;
       
       if (actionType === "forgot-password") {
-        // Correct endpoint for OTP verification
-        response = await postData("/api/user/verify-otp", {
-          email: userEmail,
-          otp: otp
-        });
+        navigate("/change-password");
+        ;
       } else {
         response = await postData("/api/user/verifyemail", {
           email: userEmail,
@@ -64,6 +61,24 @@ function Verify() {
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const userEmail = localStorage.getItem("userEmail");
+      const response = await postData("/api/user/resend-otp", { 
+        email: userEmail 
+      });
+      
+      if (response.success) {
+        alert("New OTP sent successfully!");
+      } else {
+        alert("Failed to resend OTP");
+      }
+    } catch (error) {
+      console.error("Resend failed:", error);
+      alert("Error resending OTP");
     }
   };
 
@@ -98,6 +113,14 @@ function Verify() {
           >
             {loading ? "Verifying..." : "Verify OTP"}
           </Button>
+
+          <Button
+  onClick={handleResendOtp}
+  className="w-full py-3 mt-2 text-blue-600 font-bold"
+  variant="outlined"
+>
+  Resend OTP
+</Button>
         </form>
       </div>
     </section>

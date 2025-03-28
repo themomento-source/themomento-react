@@ -1,5 +1,6 @@
 import React from "react";
 import { FaRegSun } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const BecomeMemberPromo = () => {
   return (
@@ -9,12 +10,12 @@ const BecomeMemberPromo = () => {
         <h2 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-wide">
           CAPTURE<br />CONNECT<br />GROW
         </h2>
-
+        <Link to="/my-account">  
         <button className="border border-yellow-400 text-yellow-400 px-8 py-3 text-lg font-semibold tracking-wide
-         hover:bg-yellow-400 hover:text-black transition duration-300 font-pt-serif">
-          JOIN MOMENTO
+         hover:bg-yellow-400 hover:text-black transition duration-300 font-pt-serif mt-6">
+          JOIN MOMENTO NOW
         </button>
-
+        </Link>
         <div>
           <h3 className="text-4xl font-bold text-yellow-400 font-marcellus">FREE MEMBERSHIP</h3>
         </div>
@@ -52,3 +53,6 @@ const BecomeMemberPromo = () => {
 };
 
 export default BecomeMemberPromo;
+
+
+

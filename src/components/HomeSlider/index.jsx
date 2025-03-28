@@ -12,7 +12,7 @@ function HomeSlider() {
     // Static fallback image
     {
       url: "https://res.cloudinary.com/dgob9antb/image/upload/v1742844182/slider/ncihadv9tnucyk0fumlh.jpg",
-      title: "Welcome to Momento",
+      title: "Elevate Your Photography Journey",
       isStatic: true
     }
   ]);
@@ -67,7 +67,7 @@ function HomeSlider() {
               <img
                 src={slide.url}
                 alt={slide.title}
-                className="w-full h-[800px] object-cover"
+                className="w-full h-[700px] object-cover"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/50 p-6">
                 {/* Show loading spinner only when waiting for dynamic content */}
@@ -96,8 +96,8 @@ function HomeSlider() {
 
                 <div className="flex gap-4">
                   <Link to="/my-account">
-                    <button className="inline-block px-6 py-2 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] transition-colors duration-300">
-                      Join Now
+                    <button className="inline-block px-4 py-2 mt-4 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] transition-colors duration-300">
+                      Join Momento Now
                     </button>
                   </Link>
                 </div>
