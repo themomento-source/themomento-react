@@ -100,12 +100,13 @@ function Register() {
 
       if (response.success) {
         localStorage.setItem("userEmail", formData.email);
+        localStorage.setItem("actionType", "registration");
         setSuccessMessage(
           "Registration successful! An OTP has been sent to your email."
         );
         setTimeout(() => {
           navigate("/verify");
-        }, 2000);
+        }, 1000);
       } else {
         setErrorMessage(response.message || "Something went wrong");
       }

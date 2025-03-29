@@ -26,27 +26,28 @@ function Verify() {
     const actionType = localStorage.getItem("actionType");
     const userEmail = localStorage.getItem("userEmail");
   
-    if (otp.length !== 6) {
-      setError("OTP must be exactly 6 digits.");
+    if (!userEmail || otp.length !== 6) {
+      setError("Invalid verification request");
       return;
     }
   
     setLoading(true);
   
     try {
-      let response;
-      
-      if (actionType === "forgot-password") {
-        navigate("/change-password");
-        ;
-      } else {
-        response = await postData("/api/user/verifyemail", {
-          email: userEmail,
-          otp,
-        });
-      }
+      // Determine endpoint based on action type
+      const endpoint = actionType === "forgot-password" 
+        ? "/api/user/verify-otp" 
+        : "/api/user/verifyemail";
+  
+      const response = await postData(endpoint, {
+        email: userEmail,
+        otp,
+      });
   
       if (response.success) {
+        // Clear OTP-related storage
+        localStorage.removeItem("actionType");
+        
         if (actionType === "forgot-password") {
           navigate("/change-password");
         } else {
@@ -54,11 +55,10 @@ function Verify() {
           navigate("/login");
         }
       } else {
-        setError(response.message || "Invalid OTP. Please try again.");
+        setError(response.message || "Invalid OTP");
       }
     } catch (error) {
-      console.error("Error verifying OTP:", error);
-      setError("An error occurred. Please try again.");
+      setError("Verification failed. Please try again.");
     } finally {
       setLoading(false);
     }

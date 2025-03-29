@@ -25,24 +25,26 @@ function Login() {
 
  
 
- const forgotPassword = async () => {
+  const forgotPassword = async () => {
     try {
+      console.log('Sending forgot password request...');
       const response = await postData("/api/user/forgot-password", {
         email: formData.email,
       });
   
-      console.log("Forgot password response:", response); // Add this
+      console.log('Forgot password response:', response);
   
       if (response.success) {
-        context.openAlertBox("success", `OTP sent to ${formData.email}`);
+        console.log('OTP sent, navigating to /verify');
+        
         localStorage.setItem("userEmail", formData.email);
         localStorage.setItem("actionType", "forgot-password");
-        navigate("/verify");
+        navigate("/verify"); 
       } else {
         console.error("Failed to send OTP:", response.message);
       }
     } catch (error) {
-      console.error("Forgot password error:", error.response?.data || error);
+      console.error("Forgot password error:", error);
     }
   };
 
@@ -151,16 +153,16 @@ function Login() {
             </div>
 
             <div className="text-center my-3">
-              <a
-                className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  forgotPassword();
-                }}
-              >
-                Forgot Password?
-              </a>
+            <a
+  className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
+  href="#"
+  onClick={async (e) => {
+    e.preventDefault();
+    await forgotPassword();
+  }}
+>
+  Forgot Password?
+</a>
             </div>
 
             <div className="flex items-center mt-5">

@@ -16,7 +16,7 @@ import Register from "./Pages/Register";
 import Verify from "./Pages/Verify";
 import Checkout from "./Pages/Checkout";
 import MyAccount from "./Pages/MyAccount";
-import ChangePassword from "./Pages/ChangePassword/index.jsx";
+
 import PublicProfile from "./Pages/MyAccount/publicProfile.jsx";
 import Settings from "./Pages/MyAccount/settings.jsx";
 
@@ -31,6 +31,7 @@ import MembershipPromo from "./Pages/BecomeAMember/index.jsx";
 import Learning from "./Pages/BlogListing/Learning.jsx";
 import Interview from "./Pages/BlogListing/Interview.jsx";
 import GeneralBlog from "./Pages/BlogListing/GeneralBlog.jsx";
+import ChangePassword from "./Pages/Login/changePassword/index.jsx";
 
 export const MyContext = createContext();
 
@@ -119,6 +120,7 @@ function App() {
               <Route path="/user/:userId" element={<PublicProfile />} />
               <Route path="/about" element={<AboutMomento />} />
               <Route path="/become-member" element={<MembershipPromo/>} />
+              <Route path="/change-password" element={<ChangePassword />} />
               
               
 

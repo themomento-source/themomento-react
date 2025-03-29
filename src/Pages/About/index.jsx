@@ -51,7 +51,7 @@ const AboutMomento = () => {
               <h3 className="text-xl font-semibold text-black mb-2 font-marcellus text-center">
                 Our Vision
               </h3>
-              <p className="text-gray-600 text-base font-pt-serif text-center">
+              <p className="text-black text-base font-pt-serif text-center">
                 To build a world where creativity is celebrated, and photography becomes a tool for social and personal transformation.
               </p>
             </div>
@@ -71,7 +71,7 @@ const AboutMomento = () => {
                 <h3 className="text-xl font-semibold text-black mb-2 font-marcellus">
                   Free Portfolio Gallery
                 </h3>
-                <p className="text-gray-600 text-base font-pt-serif">
+                <p className="text-black text-base font-pt-serif text-center">
                   Showcase your best work with a professional portfolio gallery to attract clients and collaborators.
                 </p>
               </div>
@@ -95,7 +95,7 @@ const AboutMomento = () => {
                 <h3 className="text-xl font-semibold text-black mb-2 font-marcellus">
                   Exclusive Opportunities
                 </h3>
-                <p className="text-gray-600 text-base font-pt-serif">
+                <p className="text-black text-base font-pt-serif text-center">
                   Access photography assignments, client opportunities, and expert feedback.
                 </p>
               </div>
