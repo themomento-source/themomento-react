@@ -31,8 +31,8 @@ const Navigation = ({ mainMenuItems}) => {
 
   // Function to handle Home button click
   const handleHomeClick = () => {
-    navigate("/"); // Navigate to the home page
-    window.location.reload(); // Reload the page
+    navigate("/"); 
+    window.location.reload();
   };
 
   return (

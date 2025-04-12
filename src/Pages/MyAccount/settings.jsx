@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Container,
   Paper,
+  MenuItem
 } from "@mui/material";
 import { MyContext } from "../../App";
 import { editData } from "../../utils/api";
@@ -44,6 +45,7 @@ const Settings = () => {
         award: userData.award || "",
         genres: userData.genres || "",
         favouriteEquipement: userData.favouriteEquipement || "",
+        gender: userData.gender || "",
       });
     }
   }, [userData]);
@@ -142,6 +144,22 @@ const Settings = () => {
             variant="outlined"
           />
 
+<TextField
+  select
+  fullWidth
+  label="Gender"
+  name="gender"
+  value={formData.gender}
+  onChange={handleChange}
+  margin="normal"
+  variant="outlined"
+>
+  <MenuItem value="">Select Gender</MenuItem>
+  <MenuItem value="male">MALE</MenuItem>
+  <MenuItem value="female">FEMALE</MenuItem>
+  <MenuItem value="others">OTHERS</MenuItem>
+</TextField>
+
           <TextField
             fullWidth
             label="Location"
@@ -206,6 +224,8 @@ const Settings = () => {
             margin="normal"
             variant="outlined"
           />
+
+
 
           <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
             Social Links
