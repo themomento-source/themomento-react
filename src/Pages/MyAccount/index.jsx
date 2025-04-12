@@ -12,9 +12,7 @@ import {
   TextField,
   Link,
   Grid,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  
   Select,
   MenuItem,
   InputLabel,
@@ -29,7 +27,7 @@ import {
   MdPhotoLibrary,
   MdShoppingBag,
   MdCloudUpload,
-  MdExpandMore,
+  
 } from "react-icons/md";
 import { MyContext } from "../../App.jsx";
 import { useNavigate, useParams } from "react-router-dom";
@@ -342,20 +340,14 @@ function MyAccount() {
   size="small"
   className="!bg-amber-400 !text-gray-900 !capitalize px-4 transition-colors duration-200"
 >
-  Switch Your Public Profile
+  Switch to Your Public Profile
 </Button>
                 </Box>
               )}
 
               {/* Navigation */}
               <nav className="space-y-2 py-6">
-                <Button
-                  fullWidth
-                  startIcon={<MdDashboard />}
-                  className="!justify-start !text-gray-700 hover:!bg-gray-50 rounded-md py-2"
-                >
-                  Dashboard
-                </Button>
+                
                 <Button
                   fullWidth
                   startIcon={<MdPhotoLibrary />}

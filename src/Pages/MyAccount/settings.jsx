@@ -17,6 +17,7 @@ import "react-quill/dist/quill.snow.css";
 const Settings = () => {
   const { userData, setUserData, openAlertBox } = useContext(MyContext);
   const [formData, setFormData] = useState({
+    name: "",
     mobile: "",
     about: "",
     location: "",
@@ -36,6 +37,7 @@ const Settings = () => {
   useEffect(() => {
     if (userData) {
       setFormData({
+        name: userData.name || "",
         mobile: userData.mobile || "",
         about: userData.about || "",
         location: userData.location || "",
@@ -133,6 +135,19 @@ const Settings = () => {
         </Typography>
 
         <form onSubmit={handleSubmit}>
+        <TextField
+            fullWidth
+            label="Full Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            margin="normal"
+            variant="outlined"
+            required
+          />
+
+
+
           <TextField
             fullWidth
             label="Mobile Number"
