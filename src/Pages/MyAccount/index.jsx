@@ -333,17 +333,17 @@ function MyAccount() {
 
               {userData && (
                 <Box mt={2} textAlign="center">
-                  <Button
-                    component={Link}
-                    href={`/user/${userData?._id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="contained"
-                    size="small"
-                    className="!text-white"
-                  >
-                    Switch to Your public profile
-                  </Button>
+                 <Button
+  component={Link}
+  href={`/user/${userData?._id}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  variant="contained"
+  size="small"
+  className="!bg-amber-400 !text-gray-900 !capitalize px-4 transition-colors duration-200"
+>
+  Switch Your Public Profile
+</Button>
                 </Box>
               )}
 
@@ -480,13 +480,14 @@ function MyAccount() {
                             ref={photoSubmissionRef}
                           />
                           <label htmlFor="photoSubmission">
-                            <Button
-                              variant="outlined"
-                              startIcon={<MdCloudUpload />}
-                              component="span"
-                            >
-                              Select Photo
-                            </Button>
+                          <Button
+  variant="outlined"
+  startIcon={<MdCloudUpload className="text-lg" />}
+  component="span"
+  className="!border-2 !border-gradient-to-r !from-blue-500 !to-purple-500 hover:!from-blue-600 hover:!to-purple-600 !text-gray-800 hover:!text-white !rounded-xl !px-6 !py-3 !transition-all !duration-300 hover:!bg-gradient-to-r hover:!from-blue-500 hover:!to-purple-500 !font-semibold !tracking-wide hover:!shadow-lg active:!scale-95"
+>
+  Upload File
+</Button>
                           </label>
                           <Button
                             type="submit"
@@ -562,13 +563,14 @@ function MyAccount() {
                             required
                           />
                           <label htmlFor="photoOfTheDaySubmission">
-                            <Button
-                              variant="outlined"
-                              startIcon={<MdCloudUpload />}
-                              component="span"
-                            >
-                              Select Photo
-                            </Button>
+                          <Button
+  variant="outlined"
+  startIcon={<MdCloudUpload className="text-lg" />}
+  component="span"
+  className="!border-2 !border-gradient-to-r !from-blue-500 !to-purple-500 hover:!from-blue-600 hover:!to-purple-600 !text-gray-800 hover:!text-white !rounded-xl !px-6 !py-3 !transition-all !duration-300 hover:!bg-gradient-to-r hover:!from-blue-500 hover:!to-purple-500 !font-semibold !tracking-wide hover:!shadow-lg active:!scale-95"
+>
+  Upload File
+</Button>
                           </label>
                           <Button
                             type="submit"

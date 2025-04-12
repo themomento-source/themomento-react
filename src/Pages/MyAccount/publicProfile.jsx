@@ -145,7 +145,7 @@ const PublicProfile = () => {
           <img
             src={profileData.user?.avatar || "/default-avatar.jpg"}
             alt={`${profileData.user?.name}'s avatar`}
-            className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+            className="w-full h-full object-cover rounded-full border-2 border-gray-600 shadow-lg"
           />
         </div>
 
@@ -213,7 +213,7 @@ const PublicProfile = () => {
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Biography</h3>
             <SafeHTML 
               html={profileData.user.about} 
-              className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300"
+              className="text-gray-600 dark:text-white max-w-none"
             />
           </div>
         )}

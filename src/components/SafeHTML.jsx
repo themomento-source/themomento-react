@@ -2,7 +2,7 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 
-const SafeHTML = ({ html }) => {
+const SafeHTML = ({ html, className }) => {  // Add className prop
   const cleanHTML = DOMPurify.sanitize(html, {
     USE_PROFILES: { html: true },
     ALLOWED_TAGS: [
@@ -13,7 +13,7 @@ const SafeHTML = ({ html }) => {
     ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'style', 'target', 'rel']
   });
 
-  return <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
+  return <div className={className} dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
 };
 
 export default SafeHTML;
