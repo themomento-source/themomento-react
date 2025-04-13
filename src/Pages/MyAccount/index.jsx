@@ -612,62 +612,61 @@ function MyAccount() {
                         </div>
                       ) : userSubmissions?.length > 0 ? (
                         <Grid container spacing={4}>
-                          {userSubmissions.map((submission) => (
-                            <Grid item xs={12} sm={6} md={4} key={submission._id}>
-                              <Card className="shadow-sm border border-gray-200 h-full flex flex-col">
-                                <CardContent>
-                                  <Typography variant="h6" className="font-semibold mb-2 py-2">
-                                    {submission.title || "Untitled Submission"}
-                                  </Typography>
-                                  <Typography variant="body2" className="mb-2 text-gray-600 py-2">
-                                    {submission.description || "No description"}
-                                  </Typography>
-                                  <div className="grid grid-cols-1">
-                                  <div className="relative aspect-square py-4">
+                        {userSubmissions.map((submission) => (
+                          <Grid item xs={12} sm={6} md={4} key={submission._id}>
+                            <Card className="shadow-sm border border-gray-200 h-full flex flex-col">
+                              <CardContent>
+                                <Typography variant="h6" className="font-semibold mb-2 py-2">
+                                  {submission.title || "Untitled Submission"}
+                                </Typography>
+                                <Typography variant="body2" className="mb-2 text-gray-600 py-2">
+                                  {submission.description || "No description"}
+                                </Typography>
+                                <div className="relative aspect-square py-4">
                                   <img
-  src={
-    submission.status === "approved"
-      ? `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/v${submission.image.version}/${submission.image.public_id}.${submission.image.format}?_v=${submission.cacheStamp}`
-      : `${submission.image.url}?_v=${submission.cacheStamp}`
-  }
-  alt="Submission"
-  className="w-full h-full object-cover"
-/>
-
-  {submission.status === "rejected" && (
-    <Chip
-      label="Rejected"
-      color="error"
-      size="small"
-      className="!absolute top-1 right-1"
-    />
-  )}
-</div>
-                                  </div>
-                                  {submission.rejectionReason && (
-                                    <Typography variant="body2" className="mt-2 text-red-600">
-                                      <strong>Reason:</strong> {submission.rejectionReason}
-                                    </Typography>
-                                  )}
-                                  <div className="mt-3 flex justify-between items-center">
+                                    src={
+                                      submission.status === "approved"
+                                        ? submission.image.url // Approved image URL
+                                        : submission.image.url // Fallback pending/rejected URL
+                                    }
+                                    alt="Submission"
+                                    className="w-full h-full object-cover"
+                                  />
+                                  {submission.status === "rejected" && (
                                     <Chip
-                                      label={submission.status || "pending"}
-                                      color={{
+                                      label="Rejected"
+                                      color="error"
+                                      size="small"
+                                      className="!absolute top-1 right-1"
+                                    />
+                                  )}
+                                </div>
+                                {submission.rejectionReason && (
+                                  <Typography variant="body2" className="mt-2 text-red-600">
+                                    <strong>Reason:</strong> {submission.rejectionReason}
+                                  </Typography>
+                                )}
+                                <div className="mt-3 flex justify-between items-center">
+                                  <Chip
+                                    label={submission.status || "pending"}
+                                    color={
+                                      {
                                         approved: "success",
                                         rejected: "error",
-                                        pending: "default"
-                                      }[submission.status] || "default"}
-                                      size="small"
-                                    />
-                                    <Typography variant="caption" className="text-gray-500">
-                                      {new Date(submission.createdAt).toLocaleDateString()}
-                                    </Typography>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </Grid>
-                          ))}
-                        </Grid>
+                                        pending: "default",
+                                      }[submission.status] || "default"
+                                    }
+                                    size="small"
+                                  />
+                                  <Typography variant="caption" className="text-gray-500">
+                                    {new Date(submission.createdAt).toLocaleDateString()}
+                                  </Typography>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </Grid>
+                        ))}
+                      </Grid>
                       ) : (
                         <div className="text-center p-8">
                           <Typography variant="h6" color="text.secondary">
