@@ -80,11 +80,11 @@ const Settings = () => {
           },
         }));
   
-        setTimeout(() => {
-          navigate(`/user/${response.user._id}`);
-        }, 1000);
-  
+        
+         console.log(response);
+         
         openAlertBox("success", "Profile updated successfully!");
+        
       }
     } catch (error) {
       openAlertBox("error", error.response?.data?.message || "Update failed");
@@ -170,9 +170,10 @@ const Settings = () => {
   variant="outlined"
 >
   <MenuItem value="">Select Gender</MenuItem>
-  <MenuItem value="male">MALE</MenuItem>
-  <MenuItem value="female">FEMALE</MenuItem>
-  <MenuItem value="others">OTHERS</MenuItem>
+  <MenuItem value="male">Male</MenuItem>
+  <MenuItem value="female">Female</MenuItem>
+  <MenuItem value="others">Others</MenuItem>
+  <MenuItem value="others">Prefer Not to Say</MenuItem>
 </TextField>
 
           <TextField

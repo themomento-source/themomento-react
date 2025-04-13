@@ -394,6 +394,7 @@ function MyAccount() {
               <Tab label="Purchased Photos" value="purchases" />
             </Tabs>
 
+
             <CardContent className="p-6">
               {activeTab === "submissions" && (
                 <div>
@@ -622,21 +623,30 @@ function MyAccount() {
                                     {submission.description || "No description"}
                                   </Typography>
                                   <div className="grid grid-cols-1">
-                                    <div className="relative aspect-square py-4">
-                                      <img
-                                        src={submission.image.url}
-                                        alt="Submission"
-                                        className="w-full h-full object-cover"
-                                      />
-                                      {submission.status === "rejected" && (
-                                        <Chip
-                                          label="Rejected"
-                                          color="error"
-                                          size="small"
-                                          className="!absolute top-1 right-1"
-                                        />
-                                      )}
-                                    </div>
+                                  <div className="relative aspect-square py-4">
+  <img
+    src={submission.status === "approved" 
+      ? `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/v${submission.image.version}/${submission.image.public_id}.${submission.image.format}?_v=${submission.cacheStamp}`
+      : `${submission.image.url}?_v=${submission.cacheStamp}`
+    }
+    alt="Submission"
+    className="w-full h-full object-cover"
+    onError={(e) => {
+      if (!e.target.src.endsWith('/fallback-image.jpg')) {
+        e.target.src = '/fallback-image.jpg';
+        e.target.className = 'w-full h-full object-contain bg-gray-100 p-4';
+      }
+    }}
+  />
+  {submission.status === "rejected" && (
+    <Chip
+      label="Rejected"
+      color="error"
+      size="small"
+      className="!absolute top-1 right-1"
+    />
+  )}
+</div>
                                   </div>
                                   {submission.rejectionReason && (
                                     <Typography variant="body2" className="mt-2 text-red-600">
@@ -646,13 +656,11 @@ function MyAccount() {
                                   <div className="mt-3 flex justify-between items-center">
                                     <Chip
                                       label={submission.status || "pending"}
-                                      color={
-                                        submission.status === "approved"
-                                          ? "success"
-                                          : submission.status === "rejected"
-                                          ? "error"
-                                          : "default"
-                                      }
+                                      color={{
+                                        approved: "success",
+                                        rejected: "error",
+                                        pending: "default"
+                                      }[submission.status] || "default"}
                                       size="small"
                                     />
                                     <Typography variant="caption" className="text-gray-500">
@@ -688,7 +696,6 @@ function MyAccount() {
         </main>
       </div>
 
-      {/* Snackbar for notifications */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}

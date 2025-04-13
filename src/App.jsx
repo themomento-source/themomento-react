@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext, createContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async"; // Import HelmetProvider
 import toast, { Toaster } from "react-hot-toast";
+import Alert from '@mui/material/Alert';
 import "./App.css";
 
 import Header from "./components/Header";
@@ -55,6 +56,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [openPhotoDetailsModal, setOpenPhotoDetailsModal] = useState(false);
   const [openCartPanel, setOpenCartPanel] = useState(false);
+  const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -90,6 +92,11 @@ function App() {
     }
   };
 
+  const openAlertBox = (severity, message) => {
+    setAlert({ open: true, message, severity });
+    setTimeout(() => setAlert({ ...alert, open: false }), 4000);
+  };
+
   const values = {
     isLogin,
     setIsLogin,
@@ -97,6 +104,8 @@ function App() {
     setUserData,
     isLoading,
     logout,
+    openAlertBox
+    
   };
 
   return (
@@ -104,6 +113,20 @@ function App() {
       <HelmetProvider>
         <BrowserRouter>
           <MyContext.Provider value={values}>
+          {alert.open && (
+        <Alert 
+          severity={alert.severity} 
+          sx={{ 
+            position: 'fixed', 
+            top: 20, 
+            right: 20, 
+            zIndex: 9999 
+          }}
+        >
+          {alert.message}
+        </Alert>
+      )}
+      
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />
