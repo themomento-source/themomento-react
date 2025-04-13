@@ -624,20 +624,16 @@ function MyAccount() {
                                   </Typography>
                                   <div className="grid grid-cols-1">
                                   <div className="relative aspect-square py-4">
-  <img
-    src={submission.status === "approved" 
+                                  <img
+  src={
+    submission.status === "approved"
       ? `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/v${submission.image.version}/${submission.image.public_id}.${submission.image.format}?_v=${submission.cacheStamp}`
       : `${submission.image.url}?_v=${submission.cacheStamp}`
-    }
-    alt="Submission"
-    className="w-full h-full object-cover"
-    onError={(e) => {
-      if (!e.target.src.endsWith('/fallback-image.jpg')) {
-        e.target.src = '/fallback-image.jpg';
-        e.target.className = 'w-full h-full object-contain bg-gray-100 p-4';
-      }
-    }}
-  />
+  }
+  alt="Submission"
+  className="w-full h-full object-cover"
+/>
+
   {submission.status === "rejected" && (
     <Chip
       label="Rejected"
