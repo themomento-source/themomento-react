@@ -111,7 +111,7 @@ const PublicProfile = () => {
         )}
         <div className="space-y-4 text-base">
           <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
-            <p className="font-semibold">Author:</p>
+            <p className="font-semibold">Photographer:</p>
             <p className="text-gray-600 dark:text-gray-400">
               {profileData.user?.name || "Unknown Artist"}
             </p>
@@ -126,13 +126,7 @@ const PublicProfile = () => {
               })}
             </p>
           </div>
-          <div className="pb-4">
-            <p className="font-semibold">Dimensions:</p>
-            <p className="text-gray-600 dark:text-gray-400">
-              {/* Add actual dimensions if available */}
-              6000 × 4000 pixels
-            </p>
-          </div>
+         
         </div>
       </div>
     </div>
