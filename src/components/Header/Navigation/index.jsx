@@ -17,16 +17,15 @@ import "../Navigation/style.css";
 const Navigation = ({ mainMenuItems}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
-  const context = useContext(MyContext);
   const navigate = useNavigate(); 
+  const context = useContext(MyContext);
 
 
 
   const mobileMenuItems = [
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
     { name: "Community", icon: <BsNewspaper />, path: "/bloglisting" },
-    { name: "Account", icon: <BsPerson />, path: "/login" },
+    { name: "Account", icon: <BsPerson />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login", },
   ];
 
   // Function to handle Home button click
@@ -37,69 +36,73 @@ const Navigation = ({ mainMenuItems}) => {
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="hidden md:block py-2 bg-gradient-to-r from-gray-900 to-black">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex-1 flex justify-center">
-              <ul className="flex items-center gap-4">
-                {mainMenuItems.map((item) => (
-                  <li key={item.name} className="relative group">
-                    {item.name === "Home" ? (
-                      // Use a Button with onClick for Home
-                      <Button
-                        onClick={handleHomeClick}
-                        className="!text-white !capitalize hover:!bg-amber-200"
-                      >
-                        {item.name}
-                      </Button>
-                    ) : (
-                      // Use Link for other buttons
-                      <Button
-                        component={Link}
-                        to={item.path}
-                        className="!text-white !capitalize hover:!bg-amber-200"
-                      >
-                        {item.name}
-                      </Button>
-                    )}
-                    {item.hasSubmenu && (
-                      <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-black shadow-lg rounded-lg py-2">
-                        {/* Submenu items */}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+    {/* Desktop Navigation */}
+    <nav className="hidden md:block py-2 bg-gradient-to-r from-gray-900 to-black">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between">
+          <div className="flex-1 flex justify-center">
+            <ul className="flex items-center gap-4">
+              {mainMenuItems.map((item) => (
+                <li key={item.name} className="relative group">
+                  {item.name === "Home" ? (
+                    <Button
+                      onClick={handleHomeClick}
+                      className="!text-white !capitalize hover:!bg-amber-200"
+                    >
+                      {item.name}
+                    </Button>
+                  ) : (
+                    <Button
+                      component={Link}
+                      to={item.path}
+                      className="!text-white !capitalize hover:!bg-amber-200"
+                    >
+                      {item.name}
+                    </Button>
+                  )}
+                  {item.hasSubmenu && (
+                    <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-black shadow-lg rounded-lg py-2">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.name}
+                          to={subItem.path}
+                          className="block px-4 py-2 text-white hover:bg-amber-800 font-optima"
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    {/* Mobile Bottom Navigation */}
+    {isMobile && (
+      <div className="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden">
+        <div className="flex justify-around items-center h-full">
+          {mobileMenuItems.map((item) => (
+            <div key={item.name} className="flex flex-col items-center">
+              <IconButton
+                component={Link}
+                to={item.path} // Use the dynamic path here
+                className="!text-gray-600 hover:!text-amber-200"
+              >
+                {item.icon}
+              </IconButton>
+              <span className="text-xs">{item.name}</span>
             </div>
-
-         
-          </div>
+          ))}
         </div>
-      </nav>
-
-      {/* Mobile Bottom Navigation */}
-      {isMobile && (
-        <div className="mobile-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden">
-          <div className="flex justify-around items-center h-full">
-            {mobileMenuItems.map((item) => (
-              <div key={item.name} className="flex flex-col items-center">
-                <IconButton
-                  component={item.path ? Link : "button"}
-                  to={item.path}
-                  onClick={item.action}
-                  className="!text-gray-600 hover:!text-amber-200"
-                >
-                  {item.icon}
-                </IconButton>
-                <span className="text-xs">{item.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
-  );
+      </div>
+    )}
+  </>
+);
 };
+
 
 export default Navigation;

@@ -9,12 +9,25 @@ const mainMenuItems = [
   { name: "Home", path: "/" },
   { name: "Become a Member", path: "/become-member" },
   { name: "Submit Photo", path: "/my-account/:userId" },
-  { name: "Community", path: "/bloglisting" },
+  
+  { 
+    name: "Community", 
+    path: "/bloglisting",
+    hasSubmenu: true,
+    submenu: [
+      { name: "Learning", path: "/learning" },
+      { name: "Interview", path: "/interview" },
+      { name: "General Blog", path: "/general-blog" }
+    ]
+  },
+
+
   { name: "About Us", path: "/about" },
 ];
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState(null);
   const [anchorEl, setAnchorEl] = useState(false);
   const context = useContext(MyContext);
   const navigate = useNavigate();
@@ -28,11 +41,14 @@ const Header = () => {
     window.location.reload();
   };
 
+  const handleSubmenuToggle = (menuItemName) => {
+    setOpenSubmenu((current) => (current === menuItemName ? null : menuItemName));
+  };
 
 
   // Handle "My Account" click
   const handleMyAccountClick = () => {
-    navigate("/my-account/${userData?._id}");
+    navigate(`/my-account/${context.userData?._id}`);
     window.location.reload();
   };
 
@@ -47,7 +63,7 @@ const Header = () => {
         {/* Mobile Menu Button */}
         <div className="md:hidden">
   <button
-    onClick={handleMobileMenuToggle} // Changed from setAnchorEl
+    onClick={handleMobileMenuToggle} 
     className="text-white hover:text-gray-300 px-2 py-4"
   >
     <GiHamburgerMenu size={24} />
@@ -136,52 +152,69 @@ const Header = () => {
 
       {/* Menu Items */}
       <ul className="space-y-4 pt-4">
-        {mainMenuItems.map((item) => (
-          <li key={item.name}>
-            <Link
-              to={item.path}
-              className="text-white font-serif block py-3 text-lg hover:bg-gray-800 px-4 rounded"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          </li>
-        ))}
-        {context.isLogin && (
-          <>
-            <li>
-              <Link
-                to="/my-account"
-                className="text-white block py-3 text-lg hover:bg-gray-800 px-4 rounded"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                My Account
-              </Link>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  context.logout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="text-white block w-full py-3 text-lg hover:bg-gray-800 px-4 rounded text-left"
-              >
-                Logout
-              </button>
-            </li>
-          </>
-        )}
-      </ul>
-    </div>
-  </div>
-)}
+              {mainMenuItems.map((item) => (
+                <li key={item.name}>
+                  <div
+                    className="flex justify-between items-center text-white font-serif py-3 text-lg hover:bg-gray-800 px-4 rounded cursor-pointer"
+                    onClick={() =>
+                      item.hasSubmenu ? handleSubmenuToggle(item.name) : setIsMobileMenuOpen(false)
+                    }
+                  >
+                    <span>{item.name}</span>
+                    {item.hasSubmenu && (
+                      <span>{openSubmenu === item.name ? "-" : "+"}</span> // Toggle indicator
+                    )}
+                  </div>
 
-
+                  {item.submenu && openSubmenu === item.name && (
+                    <ul className="ml-6">
+                      {item.submenu.map((subItem) => (
+                        <li key={subItem.name}>
+                          <Link
+                            to={subItem.path}
+                            className="text-gray-300 block py-2 text-md hover:bg-gray-800 px-4 font-optima"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {subItem.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+              {context.isLogin && (
+                <>
+                  <li>
+                    <Link
+                      to="/my-account"
+                      className="text-white block py-3 text-lg hover:bg-gray-800 px-4 rounded"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      My Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        context.logout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="text-white block w-full py-3 text-lg hover:bg-gray-800 px-4 rounded text-left"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
 
       {/* Navigation Component */}
       <Navigation mainMenuItems={mainMenuItems} />
     </header>
   );
 };
-
 export default Header;
