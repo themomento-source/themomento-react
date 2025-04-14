@@ -118,7 +118,7 @@ const Header = () => {
               <Link
               
                 to="/login"
-                className="hidden md:inline-block px-4 py-2"
+                className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-700"
               >
                 Login
                 
@@ -127,7 +127,7 @@ const Header = () => {
               <button className="text-white font-semi-bold">
               <Link
                 to="/register"
-                className="hidden md:inline-block px-4 py-2"
+                className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-700"
               >
                 Register
               </Link>
@@ -155,7 +155,7 @@ const Header = () => {
               {mainMenuItems.map((item) => (
                 <li key={item.name}>
                   <div
-                    className="flex justify-between items-center text-white font-serif py-3 text-lg hover:bg-gray-800 px-4 rounded cursor-pointer"
+                    className="flex justify-between items-center text-white font-serif py-3 text-lg !hover:bg-gray-800 px-4 rounded cursor-pointer"
                     onClick={() =>
                       item.hasSubmenu ? handleSubmenuToggle(item.name) : setIsMobileMenuOpen(false)
                     }

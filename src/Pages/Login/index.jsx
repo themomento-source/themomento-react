@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ function Login() {
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const context = useContext(MyContext);
 
@@ -32,19 +34,19 @@ function Login() {
         email: formData.email,
       });
   
-      console.log('Forgot password response:', response);
+      
   
       if (response.success) {
-        console.log('OTP sent, navigating to /verify');
+        
         
         localStorage.setItem("userEmail", formData.email);
         localStorage.setItem("actionType", "forgot-password");
         navigate("/verify"); 
       } else {
-        console.error("Failed to send OTP:", response.message);
+        setErrors("Failed to send OTP:", response.message);
       }
     } catch (error) {
-      console.error("Forgot password error:", error);
+      setErrors("Forgot password error:", error);
     }
   };
 
@@ -64,6 +66,7 @@ function Login() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
+      setLoading(true);
       try {
         const response = await postData("/api/user/login", formData, {
           withCredentials: true,
@@ -94,132 +97,134 @@ function Login() {
       } catch (error) {
         console.error("Login failed:", error);
         context.openAlertBox("error", "Invalid credentials or server error");
-        setErrors({ email: "Invalid credentials", password: "Invalid credentials" });
+        setErrors({ email: "Invalid credentials", password: "Invalid credentials", });
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   return (
     <section className="section py-10 bg-gradient-to-b from-gray-900 to-black min-h-screen">
-      <div className="container mx-auto px-4">
-        {" "}
-        {/* Container for centering and padding */}
-        <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
-          {" "}
-          {/* Responsive width */}
-          <h3 className="text-center text-[20px] font-bold text-black">
-            Login to Your Account
-          </h3>
-          <form className="w-full mt-5" onSubmit={handleSubmit}>
-            <div className="form-group w-full mb-5">
-              <TextField
-                type="text"
-                name="email"
-                id="email"
-                label="Username or Email *"
-                variant="outlined"
-                className="w-full"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
-              />
-            </div>
+    <div className="container mx-auto px-4">
+      <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
+        <h3 className="text-center text-[20px] font-bold text-black">
+          Login to Your Account
+        </h3>
+        <form className="w-full mt-5" onSubmit={handleSubmit}>
+          <div className="form-group w-full mb-5">
+            <TextField
+              type="text"
+              name="email"
+              id="email"
+              label="Username or Email *"
+              variant="outlined"
+              className="w-full"
+              value={formData.email}
+              onChange={handleChange}
+              error={!!errors.email}
+              helperText={errors.email}
+            />
+          </div>
 
-            <div className="form-group w-full mb-5">
-              <TextField
-                type={showPassword ? "text" : "password"}
-                name="password"
-                id="password"
-                label="Password *"
-                variant="outlined"
-                className="w-full"
-                value={formData.password}
-                onChange={handleChange}
-                error={!!errors.password}
-                helperText={errors.password}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword((prev) => !prev)}
-                      >
-                        {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </div>
+          <div className="form-group w-full mb-5">
+            <TextField
+              type={showPassword ? "text" : "password"}
+              name="password"
+              id="password"
+              label="Password *"
+              variant="outlined"
+              className="w-full"
+              value={formData.password}
+              onChange={handleChange}
+              error={!!errors.password}
+              helperText={errors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
 
-            <div className="text-center my-3">
+          <div className="text-center my-3">
             <a
-  className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
-  href="#"
-  onClick={async (e) => {
-    e.preventDefault();
-    await forgotPassword();
-  }}
->
-  Forgot Password?
-</a>
-            </div>
+              className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
+              href="#"
+              onClick={async (e) => {
+                e.preventDefault();
+                await forgotPassword();
+              }}
+            >
+              Forgot Password?
+            </a>
+          </div>
 
-            <div className="flex items-center mt-5">
-              <Button
-                type="submit"
-                className="w-full py-3 text-white font-bold rounded-md"
-                style={{
-                  background: "linear-gradient(45deg, #007BFF, #0056b3)",
-                  transition: "0.3s ease",
-                }}
-                onMouseOver={(e) =>
-                  (e.target.style.background =
-                    "linear-gradient(45deg, #0056b3, #003f7f)")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.background =
-                    "linear-gradient(45deg, #007BFF, #0056b3)")
-                }
+          <div className="flex items-center mt-5">
+            <Button
+              type="submit"
+              className="w-full py-3 text-white font-bold rounded-md"
+              style={{
+                background: "linear-gradient(45deg, #007BFF, #0056b3)",
+                transition: "0.3s ease",
+              }}
+              onMouseOver={(e) =>
+                (e.target.style.background =
+                  "linear-gradient(45deg, #0056b3, #003f7f)")
+              }
+              onMouseOut={(e) =>
+                (e.target.style.background =
+                  "linear-gradient(45deg, #007BFF, #0056b3)")
+              }
+              disabled={loading} // Disable button when loading
+            >
+              {loading ? (
+                <CircularProgress size={24} style={{ color: "white" }} /> // Loading spinner
+              ) : (
+                <span className="text-white">Login</span>
+              )}
+            </Button>
+          </div>
+
+          <div className="text-center mt-4">
+            <span className="text-gray-600 text-[15px]">
+              Not registered?{" "}
+              <a
+                className="text-blue-600 font-semibold cursor-pointer hover:underline"
+                href="register"
               >
-                <span className="text-white">Login</span>{" "}
-                {/* Login text in white */}
-              </Button>
-            </div>
+                Sign up
+              </a>
+            </span>
+          </div>
 
-            <div className="text-center mt-4">
-              <span className="text-gray-600 text-[15px]">
-                Not registered?{" "}
-                <a
-                  className="text-blue-600 font-semibold cursor-pointer hover:underline"
-                  href="register"
-                >
-                  Sign up
-                </a>
-              </span>
-            </div>
+          <div className="flex items-center my-5">
+            <hr className="flex-grow border-gray-300" />
+            <span className="px-3 text-gray-500 text-[14px]">OR</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
 
-            <div className="flex items-center my-5">
-              <hr className="flex-grow border-gray-300" />
-              <span className="px-3 text-gray-500 text-[14px]">OR</span>
-              <hr className="flex-grow border-gray-300" />
-            </div>
-
-            <div className="flex items-center justify-center">
-              <Button
-                className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md text-black font-medium"
-                style={{ transition: "0.3s ease" }}
-                onMouseOver={(e) => (e.target.style.background = "#f5f5f5")}
-                onMouseOut={(e) => (e.target.style.background = "white")}
-              >
-                <FcGoogle className="text-[20px] mr-2" />
-                Continue with Google
-              </Button>
-            </div>
-          </form>
-        </div>
+          <div className="flex items-center justify-center">
+            <Button
+              className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md text-black font-medium"
+              style={{ transition: "0.3s ease" }}
+              onMouseOver={(e) => (e.target.style.background = "#f5f5f5")}
+              onMouseOut={(e) => (e.target.style.background = "white")}
+            >
+              <FcGoogle className="text-[20px] mr-2" />
+              Continue with Google
+            </Button>
+          </div>
+        </form>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }
 

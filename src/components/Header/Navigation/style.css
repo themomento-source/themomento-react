@@ -32,7 +32,7 @@ button {
 }
 
 .MuiButton-root:hover {
-  background-color: rgba(255, 82, 82, 0.1) !important;
+  background-color: rgba(212, 18, 18, 0.1) !important;
 }
 
 /* Mobile Bottom Navigation */
@@ -61,4 +61,14 @@ button {
 
 .mobile-menu-overlay.open {
   transform: translateY(0);
+}
+
+button, .MuiButton-root, .nav li a, .mobile-bottom-nav span {
+  color: #a0460e; /* Amber-800 */
+  font-family: serif;
+  text-transform: capitalize;
+}
+
+button:hover, .MuiButton-root:hover {
+  background-color: #92400e !important; /* Amber-800 */
 }
