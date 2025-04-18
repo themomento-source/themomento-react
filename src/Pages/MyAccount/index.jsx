@@ -12,7 +12,6 @@ import {
   TextField,
   Link,
   Grid,
-  
   Select,
   MenuItem,
   InputLabel,
@@ -26,9 +25,13 @@ import {
   MdLogout,
   MdPhotoLibrary,
   MdShoppingBag,
-  MdCloudUpload,
+  
+  MdOutlineFileUpload
   
 } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
+import { FiSend } from 'react-icons/fi';
+
 import { MyContext } from "../../App.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
@@ -117,6 +120,7 @@ function MyAccount() {
       if (!file.type.match(/image\/(jpeg|jpg|png|webp)/)) {
         openAlertBox("error", "Only jpeg/JPG/PNG/WEBP images are allowed");
         return;
+        
       }
 
       setUploadingAvatar(true);
@@ -141,6 +145,7 @@ function MyAccount() {
           severity: "success",
         });
         setUploadingAvatar((prev) => !prev);
+        
       }
     } catch (error) {
       console.error("Upload failed:", error);
@@ -287,104 +292,104 @@ function MyAccount() {
       <div className="container mx-auto px-4 lg:px-8 flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full lg:w-64 flex-shrink-0 mb-8 lg:mb-0">
-          <Card className="shadow-md border border-gray-200">
-            <CardContent className="p-6">
-              {/* Profile Section */}
-              <div className="text-center mb-8">
-                <div className="relative mx-auto w-24 h-24 mb-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarUpload}
-                    className="hidden"
-                    id="avatarInput"
-                    disabled={uploadingAvatar}
-                  />
-                  <label htmlFor="avatarInput" className="cursor-pointer">
-                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
-                      {userData?.avatar ? (
-                       <img
-                       src={`${userData.avatar}?ts=${new Date().getTime()}`} // Add timestamp query parameter
-                       className="w-full h-full object-cover"
-                       alt="Profile"
-                     />
-                      ) : (
-                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                          <span className="text-gray-500 text-sm">Add Photo</span>
-                        </div>
-                      )}
-                      {uploadingAvatar && (
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                          <CircularProgress size={24} color="inherit" />
-                        </div>
-                      )}
-                    </div>
-                  </label>
+  <Card className="shadow-md border border-gray-200">
+    <CardContent className="p-6">
+      {/* Profile Section */}
+      <div className="text-center mb-8">
+        <div className="relative mx-auto w-24 h-24 mb-4">
+          {/* Avatar upload section remains unchanged */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarUpload}
+            className="hidden"
+            id="avatarInput"
+            disabled={uploadingAvatar}
+          />
+          <label htmlFor="avatarInput" className="cursor-pointer">
+            <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
+              {userData?.avatar ? (
+                <img
+                  src={`${userData.avatar}?ts=${new Date().getTime()}`}
+                  className="w-full h-full object-cover"
+                  alt="Profile"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <span className="text-gray-500 text-sm">Add Photo</span>
                 </div>
-                <Typography variant="h6" className="font-semibold text-gray-800 text-center mb-2">
-                  {userData?.name || "User Name"}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" className="text-center mb-4">
-                  {userData?.email}
-                </Typography>
-              </div>
-
-              {userData && (
-                <Box mt={2} textAlign="center">
-                 <Button
-  component={Link}
-  href={`/user/${userData?._id}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  variant="contained"
-  size="small"
-  className="!bg-amber-400 !text-gray-900 !capitalize px-4 transition-colors duration-200"
->
-  Switch to Your Public Profile
-</Button>
-                </Box>
               )}
+              {uploadingAvatar && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <CircularProgress size={24} color="inherit" />
+                </div>
+              )}
+            </div>
+          </label>
+        </div>
+        <Typography variant="h6" className="font-semibold text-gray-800 text-center mb-2">
+          {userData?.name || "User Name"}
+        </Typography>
+      </div>
 
-              {/* Navigation */}
-              <nav className="space-y-2 py-6">
-                
-                <Button
-                  fullWidth
-                  startIcon={<MdPhotoLibrary />}
-                  className="!justify-start !text-gray-600 hover:!bg-gray-50"
-                  onClick={() => setActiveTab("submissions")}
-                >
-                  My Submissions
-                </Button>
-                <Button
-                  fullWidth
-                  startIcon={<MdShoppingBag />}
-                  className="!justify-start !text-gray-600 hover:!bg-gray-50"
-                  onClick={() => setActiveTab("purchases")}
-                >
-                  Purchases
-                </Button>
-                <Button
-                  component={Link}
-                  href={`/my-account/${userData?._id}/settings`}
-                  fullWidth
-                  startIcon={<MdSettings />}
-                  className="!capitalize !justify-start !text-gray-600 hover:!bg-gray-50"
-                >
-                  Edit Profile
-                </Button>
-                <Button
-                  fullWidth
-                  startIcon={<MdLogout />}
-                  className="!justify-start !text-red-500 hover:!bg-red-50"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
-              </nav>
-            </CardContent>
-          </Card>
-        </aside>
+      {/* Profile Button */}
+      {userData && (
+       <div className="mb-6">
+       <Button
+         component={Link}
+         href={`/user/${userData?._id}`}
+         fullWidth
+         className="!bg-primary !capitalize !justify-start !rounded-none !text-gray-800"
+         target="_blank"
+         rel="noopener noreferrer"
+       >
+         <div className="flex items-center gap-2">
+           <CgProfile className="text-xl" />
+           <p>View Profile</p>
+         </div>
+       </Button>
+     </div>
+      )}
+
+      {/* Navigation */}
+      <nav className="space-y-2">
+        <Button
+          fullWidth
+          startIcon={<MdPhotoLibrary />}
+          className="!bg-primary !justify-start !rounded-none !text-gray-800"
+          onClick={() => setActiveTab("submissions")}
+        >
+          My Submissions
+        </Button>
+        <Button
+          fullWidth
+          startIcon={<MdShoppingBag />}
+          className="!bg-primary !justify-start !rounded-none !text-gray-800"
+          onClick={() => setActiveTab("purchases")}
+        >
+          Purchases
+        </Button>
+        <Button
+          component={Link}
+          href={`/my-account/${userData?._id}/settings`}
+          fullWidth
+          startIcon={<MdSettings />}
+          className="!bg-primary !justify-start !rounded-none !text-gray-800 !capitalize"
+        >
+          Edit Profile
+        </Button>
+        <Button
+          fullWidth
+          startIcon={<MdLogout />}
+          className="!bg-primary !justify-start !rounded-none !text-gray-800"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </nav>
+    </CardContent>
+  </Card>
+</aside>
 
         {/* Main Content */}
         <main className="flex-1">
@@ -401,9 +406,11 @@ function MyAccount() {
                   <Grid container spacing={4} className="mt-8">
                     {/* Submit Photo for Sale */}
                     <Grid item xs={12}>
+                      <div className=" bg-primary p-2 inline-block ">
                       <Typography variant="h6" className="mb-4">
-                        Submit Photo for your portfolio
+                        Submit Photo for Portfolio
                       </Typography>
+                      </div>
                       <form onSubmit={handlePhotoSubmission}>
                         <TextField
                           fullWidth
@@ -466,7 +473,7 @@ function MyAccount() {
                           <input
                             type="file"
                             onChange={handleFileSelect}
-                            className="hidden-file-input" // Use the new CSS class
+                            className="hidden-file-input"
                             id="photoSubmission"
                             accept="image/*"
                             required
@@ -474,18 +481,18 @@ function MyAccount() {
                           />
                           <label htmlFor="photoSubmission">
                           <Button
-  variant="outlined"
-  startIcon={<MdCloudUpload className="text-lg" />}
+
+  startIcon={<MdOutlineFileUpload className="text-lg" />}
   component="span"
-  className="!border-2 !border-gradient-to-r !from-blue-500 !to-purple-500 hover:!from-blue-600 hover:!to-purple-600 !text-gray-800 hover:!text-white !rounded-xl !px-6 !py-3 !transition-all !duration-300 hover:!bg-gradient-to-r hover:!from-blue-500 hover:!to-purple-500 !font-semibold !tracking-wide hover:!shadow-lg active:!scale-95"
+  className="!bg-primary !text-gray-800 !rounded-none !capitalize"
 >
   Upload File
 </Button>
                           </label>
-                          <Button
+                          <Button  className="!rounded-none"
                             type="submit"
-                            variant="contained"
-                            startIcon={<MdCloudUpload />}
+                           variant="contained" 
+                            startIcon={<FiSend />}
                             disabled={
                               isSubmitting ||
                               !submissionData.title ||
@@ -497,7 +504,7 @@ function MyAccount() {
                             {isSubmitting ? (
                               <CircularProgress size={24} />
                             ) : (
-                              "Submit"
+                               "Submit"
                             )}
                           </Button>
                         </div>
@@ -518,9 +525,11 @@ function MyAccount() {
 
                     {/* Submit Photo for Photo of the Day */}
                     <Grid item xs={12}>
+                      <div className="bg-primary p-2 inline-block">
                       <Typography variant="h6" className="mb-4">
-                        Submit Photo for Photo of the Day
+                        Submit Photo for Today's Best Click
                       </Typography>
+                      </div>
                       <form onSubmit={handlePhotoOfTheDaySubmission}>
                         <TextField
                           fullWidth
@@ -557,10 +566,10 @@ function MyAccount() {
                           />
                           <label htmlFor="photoOfTheDaySubmission">
                           <Button
-  variant="outlined"
-  startIcon={<MdCloudUpload className="text-lg" />}
+
+  startIcon={<MdOutlineFileUpload className="text-lg" />}
   component="span"
-  className="!border-2 !border-gradient-to-r !from-blue-500 !to-purple-500 hover:!from-blue-600 hover:!to-purple-600 !text-gray-800 hover:!text-white !rounded-xl !px-6 !py-3 !transition-all !duration-300 hover:!bg-gradient-to-r hover:!from-blue-500 hover:!to-purple-500 !font-semibold !tracking-wide hover:!shadow-lg active:!scale-95"
+  className="!bg-primary !text-gray-800 !rounded-none !capitalize"
 >
   Upload File
 </Button>
@@ -568,7 +577,7 @@ function MyAccount() {
                           <Button
                             type="submit"
                             variant="contained"
-                            startIcon={<MdCloudUpload />}
+                            startIcon={<FiSend />}
                             disabled={
                               isSubmittingPhotoOfTheDay ||
                               !photoOfTheDayData.title ||
@@ -623,15 +632,11 @@ function MyAccount() {
                                   {submission.description || "No description"}
                                 </Typography>
                                 <div className="relative aspect-square py-4">
-                                  <img
-                                    src={
-                                      submission.status === "approved"
-                                        ? submission.image.url // Approved image URL
-                                        : submission.image.url // Fallback pending/rejected URL
-                                    }
-                                    alt="Submission"
-                                    className="w-full h-full object-cover"
-                                  />
+                                <img
+  src={`${submission.image.url}?ts=${new Date().getTime()}`}
+  alt="Submission"
+  className="w-full h-full object-cover"
+/>
                                   {submission.status === "rejected" && (
                                     <Chip
                                       label="Rejected"

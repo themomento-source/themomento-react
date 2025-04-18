@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 import { Rating, Button, TextField, IconButton } from "@mui/material";
 import {
@@ -24,33 +24,27 @@ function PhotoDetails() {
   const [comments, setComments] = useState([]);
   const [juryReviews, setJuryReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPhotoDetails = async () => {
       try {
-        // First try products endpoint
-        const productData = await fetchDataFromApi(`/api/product/${id}`);
-        if (productData?.product) {
-          setPhoto(productData.product);
-        } else {
-          // If product not found, try submissions endpoint
-          const submissionData = await fetchDataFromApi(`/api/submissions/${id}`);
-          if (submissionData?.submission) {
-            // Map submission data to match product structure
-            setPhoto({
-              _id: submissionData.submission._id,
-              name: submissionData.submission.title,
-              imageUrl: submissionData.submission.image?.url,
-              description: submissionData.submission.description,
-              price: submissionData.submission.price || 49.99, // Default price
-              rating: submissionData.submission.rating || 4.5,
-              resolution: submissionData.submission.resolution || "4000x6000",
-              formats: submissionData.submission.formats || ["JPEG", "PNG"],
-              licenseId: submissionData.submission.licenseId || `SUB-${id.slice(0,6).toUpperCase()}`
-            });
-          } else {
-            setError("Photo not found");
+        // First try product endpoint
+        const productResponse = await fetchDataFromApi(`/api/product/${id}`);
+        if (productResponse?.product) {
+          setPhoto(productResponse.product);
+          return;
+        }
+  
+        // Then try submission endpoint
+        const submissionResponse = await fetchDataFromApi(`/api/submissions/${id}`);
+        if (submissionResponse?.submission) {
+          // If submission has a product, redirect to product
+          if (submissionResponse.submission.product) {
+            navigate(`/photodetails/${submissionResponse.submission.product._id}`, { replace: true });
+            return;
           }
+          setPhoto(mapSubmissionToProduct(submissionResponse.submission));
         }
       } catch (err) {
         setError(err.message);
@@ -58,10 +52,18 @@ function PhotoDetails() {
         setLoading(false);
       }
     };
-
     fetchPhotoDetails();
-  }, [id]);
+  }, [id, navigate]);
 
+  const mapSubmissionToProduct = (submission) => ({
+    _id: submission._id,
+    name: submission.title,
+    imageUrl: submission.image.url,
+    description: submission.description,
+    price: submission.price || 49.99,
+    
+  });
+  
   const handleReviewSubmit = () => {
     if (reviewText.trim()) {
       const newReview = { user: "Guest", rating, comment: reviewText };

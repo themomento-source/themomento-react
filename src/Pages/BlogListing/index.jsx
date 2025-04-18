@@ -54,97 +54,117 @@ function BlogListing() {
         </Typography>
       </div>
 
-      <div className="container mx-auto mt-8 flex flex-col gap-8 px-4">
-        {/* Learning Section */}
-        <div className="bg-white shadow-lg p-6">
-          <div className="mb-6 border-b pb-4 text-center">
-            <Typography variant="h4" className="text-black font-serif font-bold">
-              Learning
-            </Typography>
-            <Typography variant="body1" className="text-gray-600 mt-2">
-              Educational content and tutorials
-            </Typography>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-1 gap-6">
-            {learningBlogs.map(blog => (
-              <BlogCard
-                key={blog._id}
-                _id={blog._id}
-                img={blog.image}
-                title={blog.title}
-                author={blog.author}
-                intro={blog.description}
-                categories={blog.categories}
-                createdAt={blog.createdAt}
-              />
-            ))}
-          </div>
-          <div className="mt-4 text-center">
-            <Link to="/learning" className="text-amber-600 hover:text-amber-700">
-              View All →
-            </Link>
-          </div>
-        </div>
+      <div className="container mx-auto mt-8 px-4 ">
+        <div className="flex flex-col lg:flex-row gap-8  ">
+          {/* Learning Section */}
+          <div className="flex-1 bg-primary shadow-lg p-6">
+            <div className="mb-6 text-center ">
+              <Typography variant="h4" className="text-black font-serif font-bold mb-2">
+                Learning
+              </Typography>
+              <Typography variant="body1" className="text-gray-600">
+                Educational content and tutorials
+              </Typography>
+            </div>
+            
+            <div className="space-y-6">
+              {learningBlogs.slice(0, 2).map(blog => (
+                <BlogCard
+                  key={blog._id}
+                  _id={blog._id}
+                  img={blog.image}
+                  title={blog.title}
+                  author={blog.author}
+                  intro={blog.description}
+                  categories={blog.categories}
+                  createdAt={blog.createdAt}
+                  className="hover:shadow-lg transition-all duration-300"
+                />
+              ))}
+            </div>
 
-        {/* Interviews Section */}
-        <div className="bg-white shadow-lg p-6">
-          <div className="mb-6 border-b pb-4 text-center">
-            <Typography variant="h4" className="text-black font-serif font-bold">
-              Interview
-            </Typography>
-            <Typography variant="body1" className="text-gray-600 mt-2">
-              Career advice and interview tips
-            </Typography>
+            <div className="mt-6 text-center">
+              <Link 
+                to="/learning" 
+                className="inline-block bg-primary text-gray-800 px-6 py-2 rounded-md hover:bg-primary-dark transition-colors"
+              >
+                View All Learning →
+              </Link>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-1 gap-6">
-            {interviewBlogs.map(blog => (
-              <BlogCard
-                key={blog._id}
-                _id={blog._id}
-                img={blog.image}
-                title={blog.title}
-                author={blog.author}
-                intro={blog.description}
-                categories={blog.categories}
-                createdAt={blog.createdAt}
-              />
-            ))}
-          </div>
-          <div className="mt-4 text-center">
-            <Link to="/interview" className="text-amber-600 hover:text-amber-700">
-              View All →
-            </Link>
-          </div>
-        </div>
 
-        {/* General Blogs Section */}
-        <div className="bg-white shadow-lg p-6">
-          <div className="mb-6 border-b pb-4 text-center">
-            <Typography variant="h4" className="text-black font-serif font-bold">
-              Blog
-            </Typography>
-            <Typography variant="body1" className="text-gray-600 mt-2">
-              Recent updates and articles
-            </Typography>
+          {/* Interview Section */}
+          <div className="flex-1 bg-primary shadow-lg p-6">
+            <div className="mb-6 text-center">
+              <Typography variant="h4" className="text-black font-serif font-bold mb-2">
+                Interview
+              </Typography>
+              <Typography variant="body1" className="text-gray-600">
+                Career advice and interview tips
+              </Typography>
+            </div>
+            
+            <div className="space-y-6">
+              {interviewBlogs.slice(0, 2).map(blog => (
+                <BlogCard
+                  key={blog._id}
+                  _id={blog._id}
+                  img={blog.image}
+                  title={blog.title}
+                  author={blog.author}
+                  intro={blog.description}
+                  categories={blog.categories}
+                  createdAt={blog.createdAt}
+                  className="hover:shadow-lg transition-all duration-300"
+                />
+              ))}
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link 
+                to="/interview" 
+                className="inline-block bg-primary text-gray-800 px-6 py-2 rounded-md hover:bg-primary-dark transition-colors"
+              >
+                View All Interviews →
+              </Link>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {generalBlogs.map(blog => (
-              <BlogCard
-                key={blog._id}
-                _id={blog._id}
-                img={blog.image}
-                title={blog.title}
-                author={blog.author}
-                intro={blog.description}
-                categories={blog.categories}
-                createdAt={blog.createdAt}
-              />
-            ))}
-          </div>
-          <div className="mt-4 text-center">
-            <Link to="/general-blog" className="text-amber-600 hover:text-amber-700">
-              View All →
-            </Link>
+
+          {/* General Blogs Section */}
+          <div className="flex-1 bg-primary shadow-lg p-6">
+            <div className="mb-6 text-center">
+              <Typography variant="h4" className="text-black font-serif font-bold mb-2">
+                Blog
+              </Typography>
+              <Typography variant="body-1" className="text-gray-600">
+                Recent updates and articles
+              </Typography>
+            </div>
+            
+            <div className="space-y-6">
+              {generalBlogs.slice(0, 2).map(blog => (
+                <BlogCard
+                  key={blog._id}
+                  _id={blog._id}
+                  img={blog.image}
+                  title={blog.title}
+                  author={blog.author}
+                  intro={blog.description}
+                  categories={blog.categories}
+                  createdAt={blog.createdAt}
+                  className="hover:shadow-lg transition-all duration-300"
+                />
+              ))}
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link 
+                to="/general-blog" 
+                className="inline-block bg-primary text-gray-800 px-6 py-2 rounded-md hover:bg-primary-dark transition-colors"
+              >
+                View All Blogs →
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -152,4 +172,4 @@ function BlogListing() {
   );
 }
 
-export default BlogListing;
+export default BlogListing

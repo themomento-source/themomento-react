@@ -64,11 +64,11 @@ button {
 }
 
 button, .MuiButton-root, .nav li a, .mobile-bottom-nav span {
-  color: #a0460e; /* Amber-800 */
+  color: #ffcb00; /* Amber-800 */
   font-family: serif;
   text-transform: capitalize;
 }
 
 button:hover, .MuiButton-root:hover {
-  background-color: #92400e !important; /* Amber-800 */
+  background-color: #ffcb00 !important; /* Amber-800 */
 }

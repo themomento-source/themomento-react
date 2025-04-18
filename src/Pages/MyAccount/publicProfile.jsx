@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 import { MdLocationOn, MdBlurOn, MdPhotoCamera, MdLink, MdClose } from "react-icons/md";
 import { FaAward } from "react-icons/fa";
@@ -8,6 +8,7 @@ import SafeHTML from "../../components/SafeHTML";
 
 const PublicProfile = () => {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [profileData, setProfileData] = useState({
     user: {},
@@ -19,26 +20,27 @@ const PublicProfile = () => {
   useEffect(() => {
     const fetchPublicProfile = async () => {
       try {
-        const [userResponse, photosResponse] = await Promise.all([
+        const [userResponse, submissionsResponse] = await Promise.all([
           fetchDataFromApi(`/api/user/${userId}/public`),
           fetchDataFromApi(`/api/submissions/public/${userId}`),
         ]);
-
-        const photos =
-          photosResponse?.data?.flatMap((submission) =>
-            submission.image
-              ? [{
-                  url: submission.image.url,
-                  description: submission.description,
-                  _id: submission._id,
-                  title: submission.title || "Untitled"
-                }]
-              : []
-          ) || [];
-
+  
+        console.log('Submissions response:', submissionsResponse); // Debug log
+  
+        const photos = submissionsResponse?.data?.map(submission => ({
+          url: submission.image.url,
+          description: submission.description,
+          _id: submission._id,
+          productId: submission.product?._id,
+          title: submission.title || "Untitled",
+          status: submission.status // Add status to photo object
+        })) || [];
+  
+        console.log('Processed photos:', photos); // Debug log
+  
         setProfileData({
           user: userResponse?.data || {},
-          photos: photos || [],
+          photos,
         });
       } catch (error) {
         console.error("Error fetching public profile:", error);
@@ -47,7 +49,7 @@ const PublicProfile = () => {
         setLoading(false);
       }
     };
-
+  
     fetchPublicProfile();
   }, [userId]);
 
@@ -247,12 +249,20 @@ const PublicProfile = () => {
         </h3>
         <div className="container mx-auto px-4">
           <div className="columns-1 sm:columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
-            {profileData.photos.map((photo) => (
-              <div
-                key={photo._id}
-                className="relative group break-inside-avoid cursor-pointer"
-                onClick={() => setSelectedPhoto(photo)}
-              >
+          {profileData.photos.map((photo) => (
+  <div
+    key={photo._id}
+    className="relative group break-inside-avoid cursor-pointer"
+    onClick={() => {
+      console.log('Clicked photo:', photo); // Debug log
+      if (photo.productId && photo.status === "approved") {
+        navigate(`/photodetails/${photo.productId}`);
+      } else {
+        setSelectedPhoto(photo);
+      }
+    }}
+  >
+
                 <div className="relative overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <img
                     src={photo.url}
