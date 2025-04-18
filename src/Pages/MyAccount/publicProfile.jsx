@@ -60,7 +60,7 @@ const PublicProfile = () => {
 
   const handleShare = async () => {
     const profileUrl = window.location.href;
-    const shareText = `Check out ${profileData.user.name || 'this amazing photographer'}'s profile on Visual Vibe!`;
+    const shareText = `Check out ${profileData.user.name || 'this amazing photographer'}'s profile on The Momento!`;
 
     try {
       if (navigator.share) {
