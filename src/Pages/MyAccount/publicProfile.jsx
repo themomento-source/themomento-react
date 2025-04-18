@@ -60,7 +60,7 @@ const PublicProfile = () => {
 
   const handleShare = async () => {
     const profileUrl = window.location.href;
-    const shareText = `Check out ${profileData.user.name || 'this amazing photographer'}'s profile on The Momento!`;
+    const shareText = `Check out ${profileData.user.name}'s profile on The Momento!`;
 
     try {
       if (navigator.share) {
@@ -182,7 +182,7 @@ const PublicProfile = () => {
           />
         </div>
 
-        <h1 className="text-4xl font-bold mb-2 bg-primary dark:bg-primary text-gray-900 dark:text-gray-900 p-2">
+        <h1 className="text-3xl bg-primary dark:bg-primary shadow-md dark:shadow-md font-bold mb-2 text-center text-gray-900 dark:text-gray-900 p-2">
           {profileData.user?.name || "Visual Storyteller"}
         </h1>
         
