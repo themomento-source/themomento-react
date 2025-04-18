@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 import { 
@@ -76,6 +76,22 @@ const PublicProfile = () => {
       console.error('Sharing failed:', error);
     }
   };
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowShareDropdown(false);
+      }
+    };
+  
+    if (showShareDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showShareDropdown]);
 
   if (loading) {
     return (
@@ -225,7 +241,7 @@ const PublicProfile = () => {
   </div>
 
   {/* Share Button Div */}
-  <div className="relative bg-primary p-2 rounded-xl">
+  <div className="relative bg-primary p-2 rounded-xl" ref={dropdownRef}>
     <button
       onClick={handleShare}
       className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors flex items-center gap-1"
