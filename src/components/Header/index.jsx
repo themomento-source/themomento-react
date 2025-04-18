@@ -98,14 +98,14 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md overflow-hidden z-10">
                   <button
                     onClick={handleMyAccountClick}
-                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-left text-black bg-primary hover:!bg-gray-100"
                   >
                     My Account
                   </button>
                   <hr className="border-gray-200" />
                   <button
                     onClick={context.logout}
-                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                    className="block w-full px-4 py-2 text-left text-black bg-primary hover:!bg-gray-100"
                   >
                     Logout
                   </button>

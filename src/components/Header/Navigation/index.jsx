@@ -19,7 +19,7 @@ const Navigation = ({ mainMenuItems }) => {
 
   const mobileMenuItems = [
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
-    { name: "Community", icon: <BsNewspaper />, path: "/bloglisting" },
+    { name: "Community ", icon: <BsNewspaper />, path: "/bloglisting" },
     { name: "Account", icon: <BsPerson />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
   ];
 
@@ -82,11 +82,11 @@ const Navigation = ({ mainMenuItems }) => {
               <div key={item.name} className="flex flex-col items-center">
                 <Link
                   to={item.path}
-                  className="!text-amber-800 hover:!bg-amber-200 flex flex-col items-center p-2 rounded-full transition-colors duration-200"
+                  className="!text-gray-900 hover:!bg-amber-200 flex flex-col items-center p-2 rounded-full transition-colors duration-200"
                 >
                   {item.icon}
                 </Link>
-                <span className="text-xs text-amber-800 font-serif capitalize">
+                <span className="text-xs !text-gray-900 font-serif capitalize">
                   {item.name}
                 </span>
               </div>
