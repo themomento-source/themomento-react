@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async"; // Import HelmetProvider
 import toast, { Toaster } from "react-hot-toast";
 import Alert from '@mui/material/Alert';
 import "./App.css";
@@ -110,7 +109,7 @@ function App() {
 
   return (
     <>
-      <HelmetProvider>
+     
         <BrowserRouter>
           <MyContext.Provider value={values}>
           {alert.open && (
@@ -177,7 +176,7 @@ function App() {
             <Footer />
           </MyContext.Provider>
         </BrowserRouter>
-      </HelmetProvider>
+     
 
       <Toaster />
 
