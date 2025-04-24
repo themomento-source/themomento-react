@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Box,
+  
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { BsPerson } from "react-icons/bs";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { BsCamera, BsGrid, BsNewspaper } from "react-icons/bs";
+
+import { BsCamera, BsNewspaper } from "react-icons/bs";
 import { MyContext } from "../../../App";
 import "../Navigation/style.css";
 
@@ -31,7 +31,7 @@ const Navigation = ({ mainMenuItems }) => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block py-2 bg-gradient-to-r from-gray-900 to-black">
+      <nav className="hidden md:block py-2 bg-gray-50 to-black">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex-1 flex justify-center">
@@ -41,25 +41,25 @@ const Navigation = ({ mainMenuItems }) => {
                     {item.name === "Home" ? (
                       <button
                         onClick={handleHomeClick}
-                        className="text-white capitalize hover:bg-amber-800 px-2 py-2 font-serif bg-transparent border-none cursor-pointer transition-colors duration-200"
+                        className="text-gray-900 capitalize hover:!bg-amber-400 px-2 py-2 font-serif bg-transparent border-none cursor-pointer transition-colors duration-200"
                       >
                         {item.name}
                       </button>
                     ) : (
                       <Link
                         to={item.path}
-                        className="text-white capitalize hover:bg-amber-800 px-2 py-2 font-serif no-underline inline-block transition-colors duration-200"
+                        className="text-gray-900 capitalize hover:bg-amber-400 px-2 py-2 font-serif no-underline inline-block transition-colors duration-200"
                       >
                         {item.name}
                       </Link>
                     )}
                     {item.hasSubmenu && (
-                      <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-black shadow-lg rounded-lg py-2">
+                      <div className="absolute hidden group-hover:block top-full left-0 w-48 bg-gray-50 shadow-lg rounded-lg py-2">
                         {item.submenu.map((subItem) => (
                           <Link
                             key={subItem.name}
                             to={subItem.path}
-                            className="block px-4 py-2 text-white hover:bg-amber-800 font-serif capitalize transition-colors duration-200"
+                            className="block px-4 py-2 text-gray-900 hover:bg-amber-400 font-serif capitalize transition-colors duration-200"
                           >
                             {subItem.name}
                           </Link>

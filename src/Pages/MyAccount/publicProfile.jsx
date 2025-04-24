@@ -118,11 +118,11 @@ const PublicProfile = () => {
     <div className="container mx-auto py-16 min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Photo Modal */}
       {selectedPhoto && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedPhoto(null)}
         >
-          <div 
+          <div
             className="bg-white dark:bg-gray-800 rounded-xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row"
             onClick={(e) => e.stopPropagation()}
           >
@@ -173,7 +173,7 @@ const PublicProfile = () => {
       )}
 
       {/* Profile Header Section */}
-      <div className="flex flex-col items-center mb-16 p-8 bg-white dark:bg-gray-900 rounded-xl shadow-sm">
+      <div className="flex flex-col items-center p-8 bg-gray-900 shadow-sm">
         <div className="w-32 h-32 relative mb-6">
           <img
             src={profileData.user?.avatar || "/default-avatar.jpg"}
@@ -182,161 +182,167 @@ const PublicProfile = () => {
           />
         </div>
 
-        <h1 className="text-3xl bg-primary dark:bg-primary shadow-md dark:shadow-md font-bold mb-2 text-center text-gray-900 dark:text-gray-900 p-2">
+        <h1 className="text-3xl  shadow-md font-bold mb-2 text-center text-gray-200 p-2">
           {profileData.user?.name || "Visual Storyteller"}
         </h1>
         
         <div className="flex flex-wrap gap-3 mb-6 justify-center mt-6">
           {profileData.user.location && (
-            <span className="flex bg-primary text-black items-center gap-2 px-4 py-2  dark:bg-primary rounded-full text-md">
+            <span className="flex bg-primary text-black items-center gap-2 px-4 py-2 dark:bg-primary rounded-full text-md">
               <MdLocationOn className="text-black" />
               {profileData.user.location}
             </span>
           )}
           {profileData.user.genres && (
-            <span className="flex bg-primary items-center gap-2 px-4 py-2  dark:bg-primary rounded-full text-md text-black">
+            <span className="flex bg-primary items-center gap-2 px-4 py-2 dark:bg-primary rounded-full text-md text-black">
               <MdBlurOn className="text-purple-500" />
               {profileData.user.genres}
             </span>
           )}
-          <span className="flex items-center bg-primary gap-2 px-4 py-2  dark:bg-primary rounded-full text-md text-black">
-            <MdPhotoCamera className="text-green-500" />
-            {`${profileData.photos.length} Works`}
-          </span>
+        
         </div>
 
         <div className="flex items-center gap-4">
-  {/* Social Links Div */}
-  <div className="flex gap-4 bg-primary p-2 rounded-xl items-center">
-    {profileData.user.socialLinks?.instagram && (
-      <a
-        href={`https://instagram.com/${profileData.user.socialLinks.instagram}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors"
-      >
-        <FiInstagram className="text-2xl" />
-      </a>
-    )}
-    {profileData.user.socialLinks?.twitter && (
-      <a
-        href={`https://twitter.com/${profileData.user.socialLinks.twitter}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors"
-      >
-        <FiTwitter className="text-2xl" />
-      </a>
-    )}
-    {profileData.user.socialLinks?.websites && (
-      <a
-        href={profileData.user.socialLinks.websites}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors"
-      >
-        <MdLink className="text-2xl" />
-      </a>
-    )}
-  </div>
+          {/* Social Links Div */}
+          <div className="flex gap-4 bg-primary p-2 rounded-xl items-center">
+            {profileData.user.socialLinks?.instagram && (
+              <a
+                href={`https://instagram.com/${profileData.user.socialLinks.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors"
+              >
+                <FiInstagram className="text-2xl" />
+              </a>
+            )}
+            {profileData.user.socialLinks?.twitter && (
+              <a
+                href={`https://twitter.com/${profileData.user.socialLinks.twitter}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors"
+              >
+                <FiTwitter className="text-2xl" />
+              </a>
+            )}
+            {profileData.user.socialLinks?.websites && (
+              <a
+                href={profileData.user.socialLinks.websites}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors"
+              >
+                <MdLink className="text-2xl" />
+              </a>
+            )}
+          </div>
 
-  {/* Share Button Div */}
-  <div className="relative bg-primary p-2 rounded-xl" ref={dropdownRef}>
-    <button
-      onClick={handleShare}
-      className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors flex items-center gap-1"
-      aria-label="Share profile"
-    >
-      <MdShare className="text-2xl" />
-      <span className="text-md">Share</span>
-    </button>
+          {/* Share Button */}
+          <div className="relative bg-primary p-2 rounded-xl" ref={dropdownRef}>
+            <button
+              onClick={handleShare}
+              className="text-gray-600 dark:text-black hover:text-blue-600 transition-colors flex items-center gap-1"
+              aria-label="Share profile"
+            >
+              <MdShare className="text-2xl" />
+              <span className="text-md">Share</span>
+            </button>
 
-    {showShareDropdown && (
-      <div className="absolute bottom-0 left-0 mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-2 min-w-[200px] z-50">
-        <div className="space-y-2">
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-          >
-            <FiFacebook className="text-blue-600" />
-            <span className="text-white">Facebook</span>
-          </a>
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${profileData.user.name || 'this amazing photographer'}'s profile`)}&url=${encodeURIComponent(window.location.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-          >
-            <FiTwitter className="text-blue-400" />
-            <span className="text-white">Twitter</span>
-          </a>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(`Check out this photography profile: ${window.location.href}`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-          >
-            <FaWhatsapp />
-            <span className="text-white">WhatsApp</span>
-          </a>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-              setShowShareDropdown(false);
-            }}
-            className="w-full hover:bg-white flex items-center gap-2 p-2  dark:hover:bg-gray-700 rounded-md"
-          >
-            <MdLink className="text-gray-600 dark:text-gray-300" />
-            <span className="text-black dark:!text-white  dark:hover:!bg-gray-700 ">Copy Link</span>
-          </button>
+            {showShareDropdown && (
+              <div className="absolute bottom-0 left-0 mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-2 min-w-[200px] z-50">
+                <div className="space-y-2">
+                  {/* Social Sharing Links */}
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                  >
+                    <FiFacebook className="text-blue-600" />
+                    <span className="text-white">Facebook</span>
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${profileData.user.name || 'this amazing photographer'}'s profile`)}&url=${encodeURIComponent(window.location.href)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                  >
+                    <FiTwitter className="text-blue-400" />
+                    <span className="text-white">Twitter</span>
+                  </a>
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(`Check out this photography profile: ${window.location.href}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                  >
+                    <FaWhatsapp />
+                    <span className="text-white">WhatsApp</span>
+                  </a>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      setShowShareDropdown(false);
+                    }}
+                    className="w-full hover:bg-white flex items-center gap-2 p-2  dark:hover:bg-gray-700 rounded-md"
+                  >
+                    <MdLink className="text-gray-600 dark:text-gray-300" />
+                    <span className="text-black dark:!text-white  dark:hover:!bg-gray-700 ">Copy Link</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-</div>
       </div>
 
       {/* Bio Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 m-4">
-        {profileData.user?.about && (
-          <div className="bg-primary dark:bg-primary p-8 shadow-md">
-            <h3 className="text-xl text-center font-semibold mb-4 text-gray-900 dark:text-gray-900">BIOGRAPHY</h3>
-            <SafeHTML 
-              html={profileData.user.about} 
-              className="text-gray-900 dark:text-gray-900 max-w-none"
-            />
-          </div>
-        )}
-
-        {/* Details Section */}
-        <div className="space-y-8">
-          {profileData.user?.favouriteEquipement && (
-            <div className="bg-primary dark:bg-primary p-8  shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-gray-900  dark:text-gray-900 text-center">Gear & Equipment</h3>
-              <p className="text-gray-600 dark:text-gray-900">{profileData.user.favouriteEquipement}</p>
-            </div>
-          )}
-
-          {profileData.user?.award && (
-            <div className="bg-primary dark:bg-primary p-8  shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900 text-center">Achievements</h3>
-              <div className="grid gap-3">
-                {profileData.user.award.split(",").map((award, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700"
-                  >
-                    <FaAward className="flex-shrink-0 text-yellow-500" />
-                    <p className="text-gray-600 dark:text-gray-300">{award.trim()}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+      {profileData.user?.about && (
+        <div className="bg-primary p-12 shadow-md mt-8 w-full text-center">
+          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900">
+            BIOGRAPHY
+          </h3>
+          <SafeHTML
+            html={profileData.user.about}
+            className="text-gray-900 dark:text-gray-900 max-w-none text-justify"
+          />
         </div>
-      </div>
+      )}
+
+      {/* Details Section */}
+      <div className="flex flex-wrap gap-4 justify-center mt-6 mb-6">
+  {/* Gear & Equipment Section */}
+  {profileData.user?.favouriteEquipement && (
+    <div className="w-80 bg-primary dark:bg-primary p-8 shadow-md text-center flex flex-col justify-center">
+      <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900">
+        Gear & Equipment
+      </h3>
+      <p className="text-gray-900 dark:text-gray-900 font-semibold">
+        {profileData.user.favouriteEquipement}
+      </p>
+    </div>
+  )}
+
+  {/* Achievements Section */}
+  {profileData.user?.award && (
+    <div className="w-80 bg-primary dark:bg-primary p-8 shadow-md  text-center flex flex-col justify-center">
+      <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900">
+        Achievements
+      </h3>
+      <ul className="space-y-2">
+        {profileData.user.award.split(",").map((award, index) => (
+          <li
+            key={index}
+            className="flex items-center justify-center gap-2 text-gray-900 dark:text-gray-900 font-semibold"
+          >
+            <FaAward className="text-gray-900" />
+            <span>{award.trim()}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
 
       {/* Gallery Section */}
       <div className="mb-16">

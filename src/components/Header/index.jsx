@@ -58,13 +58,13 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 bg-gradient-to-r from-gray-900 to-black z-10">
+    <header className="sticky top-0 bg-gray-50 z-10">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile Menu Button */}
         <div className="md:hidden">
   <button
     onClick={handleMobileMenuToggle} 
-    className="text-white hover:text-gray-300 px-2 py-4"
+    className="text-gray-900 hover:text-gray-300 px-2 py-4"
   >
     <GiHamburgerMenu size={24} />
   </button>
@@ -98,14 +98,14 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md overflow-hidden z-10">
                   <button
                     onClick={handleMyAccountClick}
-                    className="block w-full px-4 py-2 text-left text-black bg-primary hover:!bg-gray-100"
+                    className="block w-full px-4 py-2 text-left text-black bg-gray-50 hover:!bg-gray-100"
                   >
                     My Account
                   </button>
                   <hr className="border-gray-200" />
                   <button
                     onClick={context.logout}
-                    className="block w-full px-4 py-2 text-left text-black bg-primary hover:!bg-gray-100"
+                    className="block w-full px-4 py-2 text-left text-black bg-gray-50 hover:!bg-gray-100"
                   >
                     Logout
                   </button>
@@ -114,17 +114,17 @@ const Header = () => {
             </div>
           ) : (
             <div className="flex gap-2">
-              <button className="text-white font-semi-bold">
+              <button className="text-gray-900 font-semi-bold">
               <Link
               
                 to="/login"
-                className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-700"
+                className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-400"
               >
                 Login
                 
               </Link>
               </button>
-              <button className="text-white font-semi-bold">
+              <button className="text-gray-900 font-semi-bold">
               <Link
                 to="/register"
                 className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-700"
@@ -140,11 +140,11 @@ const Header = () => {
   <div className="md:hidden fixed inset-0 bg-gray-900 z-50 pt-16">
     <div className="container mx-auto px-4">
       {/* Menu Header with Close Icon */}
-      <div className="flex justify-between items-center pb-4 border-b border-gray-700">
-        <h2 className="text-white text-xl font-bold">Menu</h2>
+      <div className="flex justify-between items-center pb-4 border-b border-gray-50">
+        <h2 className="text-gray-900 text-xl font-bold">Menu</h2>
         <button
           onClick={() => setIsMobileMenuOpen(false)}
-          className="text-white text-2xl p-2 hover:bg-gray-800 rounded-full"
+          className="text-gray-50 text-2xl p-2 hover:bg-gray-800 rounded-full"
         >
           <MdOutlineClose />
         </button>

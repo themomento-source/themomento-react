@@ -46,7 +46,7 @@ function BlogListing() {
     return <div className="text-center py-8 text-red-500">{error}</div>;
 
   return (
-    <section className="py-10 bg-gradient-to-r from-gray-900 to-black">
+    <section className="py-10 bg-gray-50">
       {/* Hero Section */}
       <div className="bg-amber-200 mb-5 shadow-md py-10 text-center">
         <Typography variant="h3" className="text-black font-bold" style={{ fontFamily: '"Marcellus", serif' }}>
@@ -57,7 +57,7 @@ function BlogListing() {
       <div className="container mx-auto mt-8 px-4 ">
         <div className="flex flex-col lg:flex-row gap-8  ">
           {/* Learning Section */}
-          <div className="flex-1 bg-primary shadow-lg p-6">
+          <div className="flex-1 bg-white shadow-lg p-6">
             <div className="mb-6 text-center ">
               <Typography variant="h4" className="text-black font-serif font-bold mb-2">
                 Learning
@@ -94,7 +94,7 @@ function BlogListing() {
           </div>
 
           {/* Interview Section */}
-          <div className="flex-1 bg-primary shadow-lg p-6">
+          <div className="flex-1 bg-white shadow-lg p-6">
             <div className="mb-6 text-center">
               <Typography variant="h4" className="text-black font-serif font-bold mb-2">
                 Interview
@@ -131,7 +131,7 @@ function BlogListing() {
           </div>
 
           {/* General Blogs Section */}
-          <div className="flex-1 bg-primary shadow-lg p-6">
+          <div className="flex-1 bg-white shadow-lg p-6">
             <div className="mb-6 text-center">
               <Typography variant="h4" className="text-black font-serif font-bold mb-2">
                 Blog

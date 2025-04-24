@@ -4,23 +4,23 @@ import { Link } from "react-router-dom";
 
 const BecomeMemberPromo = () => {
   return (
-    <div className="bg-gradient-to-r from-gray-900 to-black text-white flex flex-col md:flex-row items-center justify-center p-8 md:p-16">
+    <div className="bg-gray-50  flex flex-col md:flex-row items-center justify-center p-8 md:p-16">
       {/* Left Section */}
       <div className="md:w-1/2 space-y-8">
-        <h2 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-wide">
+        <h2 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-wide text-gray-900">
           CAPTURE<br />CONNECT<br />GROW
         </h2>
         <Link to="/my-account/:userId">  
-        <button className="border border-yellow-400 text-yellow-400 px-8 py-3 text-lg font-semibold tracking-wide
-         hover:bg-yellow-400 hover:text-black transition duration-300 font-pt-serif mt-6">
+        <button className="border border-gray-800 text-gray-600 px-8 py-3 text-lg font-semibold tracking-wide
+         hover:bg-amber-200 hover:text-black transition duration-300 font-pt-serif mt-6">
           JOIN MOMENTO NOW
         </button>
         </Link>
         <div>
-          <h3 className="text-4xl font-bold text-yellow-400 font-marcellus">FREE MEMBERSHIP</h3>
+          <h3 className="text-4xl font-bold text-gray-800 font-marcellus">FREE MEMBERSHIP</h3>
         </div>
 
-        <div className="inline-block bg-yellow-400 px-6 py-2 text-black font-bold uppercase tracking-wider font-pt-serif">
+        <div className="inline-block bg-amber-200 px-6 py-2 text-black font-bold uppercase tracking-wider font-pt-serif">
           WE OFFER
         </div>
 
