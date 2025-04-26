@@ -115,7 +115,7 @@ const PublicProfile = () => {
   }
 
   return (
-    <div className="container mx-auto py-16 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="container mx-auto py-16 min-h-screen bg-gray-50">
       {/* Photo Modal */}
       {selectedPhoto && (
         <div
@@ -173,7 +173,7 @@ const PublicProfile = () => {
       )}
 
       {/* Profile Header Section */}
-      <div className="flex flex-col items-center p-8 bg-gray-900 shadow-sm">
+      <div className="flex flex-col items-center p-8 bg-gray-50 shadow-sm">
         <div className="w-32 h-32 relative mb-6">
           <img
             src={profileData.user?.avatar || "/default-avatar.jpg"}
@@ -182,7 +182,7 @@ const PublicProfile = () => {
           />
         </div>
 
-        <h1 className="text-3xl  shadow-md font-bold mb-2 text-center text-gray-200 p-2">
+        <h1 className="text-3xl font-bold mb-2 text-center text-gray-900 p-2">
           {profileData.user?.name || "Visual Storyteller"}
         </h1>
         
@@ -287,7 +287,7 @@ const PublicProfile = () => {
                     className="w-full hover:bg-white flex items-center gap-2 p-2  dark:hover:bg-gray-700 rounded-md"
                   >
                     <MdLink className="text-gray-600 dark:text-gray-300" />
-                    <span className="text-black dark:!text-white  dark:hover:!bg-gray-700 ">Copy Link</span>
+                    <span className="text-black dark:!text-white">Copy Link</span>
                   </button>
                 </div>
               </div>
@@ -298,13 +298,13 @@ const PublicProfile = () => {
 
       {/* Bio Section */}
       {profileData.user?.about && (
-        <div className="bg-primary p-12 shadow-md mt-8 w-full text-center">
-          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900">
+        <div className="bg-gray-50 p-12 shadow-md mt-8 w-full text-center">
+          <h3 className="text-xl font-semibold mb-4 text-gray-900">
             BIOGRAPHY
           </h3>
           <SafeHTML
             html={profileData.user.about}
-            className="text-gray-900 dark:text-gray-900 max-w-none text-justify"
+            className="text-gray-900 max-w-none text-justify"
           />
         </div>
       )}
@@ -313,11 +313,11 @@ const PublicProfile = () => {
       <div className="flex flex-wrap gap-4 justify-center mt-6 mb-6">
   {/* Gear & Equipment Section */}
   {profileData.user?.favouriteEquipement && (
-    <div className="w-80 bg-primary dark:bg-primary p-8 shadow-md text-center flex flex-col justify-center">
-      <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900">
-        Gear & Equipment
+    <div className="w-80 bg-primary p-8 shadow-md text-center flex flex-col justify-center">
+      <h3 className="text-xl font-semibold mb-4 text-gray-90">
+      My favorite Gear & Equipment
       </h3>
-      <p className="text-gray-900 dark:text-gray-900 font-semibold">
+      <p className="text-gray-900  font-semibold">
         {profileData.user.favouriteEquipement}
       </p>
     </div>
@@ -326,14 +326,14 @@ const PublicProfile = () => {
   {/* Achievements Section */}
   {profileData.user?.award && (
     <div className="w-80 bg-primary dark:bg-primary p-8 shadow-md  text-center flex flex-col justify-center">
-      <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-900">
+      <h3 className="text-xl font-semibold mb-4 text-gray-900 ">
         Achievements
       </h3>
       <ul className="space-y-2">
         {profileData.user.award.split(",").map((award, index) => (
           <li
             key={index}
-            className="flex items-center justify-center gap-2 text-gray-900 dark:text-gray-900 font-semibold"
+            className="flex items-center justify-center gap-2 text-gray-900  font-semibold"
           >
             <FaAward className="text-gray-900" />
             <span>{award.trim()}</span>
@@ -346,7 +346,7 @@ const PublicProfile = () => {
 
       {/* Gallery Section */}
       <div className="mb-16">
-        <h3 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">
+        <h3 className="text-3xl font-bold mb-8 text-center text-gray-900">
           Gallery
         </h3>
         <div className="container mx-auto px-4">
