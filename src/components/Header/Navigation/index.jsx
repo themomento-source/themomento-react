@@ -31,7 +31,7 @@ const Navigation = ({ mainMenuItems }) => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block py-2 bg-gray-50 to-black">
+      <nav className="hidden md:block py-2 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex-1 flex justify-center">
@@ -41,14 +41,15 @@ const Navigation = ({ mainMenuItems }) => {
                     {item.name === "Home" ? (
                       <button
                         onClick={handleHomeClick}
-                        className="text-gray-900 capitalize hover:!bg-amber-400 px-2 py-2 font-serif bg-transparent border-none cursor-pointer transition-colors duration-200"
+                        className="text-gray-900 text-[18px] hover:!bg-amber-400 px-2 py-2 font-pt-serif 
+                        bg-transparent border-none cursor-pointer transition-colors duration-200"
                       >
                         {item.name}
                       </button>
                     ) : (
                       <Link
                         to={item.path}
-                        className="text-gray-900 capitalize hover:bg-amber-400 px-2 py-2 font-serif no-underline inline-block transition-colors duration-200"
+                        className="text-gray-900 capitalize text-[18px] hover:bg-amber-400 px-2 py-2 font-pt-serif  no-underline inline-block transition-colors duration-200"
                       >
                         {item.name}
                       </Link>

@@ -182,7 +182,7 @@ const PublicProfile = () => {
           />
         </div>
 
-        <h1 className="text-3xl font-bold mb-2 text-center text-gray-900 p-2">
+        <h1 className="text-3xl font-bold font-pt-serif  mb-2 text-center text-gray-900 p-2">
           {profileData.user?.name || "Visual Storyteller"}
         </h1>
         
@@ -299,7 +299,7 @@ const PublicProfile = () => {
       {/* Bio Section */}
       {profileData.user?.about && (
         <div className="bg-gray-50 p-12 shadow-md mt-8 w-full text-center">
-          <h3 className="text-xl font-semibold mb-4 text-gray-900">
+          <h3 className="text-xl font-semibold font-pt-serif mb-4 text-gray-900">
             BIOGRAPHY
           </h3>
           <SafeHTML
@@ -346,7 +346,7 @@ const PublicProfile = () => {
 
       {/* Gallery Section */}
       <div className="mb-16">
-        <h3 className="text-3xl font-bold mb-8 text-center text-gray-900">
+        <h3 className="text-3xl font-bold font-pt-serif mb-8 text-center text-gray-900">
           Gallery
         </h3>
         <div className="container mx-auto px-4">
