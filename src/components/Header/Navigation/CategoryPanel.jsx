@@ -18,7 +18,7 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
     },
   ];
 
-  if (!isOpenCatPanel) return null; // Don't render if the panel is closed
+  if (!isOpenCatPanel) return null; 
 
   return (
     <Box

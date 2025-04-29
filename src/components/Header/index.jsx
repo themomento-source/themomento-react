@@ -152,62 +152,77 @@ const Header = () => {
 
       {/* Menu Items */}
       <ul className="space-y-4 pt-4">
-              {mainMenuItems.map((item) => (
-                <li key={item.name}>
-                  <div
-                    className="flex justify-between items-center text-white font-serif py-3 text-lg !hover:bg-gray-800 px-4 rounded cursor-pointer"
-                    onClick={() =>
-                      item.hasSubmenu ? handleSubmenuToggle(item.name) : setIsMobileMenuOpen(false)
-                    }
-                  >
-                    <span>{item.name}</span>
-                    {item.hasSubmenu && (
-                      <span>{openSubmenu === item.name ? "-" : "+"}</span> // Toggle indicator
-                    )}
-                  </div>
+  {mainMenuItems.map((item) => {
+    // Dynamically determine path for Submit Photo
+    const path = item.name === "Submit Photo"
+      ? context.isLogin
+        ? `/my-account/${context.userData?._id}`
+        : "/login"
+      : item.path;
 
-                  {item.submenu && openSubmenu === item.name && (
-                    <ul className="ml-6">
-                      {item.submenu.map((subItem) => (
-                        <li key={subItem.name}>
-                          <Link
-                            to={subItem.path}
-                            className="text-gray-300 block py-2 text-md hover:bg-gray-800 px-4 font-optima"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            {subItem.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-              {context.isLogin && (
-                <>
-                  <li>
-                    <Link
-                      to="/my-account"
-                      className="text-white block py-3 text-lg hover:bg-gray-800 px-4 rounded"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      My Account
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        context.logout();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="text-white block w-full py-3 text-lg hover:bg-gray-800 px-4 rounded text-left"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </>
-              )}
-            </ul>
+    return (
+      <li key={item.name}>
+        {item.hasSubmenu ? (
+          <div
+            className="flex justify-between items-center text-white font-serif py-3 text-lg hover:bg-gray-800 px-4 rounded cursor-pointer"
+            onClick={() => handleSubmenuToggle(item.name)}
+          >
+            <span>{item.name}</span>
+            <span>{openSubmenu === item.name ? "-" : "+"}</span>
+          </div>
+        ) : (
+          <Link
+            to={path}
+            className="flex justify-between items-center text-white font-serif py-3 text-lg hover:bg-gray-800 px-4 rounded cursor-pointer"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span>{item.name}</span>
+          </Link>
+        )}
+
+        {item.submenu && openSubmenu === item.name && (
+          <ul className="ml-6">
+            {item.submenu.map((subItem) => (
+              <li key={subItem.name}>
+                <Link
+                  to={subItem.path}
+                  className="text-gray-300 block py-2 text-md hover:bg-gray-800 px-4 font-optima"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {subItem.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    );
+  })}
+  {context.isLogin && (
+    <>
+      <li>
+        <Link
+          to={`/my-account/${context.userData?._id}`}
+          className="text-white block py-3 text-lg hover:bg-gray-800 px-4 rounded"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          My Account
+        </Link>
+      </li>
+      <li>
+        <button
+          onClick={() => {
+            context.logout();
+            setIsMobileMenuOpen(false);
+          }}
+          className="text-white block w-full py-3 text-lg hover:bg-gray-800 px-4 rounded text-left"
+        >
+          Logout
+        </button>
+      </li>
+    </>
+  )}
+</ul>
           </div>
         </div>
       )}
