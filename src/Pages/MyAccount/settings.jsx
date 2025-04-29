@@ -268,7 +268,16 @@ const Settings = () => {
             variant="outlined"
             placeholder="@username"
           />
-
+    <TextField
+            fullWidth
+            label="Facebook"
+            name="facebook"
+            value={formData.facebook}
+            onChange={handleChange}
+            margin="normal"
+            variant="outlined"
+            placeholder="@username"
+          />
           <TextField
             fullWidth
             label="Twitter"

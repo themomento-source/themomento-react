@@ -8,9 +8,9 @@ const PhotoOfTheDay = () => {
   useEffect(() => {
     const fetchPhotoOfTheDay = async () => {
       try {
-        const response = await fetchDataFromApi("/api/dayphoto/latest-approved");
-        if (response?.photo) {
-          setPhotoOfTheDay(response.photo);
+        const response = await fetchDataFromApi("/api/photo/photo-of-the-day");
+        if (response?.photoOfTheDay) {
+          setPhotoOfTheDay(response.photoOfTheDay);
         } else {
           console.error("No photo of the day found");
         }
@@ -31,7 +31,7 @@ const PhotoOfTheDay = () => {
       ) : photoOfTheDay ? (
         <div className="max-w-7xl mx-auto">
           {/* Amber Top Bar */}
-          <div className="text-gray-900 text-center py-3 mb-8 font-optima font-bold 
+          <div className="text-gray-900 text-center py-3 mb-8 font-optima font-bold
           text-xl md:text-2xl uppercase tracking-wide">
             Today’s Best Click
           </div>
@@ -41,7 +41,7 @@ const PhotoOfTheDay = () => {
             {/* Photo Section - 80% width */}
             <div className="md:col-span-10 relative w-full aspect-[4/3]">
               <img
-                src={photoOfTheDay.image.url}
+                src={photoOfTheDay.images[0]?.url} 
                 alt={photoOfTheDay.title}
                 className="w-full h-full object-contain"
               />
@@ -57,7 +57,7 @@ const PhotoOfTheDay = () => {
                   {photoOfTheDay.description}
                 </p>
                 <p className="text-gray-600 text-xs italic font-pt-serif">
-                  Photo by {photoOfTheDay.user?.name || "Momento User"}
+                  Photo by {photoOfTheDay.user?.name || "Momento User"} 
                 </p>
               </div>
             </div>

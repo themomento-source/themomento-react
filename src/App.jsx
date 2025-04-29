@@ -180,14 +180,7 @@ function App() {
 
       <Toaster />
 
-      {/* Photo Details Modal */}
-      <Dialog open={openPhotoDetailsModal} onClose={() => setOpenPhotoDetailsModal(false)}>
-        <DialogContent>
-          <div className="flex items-center w-full">
-            <PhotoDetails />
-          </div>
-        </DialogContent>
-      </Dialog>
+ 
 
       {/* Shopping Cart Drawer */}
       <Drawer open={openCartPanel} onClose={() => setOpenCartPanel(false)} anchor="right">
