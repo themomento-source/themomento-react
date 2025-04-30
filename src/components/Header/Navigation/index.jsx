@@ -8,7 +8,7 @@ import {
 import { BsPerson } from "react-icons/bs";
 
 import { BsCamera } from "react-icons/bs";
-import { FaPhotoVideo } from "react-icons/fa";
+import { MdOutlineFileUpload } from "react-icons/md";
 import { MyContext } from "../../../App";
 import "../Navigation/style.css";
 
@@ -20,7 +20,7 @@ const Navigation = ({ mainMenuItems }) => {
 
   const mobileMenuItems = [
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
-    { name: "Submit Photo ", icon: <FaPhotoVideo />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
+    { name: "Submit Photo ", icon: <MdOutlineFileUpload />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
     { name: "Account", icon: <BsPerson />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
   ];
 
