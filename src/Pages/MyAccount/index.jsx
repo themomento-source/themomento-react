@@ -9,21 +9,26 @@ import {
   Typography,
   Chip,
   TextField,
-  Link,
+  MenuItem,
   Grid,
   Select,
-  MenuItem,
   InputLabel,
   FormControl,
 } from "@mui/material";
 import { MdPhotoLibrary, MdShoppingBag, MdOutlineFileUpload, MdSettings, MdLogout } from "react-icons/md";
+import { MdMessage } from "react-icons/md";
+import { formatDistanceToNow } from "date-fns";
 import { CgProfile } from "react-icons/cg";
 import { FiSend } from "react-icons/fi";
 import { MyContext } from "../../App.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
 
 function MyAccount() {
+  const [messages, setMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0); 
+
   const { userId } = useParams();
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [activeTab, setActiveTab] = useState("submissions");
@@ -65,6 +70,49 @@ function MyAccount() {
       setLoadingSubmissions(false);
     }
   };
+
+  const fetchUnreadMessages = async () => {
+    try {
+      const response = await fetchDataFromApi("/api/message/unread-count");
+      if (response?.success) {
+        setUnreadCount(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching unread messages count:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnreadMessages();
+
+    // Set an interval to refresh unread messages count every 30 seconds
+    const interval = setInterval(() => {
+      fetchUnreadMessages();
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, []);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        setLoadingMessages(true);
+        const response = await fetchDataFromApi("/api/message");
+        if (response?.success) {
+          setMessages(response.data);
+          fetchUnreadMessages(); // Fetch unread count when messages load
+        }
+      } catch (error) {
+        openAlertBox("error", "Failed to load messages");
+      } finally {
+        setLoadingMessages(false);
+      }
+    };
+
+    if (activeTab === "messages") {
+      fetchMessages();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -172,8 +220,6 @@ function MyAccount() {
     navigate("/login");
   };
 
-
-  
   return (
     <section className="py-8 w-full bg-gray-100 min-h-screen">
       <div className="container mx-auto px-4 lg:px-8 flex flex-col lg:flex-row gap-8">
@@ -220,17 +266,15 @@ function MyAccount() {
 
               {/* Navigation */}
               <nav className="space-y-2">
-
-              <Button
-    component={Link}
-    href={`/user/${userData?._id}`}
-    fullWidth
-    startIcon={<CgProfile />}
-    className="!bg-primary !justify-start !rounded-none !text-gray-800 !capitalize"
-  >
-    View Public Profile
-  </Button>
-
+                <Button
+                  component={Link}
+                  to={`/user/${userData?._id}`}
+                  fullWidth
+                  startIcon={<CgProfile />}
+                  className="!bg-primary !justify-start !rounded-none !text-gray-800 !capitalize"
+                >
+                  View Public Profile
+                </Button>
                 <Button
                   fullWidth
                   startIcon={<MdPhotoLibrary />}
@@ -239,17 +283,10 @@ function MyAccount() {
                 >
                   My Submissions
                 </Button>
-                <Button
-                  fullWidth
-                  startIcon={<MdShoppingBag />}
-                  className="!bg-primary !justify-start !rounded-none !text-gray-800"
-                  onClick={() => setActiveTab("purchases")}
-                >
-                  Purchases
-                </Button>
+            
                 <Button
                   component={Link}
-                  href={`/my-account/${userData?._id}/settings`}
+                  to={`/my-account/${userData?._id}/settings`}
                   fullWidth
                   startIcon={<MdSettings />}
                   className="!bg-primary !justify-start !rounded-none !text-gray-800 !capitalize"
@@ -273,104 +310,156 @@ function MyAccount() {
         <main className="flex-1">
           <Card className="shadow-sm border border-gray-200">
             <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-              <Tab label="Photo Submissions" value="submissions" />
-              <Tab label="Purchased Photos" value="purchases" />
+              <Tab label={`Photo Submissions`} value="submissions" />
+             
+              <Tab label={`Messages (${unreadCount})`} value="messages" /> {/* Unread Message Count */}
             </Tabs>
 
-            <CardContent className="p-6">
-              {activeTab === "submissions" && (
-                <div>
-                  <Grid container spacing={4} className="mt-8">
-                    <Grid item xs={12}>
-                      <form onSubmit={handlePhotoSubmission}>
-                        <TextField
-                          fullWidth
-                          label="Title"
-                          name="title"
-                          value={submissionData.title}
-                          onChange={handleSubmissionChange}
-                          variant="outlined"
-                          margin="normal"
-                          required
-                        />
-                        <TextField
-                          fullWidth
-                          label="Description"
-                          name="description"
-                          multiline
-                          rows={3}
-                          value={submissionData.description}
-                          onChange={handleSubmissionChange}
-                          variant="outlined"
-                          margin="normal"
-                          required
-                          inputProps={{ maxLength: 400 }}
-                          helperText={`${submissionData.description.length}/400`}
-                        />
-                        <FormControl fullWidth margin="normal" required>
-                          <InputLabel>Categories</InputLabel>
-                          <Select
-                            multiple
-                            name="categories"
-                            value={submissionData.categories}
-                            onChange={handleSubmissionChange}
-                            renderValue={(selected) =>
-                              selected.map((id) => categories.find((c) => c._id === id)?.name).join(", ")
-                            }
-                          >
-                            {categories.map((category) => (
-                              <MenuItem key={category._id} value={category._id}>
-                                {category.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <div className="flex items-center gap-4 mt-4">
-                          <input
-                            type="file"
-                            onChange={handleFileSelect}
-                            className="hidden-file-input"
-                            id="photoSubmission"
-                            accept="image/*"
-                            required
-                            ref={fileInputRef}
-                          />
-                          <label htmlFor="photoSubmission">
-                            <Button
-                              startIcon={<MdOutlineFileUpload className="text-lg" />}
-                              component="span"
-                              className="!bg-primary !text-gray-800 !rounded-none !capitalize"
-                            >
-                              Upload File
-                            </Button>
-                          </label>
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            className="!rounded-none"
-                            startIcon={<FiSend />}
-                            disabled={isSubmitting || !submissionData.file}
-                          >
-                            {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
-                          </Button>
-                        </div>
-                        {submissionData.file && (
-                          <div className="mt-4">
-                            <Typography variant="body2" color="text.secondary">
-                              Selected file: {submissionData.file.name}
-                            </Typography>
-                            <img
-                              src={submissionData.preview}
-                              alt="Preview"
-                              className="mt-2 w-32 h-32 object-cover"
-                            />
-                          </div>
-                        )}
-                      </form>
-                    </Grid>
+            {/* Messages */}
+            {activeTab === "messages" && (
+              <div className="mt-4">
+                {loadingMessages ? (
+                  <div className="text-center">
+                    <CircularProgress />
+                    <Typography variant="body2" color="text.secondary" className="mt-2">
+                      Loading messages...
+                    </Typography>
+                  </div>
+                ) : messages.length > 0 ? (
+                  <Grid container spacing={3}>
+                    {messages.map((message) => (
+                      <Grid item xs={12} key={message._id}>
+                        <Card className="shadow-sm border border-gray-200">
+                          <CardContent>
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <Typography variant="h6" className="font-semibold">
+                                  {message.subject}
+                                </Typography>
+                                <Typography variant="body2" className="text-gray-600 mt-1">
+                                  {message.content}
+                                </Typography>
+                                <div className="flex items-center mt-2 gap-2">
+                                  <Chip
+                                    label={message.read ? "Read" : "Unread"}
+                                    size="small"
+                                    color={message.read ? "default" : "primary"}
+                                  />
+                                  <Typography variant="caption" className="text-gray-500">
+                                    {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                                  </Typography>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <div className="text-center p-8">
+                    <Typography variant="h6" color="text.secondary">
+                      No messages found
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            )}
 
-                    {/* Display Submissions */}
-                    <Grid item xs={12}>
+            {/* Submissions */}
+            {activeTab === "submissions" && (
+              <CardContent className="p-6">
+                <Grid container spacing={4} className="mt-8">
+                  <Grid item xs={12}>
+                    <form onSubmit={handlePhotoSubmission}>
+                      <TextField
+                        fullWidth
+                        label="Title"
+                        name="title"
+                        value={submissionData.title}
+                        onChange={handleSubmissionChange}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                      />
+                      <TextField
+                        fullWidth
+                        label="Description"
+                        name="description"
+                        multiline
+                        rows={3}
+                        value={submissionData.description}
+                        onChange={handleSubmissionChange}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        inputProps={{ maxLength: 400 }}
+                        helperText={`${submissionData.description.length}/400`}
+                      />
+                      <FormControl fullWidth margin="normal" required>
+                        <InputLabel>Categories</InputLabel>
+                        <Select
+                          multiple
+                          name="categories"
+                          value={submissionData.categories}
+                          onChange={handleSubmissionChange}
+                          renderValue={(selected) =>
+                            selected.map((id) => categories.find((c) => c._id === id)?.name).join(", ")
+                          }
+                        >
+                          {categories.map((category) => (
+                            <MenuItem key={category._id} value={category._id}>
+                              {category.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <div className="flex items-center gap-4 mt-4">
+                        <input
+                          type="file"
+                          onChange={handleFileSelect}
+                          className="hidden-file-input"
+                          id="photoSubmission"
+                          accept="image/*"
+                          required
+                          ref={fileInputRef}
+                        />
+                        <label htmlFor="photoSubmission">
+                          <Button
+                            startIcon={<MdOutlineFileUpload className="text-lg" />}
+                            component="span"
+                            className="!bg-primary !text-gray-800 !rounded-none !capitalize"
+                          >
+                            Upload File
+                          </Button>
+                        </label>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          className="!rounded-none"
+                          startIcon={<FiSend />}
+                          disabled={isSubmitting || !submissionData.file}
+                        >
+                          {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
+                        </Button>
+                      </div>
+                      {submissionData.file && (
+                        <div className="mt-4">
+                          <Typography variant="body2" color="text.secondary">
+                            Selected file: {submissionData.file.name}
+                          </Typography>
+                          <img
+                            src={submissionData.preview}
+                            alt="Preview"
+                            className="mt-2 w-32 h-32 object-cover"
+                          />
+                        </div>
+                      )}
+                    </form>
+                  </Grid>
+
+                  {/* Display Submissions */}
+                  <Grid item xs={12}>
                     {loadingSubmissions ? (
                       <div className="text-center">
                         <CircularProgress />
@@ -391,11 +480,11 @@ function MyAccount() {
                                   {submission.description || "No description"}
                                 </Typography>
                                 <div className="relative aspect-square py-4">
-                                <img
-  src={submission.images?.[0]?.url}
-  alt="Submission"
-  className="w-full h-full object-cover"
-/>
+                                  <img
+                                    src={submission.images?.[0]?.url}
+                                    alt="Submission"
+                                    className="w-full h-full object-cover"
+                                  />
                                   {submission.status === "rejected" && (
                                     <Chip
                                       label="Rejected"
@@ -427,10 +516,8 @@ function MyAccount() {
                               </CardContent>
                             </Card>
                           </Grid>
-                          
                         ))}
                       </Grid>
-                      
                     ) : (
                       <div className="text-center p-8">
                         <Typography variant="h6" color="text.secondary">
@@ -439,10 +526,9 @@ function MyAccount() {
                       </div>
                     )}
                   </Grid>
-                  </Grid>
-                </div>
-              )}
-            </CardContent>
+                </Grid>
+              </CardContent>
+            )}
           </Card>
         </main>
       </div>

@@ -105,3 +105,27 @@ export const blogAPI = {
   update: (id, data) => editData(`/api/blog/${id}`, data),
   delete: (id) => editData(`/api/blog/${id}`, {}, { method: "DELETE" }),
 };
+
+
+
+
+
+export const deleteData = async (url) => {
+  try {
+    const response = await axios.delete(apiUrl + url, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("deleteData error:", error);
+    return {
+      error: true,
+      message: error.response?.data?.message || "Failed to delete data",
+      status: error.response?.status || 500,
+    };
+  }
+};

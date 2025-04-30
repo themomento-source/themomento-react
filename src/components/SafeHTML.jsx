@@ -2,7 +2,7 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 
-const SafeHTML = ({ html, className }) => {  // Add className prop
+const SafeHTML = ({ html, className }) => {  
   const cleanHTML = DOMPurify.sanitize(html, {
     USE_PROFILES: { html: true },
     ALLOWED_TAGS: [
