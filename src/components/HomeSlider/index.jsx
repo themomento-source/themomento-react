@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function HomeSlider() {
   const heroImage =
-    "https://res.cloudinary.com/dac4gsvh0/image/upload/v1746031360/_RAY2160-Enhanced-NR_hg9fck.jpg";
+    "https://res.cloudinary.com/dac4gsvh0/image/upload/v1746038923/8961B9DC-E687-4F96-8A13-1FBC408C69AF_nh2ws4.jpg";
 
   return (
     <div className="bg-black flex items-center py-12 md:py-20">
