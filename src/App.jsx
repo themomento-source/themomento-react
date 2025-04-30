@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Alert from '@mui/material/Alert';
 import "./App.css";
-
+import CookieConsent from "react-cookie-consent";
+import { Link } from "react-router-dom"; 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./Pages/Home";
@@ -32,6 +33,7 @@ import Learning from "./Pages/BlogListing/Learning.jsx";
 import Interview from "./Pages/BlogListing/Interview.jsx";
 import GeneralBlog from "./Pages/BlogListing/GeneralBlog.jsx";
 import ChangePassword from "./Pages/Login/changePassword/index.jsx";
+import PrivacyPolicy from "./Pages/PrivacyPolicies/index.jsx";
 
 export const MyContext = createContext();
 
@@ -143,7 +145,7 @@ function App() {
               <Route path="/about" element={<AboutMomento />} />
               <Route path="/become-member" element={<MembershipPromo/>} />
               <Route path="/change-password" element={<ChangePassword />} />
-              
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               
 
               {/* Protected Routes */}
@@ -174,6 +176,46 @@ function App() {
               />
             </Routes>
             <Footer />
+
+            <CookieConsent
+            location="bottom"
+            buttonText="Accept"
+            declineButtonText="Decline"
+            enableDeclineButton
+            flipButtons
+            style={{ 
+              background: "#2d3748",
+              padding: "1rem",
+              alignItems: "center"
+            }}
+            buttonStyle={{
+              background: "#48bb78",
+              color: "white",
+              borderRadius: "4px",
+              padding: "8px 16px",
+              fontSize: "14px"
+            }}
+            declineButtonStyle={{
+              background: "#f56565",
+              marginRight: "1rem",
+              borderRadius: "4px",
+              padding: "8px 16px",
+              fontSize: "14px"
+            }}
+            cookieName="gdprConsent"
+            expires={365}
+          >
+            <span style={{ color: "white", fontSize: "14px" }}>
+              We use cookies to ensure you get the best experience on our website.{" "}
+              <Link 
+                to="/privacy-policy" 
+                style={{ color: "#63b3ed", textDecoration: "underline" }}
+              >
+                Learn more
+              </Link>
+            </span>
+          </CookieConsent>
+
           </MyContext.Provider>
         </BrowserRouter>
      
