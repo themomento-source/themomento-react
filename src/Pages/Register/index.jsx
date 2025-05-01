@@ -279,12 +279,7 @@ function Register() {
               <hr className="flex-grow border-gray-300" />
             </div>
 
-            <Button
-              className="w-full flex items-center py-3 border"
-              onClick={authWithGoogle}
-            >
-              <FcGoogle className="text-[20px] mr-2" /> Continue with Gmail
-            </Button>
+            
           </form>
         </div>
       </div>

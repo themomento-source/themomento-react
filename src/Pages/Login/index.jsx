@@ -211,15 +211,7 @@ function Login() {
           </div>
 
           <div className="flex items-center justify-center">
-            <Button
-              className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md text-black font-medium"
-              style={{ transition: "0.3s ease" }}
-              onMouseOver={(e) => (e.target.style.background = "#f5f5f5")}
-              onMouseOut={(e) => (e.target.style.background = "white")}
-            >
-              <FcGoogle className="text-[20px] mr-2" />
-              Continue with Google
-            </Button>
+           
           </div>
         </form>
       </div>
