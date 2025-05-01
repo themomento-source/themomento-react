@@ -6,7 +6,7 @@ import { fetchDataFromApi } from "../../utils/api";
 
 function PhotoListing() {
   const [allPhotos, setAllPhotos] = useState([]);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchAllPhotos = async () => {

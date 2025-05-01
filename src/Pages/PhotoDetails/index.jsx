@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
-import { FaDownload, FaRegHeart } from "react-icons/fa";
 import { fetchDataFromApi } from "../../utils/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import ImageProtector from "../../components/ImageProtector";
+
 
 function PhotoDetails() {
   const { id } = useParams();
@@ -61,23 +60,29 @@ function PhotoDetails() {
 
         {/* Main Content Container */}
         <div className="flex flex-col">
+
+
+
+          
           {/* Image Section - Full Width */}
           <div className="w-full max-h-screen mb-12">
             <div className="bg-white p-4 flex items-center justify-center">
-              <ImageProtector>
-                <img
-                  src={photo.images?.[0]?.url}
-                  alt={photo.title}
-                  className="w-auto max-w-full max-h-[80vh] object-contain"
-                  style={{ 
-                    aspectRatio: photo.dimensions?.width && photo.dimensions?.height 
-                      ? `${photo.dimensions.width}/${photo.dimensions.height}`
-                      : 'auto'
-                  }}
-                />
-              </ImageProtector>
+             
+              <img
+  src={photo.images?.[0]?.url}
+  alt={photo.title}
+  className="w-auto max-w-full max-h-[80vh] object-contain"
+  style={{ 
+    aspectRatio: photo.dimensions?.width && photo.dimensions?.height 
+      ? `${photo.dimensions.width}/${photo.dimensions.height}`
+      : 'auto'
+  }}
+/>
+              
             </div>
           </div>
+
+          
 
           {/* Details Section */}
           <div className="max-w-4xl mx-auto w-full">
@@ -89,14 +94,33 @@ function PhotoDetails() {
                 {photo.description}
               </p>
 
+              <div className="m-4">
+
+              <p className="text-sm text-gray-500 mb-1">Upload Date</p>
+  <p className="font-medium text-gray-700">
+    {new Date(photo.createdAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}
+  </p>
+  </div>
+
               {/* Author Section */}
               <div className="flex items-center space-x-4 mb-8">
+
+   
+
                 <img
                   src={photo.user?.profileImage || "/default-avatar.jpg"}
                   alt={photo.user?.name}
                   className="w-14 h-14  object-cover border-2 border-gray-200"
                 />
                 <div>
+
+
+
+                  
                   <p className="text-lg font-semibold text-gray-900">
                     {photo.user?.name}
                   </p>
@@ -106,36 +130,13 @@ function PhotoDetails() {
 
               {/* Action Buttons */}
               <div className="flex space-x-4">
-                <button className="flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white hover:shadow-lg transition-all">
-                  <FaDownload className="w-5 h-5" />
-                  <span>Download</span>
-                </button>
-                <button className="flex items-center space-x-2 px-6 py-3 border-2 border-gray-200 text-gray-600 hover:border-gray-300 transition-colors">
-                  <FaRegHeart className="w-5 h-5" />
-                  <span>Like</span>
-                </button>
+                
+                
               </div>
             </div>
 
             {/* Metadata */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white p-6 shadow-sm">
-                <p className="text-sm text-gray-500 mb-1">Upload Date</p>
-                <p className="font-medium text-gray-700">
-                  {new Date(photo.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
-              <div className="bg-white p-6 shadow-sm">
-                <p className="text-sm text-gray-500 mb-1">Resolution</p>
-                <p className="font-medium text-gray-700">
-                  {photo.dimensions?.width || 'Unknown'} x {photo.dimensions?.height || 'Unknown'}
-                </p>
-              </div>
-            </div>
+           
           </div>
         </div>
 
@@ -174,3 +175,11 @@ function PhotoDetails() {
 };
 
 export default PhotoDetails;
+
+
+
+
+
+
+
+

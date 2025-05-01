@@ -42,7 +42,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const RouterContent = () => {
-  useGoogleAnalytics(); // Now inside Router context
+  useGoogleAnalytics(); 
   const { alert } = useContext(MyContext);
 
 
