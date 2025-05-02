@@ -59,7 +59,7 @@ function BlogListing() {
           {/* Learning Section */}
           <div className="flex-1 bg-white shadow-lg p-6">
             <div className="mb-6 text-center ">
-              <Typography variant="h4" className="text-black font-serif font-bold mb-2">
+              <Typography variant="h4" className="text-black font-marcellus font-bold mb-2">
                 Learning
               </Typography>
               <Typography variant="body1" className="text-gray-600">
@@ -96,7 +96,7 @@ function BlogListing() {
           {/* Interview Section */}
           <div className="flex-1 bg-white shadow-lg p-6">
             <div className="mb-6 text-center">
-              <Typography variant="h4" className="text-black font-serif font-bold mb-2">
+              <Typography variant="h4" className="text-black font-marcellus font-bold mb-2">
                 Interview
               </Typography>
               <Typography variant="body1" className="text-gray-600">
@@ -133,7 +133,7 @@ function BlogListing() {
           {/* General Blogs Section */}
           <div className="flex-1 bg-white shadow-lg p-6">
             <div className="mb-6 text-center">
-              <Typography variant="h4" className="text-black font-serif font-bold mb-2">
+              <Typography variant="h4" className="text-black font-marcellus font-bold mb-2">
                 Blog
               </Typography>
               <Typography variant="body-1" className="text-gray-600">

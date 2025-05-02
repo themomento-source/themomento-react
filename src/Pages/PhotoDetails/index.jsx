@@ -87,10 +87,10 @@ function PhotoDetails() {
           {/* Details Section */}
           <div className="max-w-4xl mx-auto w-full">
             <div className="bg-white p-8 shadow-xl">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4 font-serif">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4 font-marcellus">
                 {photo.title}
               </h1>
-              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              <p className="text-lg text-gray-900 leading-relaxed mb-8 font-pt-serif">
                 {photo.description}
               </p>
 
@@ -139,7 +139,7 @@ function PhotoDetails() {
         {/* Similar Photos */}
         {relatedPhotos.length > 0 && (
           <div className="mt-16">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8 font-serif">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 font-pt-serif">
               Similar Photos
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -155,7 +155,8 @@ function PhotoDetails() {
                     className="w-full h-48 object-cover"
 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent  flex items-end p-4">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent 
+                   flex items-end p-4 font-pt-serif">
                     <p className="text-white font-medium truncate">
                       {relatedPhoto.title}
                     </p>

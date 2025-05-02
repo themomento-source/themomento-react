@@ -471,10 +471,10 @@ function MyAccount() {
                           <Grid item xs={12} sm={6} md={4} key={submission._id}>
                             <Card className="shadow-sm border border-gray-200 h-full flex flex-col">
                               <CardContent>
-                                <Typography variant="h6" className="font-semibold mb-2 py-2">
+                                <Typography variant="h6" className="font-semibold mb-2 py-2 font-marcellus">
                                   {submission.title || "Untitled Submission"}
                                 </Typography>
-                                <Typography variant="body2" className="mb-2 text-gray-600 py-2">
+                                <Typography variant="body2" className="mb-2 text-gray-900 font-marcellus py-2">
                                   {submission.description || "No description"}
                                 </Typography>
                                 <div className="relative aspect-square py-4">

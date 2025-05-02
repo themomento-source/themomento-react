@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { BsCartFill } from "react-icons/bs";
-import { FaRegHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
 
@@ -37,10 +35,10 @@ function PhotoListing() {
     <section className="py-12 bg-gray-50 min-h-screen">
       {/* Page Header */}
       <div className="container mx-auto text-center mb-12 px-4">
-        <h2 className="text-4xl font-bold text-gray-900 font-serif mb-4">
+        <h2 className="text-4xl font-bold text-gray-900 font-marcellus mb-4">
           Premium Stock Photography
         </h2>
-        <p className="text-gray-600 text-lg m-6">
+        <p className="text-gray-600 text-lg m-6 font-pt-serif">
           Discover exceptional images for your creative projects
         </p>
       </div>
@@ -74,33 +72,9 @@ function PhotoListing() {
                   {/* Image Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                     <div className="text-white">
-                      <h3 className="text-xl font-bold mb-1">{photo.title || "Untitled Photo"}</h3>
-                      <p className="text-sm opacity-90">by {photo.author || "Unknown Author"}</p>
-                      <div className="flex items-center justify-between mt-3">
-                        <span className="text-lg font-semibold">${photo.price || "N/A"}</span>
-                        <div className="flex gap-3">
-                          <button
-                            className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // Handle cart logic here
-                              console.log("Add to cart clicked for:", photo._id);
-                            }}
-                          >
-                            <BsCartFill className="text-xl" />
-                          </button>
-                          <button
-                            className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // Handle favorite logic here
-                              console.log("Add to favorites clicked for:", photo._id);
-                            }}
-                          >
-                            <FaRegHeart className="text-xl text-red-400" />
-                          </button>
-                        </div>
-                      </div>
+                      <h3 className="text-xl font-bold font-marcellus mb-1">{photo.title || "Untitled Photo"}</h3>
+                      <p className="text-sm opacity-90 font-pt-serif">by {photo.user?.name}</p>
+                      
                     </div>
                   </div>
                 </div>
