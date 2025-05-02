@@ -31,7 +31,7 @@ const PhotoOfTheDay = () => {
       ) : photoOfTheDay ? (
         <div className="max-w-7xl mx-auto">
           {/* Amber Top Bar */}
-          <div className="text-gray-900 text-center py-3 mb-8 font-optima font-bold
+          <div className="text-gray-900 text-center py-3 mb-8 font-bold font-marcellus
           text-xl md:text-2xl uppercase tracking-wide">
             Today’s Best Click
           </div>

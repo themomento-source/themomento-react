@@ -26,13 +26,19 @@ function ImageCard({
 
   return (
     <div 
-      className="relative group w-full max-w-[600px] h-[600px] overflow-hidden hover:cursor-pointer"
+      className="relative group w-full max-w-[600px] h-auto overflow-hidden hover:cursor-pointer flex items-center justify-center bg-gray-100"
       onClick={handleClick}
+      style={{
+        aspectRatio: "auto", // Automatically adjust the height based on the image aspect ratio
+      }}
     >
       <img
         src={img}
         alt={title}
-        className="w-full h-full object-cover transition-all duration-300 transform group-hover:scale-110"
+        className="w-auto h-auto max-w-full max-h-full object-contain"
+        style={{
+          display: "block", // Ensure there’s no extra space around the image
+        }}
       />
 
       {/* Photo of the Day Badge */}

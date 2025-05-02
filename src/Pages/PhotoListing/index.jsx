@@ -57,7 +57,7 @@ function PhotoListing() {
               <div
                 key={photo._id}
                 className="relative group break-inside-avoid"
-                onClick={() => handleImageClick(photo._id)} // Ensure navigation on click
+                onClick={() => handleImageClick(photo._id)} 
               >
                 <div
                   className="relative overflow-hidden  shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-zoom-in"

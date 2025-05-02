@@ -4,7 +4,7 @@ import { FaImages, FaHandshake, FaTicketAlt, FaComments, FaBullhorn, FaShieldAlt
 
 const MembershipPromo = () => {
   return (
-    <div className="bg-gradient-to-r from-gray-900 to-black py-16 px-4 md:px-8">
+    <div className="bg-gray-50 py-16 px-4 md:px-8">
       <link
         href="https://fonts.googleapis.com/css2?family=Marcellus&family=PT+Serif&display=swap"
         rel="stylesheet"
@@ -12,14 +12,14 @@ const MembershipPromo = () => {
 
       <div className="max-w-7xl mx-auto">
         <div className="text-left md:text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 font-marcellus">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 font-marcellus">
             Become a Member
           </h2>
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 font-marcellus">
+          <h3 className="text-2xl md:text-3xl font-bold text-black mb-6 font-marcellus">
             Elevate Your Photography Journey: Join Momento Now!
           </h3>
 
-          <p className="text-white text-lg md:text-xl mb-12 leading-relaxed font-pt-serif">
+          <p className="text-black text-lg md:text-xl mb-12 leading-relaxed font-pt-serif">
             At Momento, we’re dedicated to empowering photographers around the world by offering opportunities that help you grow, connect, and succeed. Whether you’re just starting out or already an experienced photographer, becoming a member opens doors to exclusive benefits that help you sharpen your craft, gain exposure, and build a successful photography career.
           </p>
 
@@ -49,14 +49,14 @@ const MembershipPromo = () => {
               title: "Privacy and Security", 
               text: "Your personal information and photos are safe with us. We respect your privacy and ownership."
             }].map((item, index) => (
-              <div key={index} className="text-left md:text-center bg-gray-900 p-6 hover:shadow-lg transition-shadow duration-300">
+              <div key={index} className="text-left md:text-center bg-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-center mb-4">
                   {item.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2 font-marcellus">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2 font-marcellus">
                   {item.title}
                 </h3>
-                <p className="text-white text-base font-pt-serif">
+                <p className="text-gray-900 text-base font-pt-serif">
                   {item.text}
                 </p>
               </div>
@@ -69,12 +69,12 @@ const MembershipPromo = () => {
             </p>
           </div>
 
-          <Link
-            to="/register"
-            className="inline-block px-8 py-3 text-lg font-semibold text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] transition-colors duration-300"
-          >
-            Join Now
-          </Link>
+         <Link to="/my-account/:userId">
+                             <button className="inline-block px-4 py-2 mt-4 text-lg 
+                              text-gray-900 bg-[#FFCB00] hover:bg-[#e6b800] transition-colors duration-300 font-pt-serif">
+                               Join Momento Now
+                             </button>
+                           </Link>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import { fetchDataFromApi } from "../../utils/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -107,26 +107,22 @@ function PhotoDetails() {
   </div>
 
               {/* Author Section */}
-              <div className="flex items-center space-x-4 mb-8">
-
-   
-
-                <img
-                  src={photo.user?.profileImage || "/default-avatar.jpg"}
-                  alt={photo.user?.name}
-                  className="w-14 h-14  object-cover border-2 border-gray-200"
-                />
-                <div>
-
-
-
-                  
-                  <p className="text-lg font-semibold text-gray-900">
-                    {photo.user?.name}
-                  </p>
-                  <p className="text-sm text-gray-500">Photographer</p>
-                </div>
-              </div>
+              <Link 
+        to={`/user/${photo.user?._id}`} 
+        className="flex items-center space-x-4 mb-8 hover:bg-gray-100 transition-colors p-2 rounded"
+      >
+        <img
+          src={photo.user?.avatar || "/default-avatar.jpg"}
+          alt={photo.user?.name}
+          className="w-14 h-14  object-cover border-2 border-gray-200"
+        />
+        <div>
+          <p className="text-lg font-semibold text-gray-900">
+            {photo.user?.name}
+          </p>
+          <p className="text-sm text-gray-500">Photographer</p>
+        </div>
+      </Link>
 
               {/* Action Buttons */}
               <div className="flex space-x-4">

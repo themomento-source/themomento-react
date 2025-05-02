@@ -99,9 +99,7 @@ const PublicProfile = () => {
   }, [showShareDropdown]);
 
   const handlePhotoClick = (item) => {
-    if (item.type === 'product') {
-      navigate(`/photodetails/${item.id}`);
-    }
+    navigate(`/photodetails/${item.id}`);
   };
 
   if (loading) {
@@ -316,36 +314,48 @@ const PublicProfile = () => {
       </div>
 
       {/* Gallery Section */}
-      <div className="mb-16">
-        <h3 className="text-3xl font-bold font-pt-serif mb-8 text-center text-gray-900">
-          Gallery
-        </h3>
-        <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-  {profileData.photos.map((item) => (
-    <ImageCard
-      key={item.id}
-      id={item.id}
-      img={item.img}
-      title={item.title}
-      author={item.author}
-      price={item.price}
-      type={item.type}
-      onSelect={() => handlePhotoClick(item)}
-      className="rounded-none" 
-      style={{ borderRadius: 0 }}
-    />
-  ))}
-</div>
-
-          {profileData.photos.length === 0 && (
-            <div className="text-center p-8">
-              <p className="text-gray-600">No products available yet</p>
-            </div>
-          )}
-        </div>
-      </div>
+      <div>
+        <h1 className="flex items-center justify-center font-semibold font-marcellus text-3xl m-6 p-6 text-black ">
+          Gallerry
+        </h1>
+     
+      <div className="container mx-auto px-4">
+  {profileData.photos.length === 0 ? (
+    <div className="text-center text-gray-500 text-lg mt-12">
+      No photos available. Please check back later.
     </div>
+  ) : (
+    <div className="columns-1 sm:columns-1 lg:columns-2 xl:columns-2 gap-6 space-y-6">
+      {profileData.photos.map((photo) => (
+        <div
+          key={photo.id}
+          className="relative group break-inside-avoid"
+          onClick={() => handlePhotoClick(photo)}
+        >
+          <div
+            className="relative overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-zoom-in"
+            onContextMenu={(e) => e.preventDefault()} // Prevent right-click on image
+          >
+            <img
+              src={photo.img}
+              alt={photo.title || "Untitled Photo"}
+              className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-300"
+            />
+            {/* Image Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+              <div className="text-white">
+                <h3 className="text-xl font-bold mb-1">{photo.title || "Untitled Photo"}</h3>
+                <p className="text-sm opacity-90">by {photo.author || "Unknown Author"}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+</div>
+         </div>
   );
 };
 

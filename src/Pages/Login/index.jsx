@@ -24,29 +24,34 @@ function Login() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
  
 
   const forgotPassword = async () => {
     try {
-      console.log('Sending forgot password request...');
+      setForgotPasswordLoading(true);
       const response = await postData("/api/user/forgot-password", {
         email: formData.email,
+        
       });
   
-      
+      context.setIsLogin(true);
   
       if (response.success) {
         
         
         localStorage.setItem("userEmail", formData.email);
         localStorage.setItem("actionType", "forgot-password");
+        
         navigate("/verify"); 
       } else {
         setErrors("Failed to send OTP:", response.message);
       }
     } catch (error) {
       setErrors("Forgot password error:", error);
+    }
+    finally{
+      setForgotPasswordLoading(false);
     }
   };
 
@@ -154,17 +159,26 @@ function Login() {
           </div>
 
           <div className="text-center my-3">
-            <a
-              className="text-blue-600 text-[15px] font-semibold cursor-pointer hover:underline"
-              href="#"
-              onClick={async (e) => {
-                e.preventDefault();
-                await forgotPassword();
-              }}
-            >
-              Forgot Password?
-            </a>
-          </div>
+    <a
+      className={`text-blue-600 text-[15px] font-semibold ${
+        forgotPasswordLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:underline"
+      }`}
+      href="#"
+      onClick={async (e) => {
+        e.preventDefault();
+        if (!forgotPasswordLoading) {
+          await forgotPassword();
+        }
+      }}
+    >
+      {forgotPasswordLoading ? (
+        <CircularProgress size={20} style={{ color: "blue" }} />
+      ) : (
+        "Forgot Password?"
+      )}
+    </a>
+  </div>
+
 
           <div className="flex items-center mt-5">
             <Button

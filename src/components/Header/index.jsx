@@ -95,7 +95,7 @@ const Header = () => {
               </button>
 
               {anchorEl && (
-                <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md overflow-hidden z-10">
+                <div className="absolute right-0 mt-2 w-40 bg-black shadow-md rounded-md overflow-hidden z-10">
                   <button
                     onClick={handleMyAccountClick}
                     className="block w-full px-4 py-2 text-left text-black bg-gray-50 hover:!bg-gray-100"
@@ -137,14 +137,14 @@ const Header = () => {
         </div>
       </div>
       {isMobileMenuOpen && (
-  <div className="md:hidden fixed inset-0 bg-gray-900 z-50 pt-16">
+  <div className="md:hidden fixed inset-0 bg-gray-50 z-50 pt-16">
     <div className="container mx-auto px-4">
       {/* Menu Header with Close Icon */}
       <div className="flex justify-between items-center pb-4 border-b border-gray-50">
         <h2 className="text-gray-900 text-xl font-bold">Menu</h2>
         <button
           onClick={() => setIsMobileMenuOpen(false)}
-          className="text-gray-50 text-2xl p-2 hover:bg-gray-800 rounded-full"
+          className="text-black text-2xl p-2 hover:bg-gray-800 rounded-full"
         >
           <MdOutlineClose />
         </button>
@@ -164,7 +164,7 @@ const Header = () => {
       <li key={item.name}>
         {item.hasSubmenu ? (
           <div
-            className="flex justify-between items-center text-white font-serif py-3 text-lg hover:bg-gray-800 px-4 rounded cursor-pointer"
+            className="flex justify-between items-center text-black font-serif py-3 text-lg  px-4 rounded cursor-pointer"
             onClick={() => handleSubmenuToggle(item.name)}
           >
             <span>{item.name}</span>
@@ -173,7 +173,7 @@ const Header = () => {
         ) : (
           <Link
             to={path}
-            className="flex justify-between items-center text-white font-serif py-3 text-lg hover:bg-gray-800 px-4 rounded cursor-pointer"
+            className="flex justify-between items-center text-black font-serif py-3 text-lg  px-4 rounded cursor-pointer"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <span>{item.name}</span>
@@ -196,29 +196,31 @@ const Header = () => {
           </ul>
         )}
       </li>
+
+
     );
   })}
   {context.isLogin && (
     <>
+     <li>
+<Link
+to={`/my-account/${context.userData?._id}`}
+className="text-black font-pt-serif block py-3 text-lg  px-4 rounded"
+onClick={() => setIsMobileMenuOpen(false)}
+>
+My Account
+</Link>
+</li>
       <li>
         <Link
-          to={`/my-account/${context.userData?._id}`}
-          className="text-white block py-3 text-lg hover:bg-gray-800 px-4 rounded"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          My Account
-        </Link>
-      </li>
-      <li>
-        <button
           onClick={() => {
             context.logout();
             setIsMobileMenuOpen(false);
           }}
-          className="text-white block w-full py-3 text-lg hover:bg-gray-800 px-4 rounded text-left"
+          className="text-black font-pt-serif block w-full py-3 text-lg px-4 rounded text-left"
         >
           Logout
-        </button>
+        </Link>
       </li>
     </>
   )}

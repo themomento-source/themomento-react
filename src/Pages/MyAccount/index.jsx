@@ -59,9 +59,11 @@ function MyAccount() {
   const fetchSubmissions = async () => {
     try {
       setLoadingSubmissions(true);
-      const response = await fetchDataFromApi(`/api/photo/user/${userData?._id}`);
+      const response = await fetchDataFromApi(
+        `/api/photo/user-submissions/${userData?._id}`
+      );
       if (response?.success) {
-        setUserSubmissions(response.photos);
+        setUserSubmissions(response.submissions);
       }
     } catch (error) {
       openAlertBox("error", "Failed to load submissions");
@@ -340,11 +342,7 @@ function MyAccount() {
                                   {message.content}
                                 </Typography>
                                 <div className="flex items-center mt-2 gap-2">
-                                  <Chip
-                                    label={message.read ? "Read" : "Unread"}
-                                    size="small"
-                                    color={message.read ? "default" : "primary"}
-                                  />
+                                
                                   <Typography variant="caption" className="text-gray-500">
                                     {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
                                   </Typography>
@@ -499,20 +497,20 @@ function MyAccount() {
                                     <strong>Reason:</strong> {submission.rejectionReason}
                                   </Typography>
                                 )}
-                                <div className="mt-3 flex justify-between items-center">
-                                  <Chip
-                                    label={submission.status || "pending"}
-                                    color={{
-                                      approved: "success",
-                                      rejected: "error",
-                                      pending: "default",
-                                    }[submission.status] || "default"}
-                                    size="small"
-                                  />
-                                  <Typography variant="caption" className="text-gray-500">
-                                    {new Date(submission.createdAt).toLocaleDateString()}
-                                  </Typography>
-                                </div>
+                               <div className="mt-3 flex justify-between items-center">
+  <Chip
+    label={submission.status || "pending"}
+    color={{
+      approved: "success",
+      pending: "warning",
+    }[submission.status] || "default"}
+    size="small"
+  />
+  <Typography variant="caption" className="text-gray-500">
+    {new Date(submission.createdAt).toLocaleDateString()}
+  </Typography>
+</div>
+
                               </CardContent>
                             </Card>
                           </Grid>
