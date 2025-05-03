@@ -57,6 +57,7 @@ const RouterContent = () => {
           position: 'fixed', 
           top: 20, 
           right: 20, 
+          minWidth: 300, 
           zIndex: 9999 
         }}>
           {alert.message}
@@ -189,11 +190,12 @@ function App() {
     }
   };
 
-  const openAlertBox = (severity, message) => {
+  const openAlertBox = (severity, message, duration = 4000) => {
     setAlert({ open: true, message, severity });
-    setTimeout(() => setAlert({ ...alert, open: false }), 4000);
+    setTimeout(() => setAlert(prev => ({ ...prev, open: false })), duration);
   };
 
+  
   const contextValue = useMemo(() => ({
     isLogin,
     setIsLogin,

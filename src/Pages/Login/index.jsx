@@ -5,7 +5,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../utils/api.js";
 import { MyContext } from "../../App";
@@ -94,7 +93,8 @@ function Login() {
           localStorage.setItem("refreshToken", response.data.refreshToken);
 
           context.setIsLogin(true);
-          navigate("/");
+          navigate("/my-account/:userId");
+          
           window.location.reload();
         } else {
           console.error("Tokens missing in response:", response);

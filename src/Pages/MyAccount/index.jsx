@@ -15,14 +15,13 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { MdPhotoLibrary, MdShoppingBag, MdOutlineFileUpload, MdSettings, MdLogout } from "react-icons/md";
-import { MdMessage } from "react-icons/md";
+import { MdPhotoLibrary, MdOutlineFileUpload, MdSettings, MdLogout } from "react-icons/md";
 import { formatDistanceToNow } from "date-fns";
 import { CgProfile } from "react-icons/cg";
 import { FiSend } from "react-icons/fi";
 import { MyContext } from "../../App.jsx";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { editData, fetchDataFromApi, uploadPhoto } from "../../utils/api.js";
+import { editData, fetchDataFromApi, uploadPhoto, deleteData } from "../../utils/api.js";
 
 function MyAccount() {
   const [messages, setMessages] = useState([]);
@@ -194,7 +193,13 @@ function MyAccount() {
 
       const response = await uploadPhoto("/api/photo/submit", formData);
       if (response?.success) {
-        openAlertBox("success", "Photo submitted successfully!");
+        openAlertBox(
+          "success",
+          "Photo submitted successfully! Our team will review your submission. " +
+          "Approved photos will appear in your public profile. If rejected, " +
+          "the photo will be permanently removed from our storage.",
+          9000
+        );
         await fetchSubmissions();
         setSubmissionData({
           title: "",
@@ -212,6 +217,25 @@ function MyAccount() {
       openAlertBox("error", error.response?.data?.message || "Photo submission failed.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+
+  const handleDeletePhoto = async (photoId) => {
+    if (window.confirm("Are you sure you want to permanently delete this photo?")) {
+      try {
+        const response = await deleteData(
+          `/api/photo/user/${photoId}`,
+          
+        );
+        
+        if (response?.success) {
+          openAlertBox('success', 'Photo deleted successfully');
+          await fetchSubmissions(); // Refresh the list
+        }
+      } catch (error) {
+        openAlertBox('error', error.message || 'Failed to delete photo');
+      }
     }
   };
 
@@ -478,26 +502,15 @@ function MyAccount() {
                                   {submission.description || "No description"}
                                 </Typography>
                                 <div className="relative aspect-square py-4">
-                                  <img
-                                    src={submission.images?.[0]?.url}
-                                    alt="Submission"
-                                    className="w-full h-full object-cover"
-                                  />
-                                  {submission.status === "rejected" && (
-                                    <Chip
-                                      label="Rejected"
-                                      color="error"
-                                      size="small"
-                                      className="!absolute top-1 right-1"
-                                    />
-                                  )}
-                                </div>
-                                {submission.rejectionReason && (
-                                  <Typography variant="body2" className="mt-2 text-red-600">
-                                    <strong>Reason:</strong> {submission.rejectionReason}
-                                  </Typography>
-                                )}
-                               <div className="mt-3 flex justify-between items-center">
+  <img
+    src={submission.images?.[0]?.url}
+    alt="Submission"
+    className="w-full h-full object-cover"
+  />
+</div>
+
+                               
+  <div className="mt-3 flex justify-between items-center">
   <Chip
     label={submission.status || "pending"}
     color={{
@@ -506,9 +519,20 @@ function MyAccount() {
     }[submission.status] || "default"}
     size="small"
   />
-  <Typography variant="caption" className="text-gray-500">
-    {new Date(submission.createdAt).toLocaleDateString()}
-  </Typography>
+  <div className="flex items-center gap-2">
+    <Typography variant="caption" className="text-gray-500">
+      {new Date(submission.createdAt).toLocaleDateString()}
+    </Typography>
+    <Button
+      variant="outlined"
+      color="error"
+      size="small"
+      onClick={() => handleDeletePhoto(submission._id)}
+     
+    >
+      Delete
+    </Button>
+  </div>
 </div>
 
                               </CardContent>

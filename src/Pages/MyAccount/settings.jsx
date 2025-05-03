@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -13,7 +13,7 @@ import { MyContext } from "../../App";
 import { editData } from "../../utils/api";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-
+import { CgProfile } from "react-icons/cg";
 const Settings = () => {
   const { userData, setUserData, openAlertBox } = useContext(MyContext);
   const [formData, setFormData] = useState({
@@ -129,6 +129,27 @@ const Settings = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
+
+<div className="w-auto mt-4 mb-4 flex space-x-2">
+  <Button
+    component={Link}
+    to={`/user/${userData?._id}`}
+    startIcon={<CgProfile />}
+    className="!bg-white !text-gray-800 !capitalize !rounded-none !justify-start px-4 py-2"
+  >
+    View Public Profile
+  </Button>
+
+  <Button
+    component={Link}
+    to={`/my-account/${userData?._id}`}
+    startIcon={<CgProfile />}
+    className="!bg-white !text-gray-900 !capitalize !rounded-none !justify-start px-4 py-2"
+  >
+    My Account
+  </Button>
+</div>
+
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" gutterBottom>
           Update Profile
@@ -187,12 +208,13 @@ const Settings = () => {
           />
 
           <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
-            About You
+            About Me
           </Typography>
           <ReactQuill
             theme="snow"
             value={formData.about}
             onChange={handleQuillChange}
+            style={{ height: '300px', marginBottom: '2rem' }}
             modules={{
               toolbar: [
                 [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
@@ -215,6 +237,7 @@ const Settings = () => {
             onChange={handleChange}
             margin="normal"
             variant="outlined"
+            style={{marginTop: '2rem' }}
           />
 
           <TextField
@@ -307,62 +330,7 @@ const Settings = () => {
         </form>
       </Paper>
 
-      <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Change Password
-        </Typography>
-        <form onSubmit={handlePasswordSubmit}>
-          <TextField
-            fullWidth
-            label="Current Password"
-            type="password"
-            name="currentPassword"
-            value={passwordForm.currentPassword}
-            onChange={handlePasswordChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="New Password"
-            type="password"
-            name="newPassword"
-            value={passwordForm.newPassword}
-            onChange={handlePasswordChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Confirm New Password"
-            type="password"
-            name="confirmPassword"
-            value={passwordForm.confirmPassword}
-            onChange={handlePasswordChange}
-            margin="normal"
-            error={passwordForm.newPassword !== passwordForm.confirmPassword}
-            helperText={
-              passwordForm.newPassword !== passwordForm.confirmPassword 
-              ? "Passwords do not match" 
-              : ""
-            }
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-            disabled={
-              !passwordForm.currentPassword ||
-              !passwordForm.newPassword ||
-              !passwordForm.confirmPassword
-            }
-          >
-            Change Password
-          </Button>
-        </form>
-      </Paper>
+     
     </Container>
   );
 };
