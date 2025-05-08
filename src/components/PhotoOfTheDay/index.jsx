@@ -30,39 +30,49 @@ const PhotoOfTheDay = () => {
         <p className="text-gray-900 text-center text-xl">Loading Photo of the Day...</p>
       ) : photoOfTheDay ? (
         <div className="max-w-7xl mx-auto">
-          {/* Amber Top Bar */}
-          <div className="text-gray-900 text-center py-3 mb-8 font-bold font-marcellus
-          text-xl md:text-2xl uppercase tracking-wide">
-            Today’s Best Click
-          </div>
+  {/* Amber Top Bar */}
+  <div className="text-gray-900 text-center py-3 mb-2 font-bold font-marcellus text-xl md:text-2xl uppercase tracking-wide">
+    Today’s Best Click
+  </div>
 
-          {/* Photo & Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            {/* Photo Section - 80% width */}
-            <div className="md:col-span-10 relative w-full aspect-[4/3]">
-              <img
-                src={photoOfTheDay.images[0]?.url} 
-                alt={photoOfTheDay.title}
-                className="w-full h-full object-contain"
-              />
-            </div>
+  {/* Current Date */}
+  <div className="text-center text-md text-gray-900 mb-6 font-pt-serif ">
+    {new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}
+  </div>
 
-            {/* Details Section - 20% width */}
-            <div className="md:col-span-2">
-              <div className="text-center md:text-left">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-marcellus">
-                  {photoOfTheDay.title}
-                </h2>
-                <p className="text-gray-900 text-sm md:text-base mb-6 leading-relaxed font-pt-serif">
-                  {photoOfTheDay.description}
-                </p>
-                <p className="text-gray-600 text-xs italic font-pt-serif">
-                  Photo by {photoOfTheDay.user?.name || "Momento User"} 
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+  {/* Photo & Details Grid */}
+  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+    {/* Photo Section - 80% width */}
+    <div className="md:col-span-10 relative w-full aspect-[4/3]">
+      <img
+        src={photoOfTheDay.images[0]?.url}
+        alt={photoOfTheDay.title}
+        className="w-full h-full object-contain"
+      />
+    </div>
+
+    {/* Details Section - 20% width */}
+    <div className="md:col-span-2">
+      <div className="text-center md:text-left">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-marcellus">
+          {photoOfTheDay.title}
+        </h2>
+        <p className="text-gray-900 text-sm md:text-base mb-6 leading-relaxed font-pt-serif">
+          {photoOfTheDay.description}
+        </p>
+        <p className="text-gray-600 text-xs italic font-pt-serif">
+          Photo by {photoOfTheDay.user?.name || "Momento User"}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
       ) : (
         <p className="text-white text-center text-xl">No Photo of the Day Available</p>
       )}
