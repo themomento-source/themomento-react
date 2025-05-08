@@ -18,6 +18,8 @@ import {
 import { MdPhotoLibrary, MdOutlineFileUpload, MdSettings, MdLogout } from "react-icons/md";
 import { formatDistanceToNow } from "date-fns";
 import { CgProfile } from "react-icons/cg";
+import { Modal, IconButton } from "@mui/material";
+import { MdClose } from "react-icons/md";
 import { FiSend } from "react-icons/fi";
 import { MyContext } from "../../App.jsx";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -27,7 +29,7 @@ function MyAccount() {
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0); 
-
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const { userId } = useParams();
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [activeTab, setActiveTab] = useState("submissions");
@@ -301,15 +303,7 @@ function MyAccount() {
                 >
                   View Public Profile
                 </Button>
-                <Button
-                  fullWidth
-                  startIcon={<MdPhotoLibrary />}
-                  className="!bg-primary !justify-start !rounded-none !text-gray-800"
-                  onClick={() => setActiveTab("submissions")}
-                >
-                  My Submissions
-                </Button>
-            
+               
                 <Button
                   component={Link}
                   to={`/my-account/${userData?._id}/settings`}
@@ -355,7 +349,10 @@ function MyAccount() {
                   <Grid container spacing={3}>
                     {messages.map((message) => (
                       <Grid item xs={12} key={message._id}>
-                        <Card className="shadow-sm border border-gray-200">
+                       <Card 
+      className="shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+      onClick={() => setSelectedMessage(message)}
+    >
                           <CardContent>
                             <div className="flex items-start justify-between">
                               <div>
@@ -554,6 +551,37 @@ function MyAccount() {
           </Card>
         </main>
       </div>
+
+
+      {selectedMessage && (
+  <Modal
+    open={Boolean(selectedMessage)}
+    onClose={() => setSelectedMessage(null)}
+    className="flex items-center justify-center p-4"
+  >
+    <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="flex justify-between items-start mb-4">
+        <Typography variant="h5" className="font-semibold">
+          {selectedMessage.subject}
+        </Typography>
+        <IconButton
+          onClick={() => setSelectedMessage(null)}
+          className="!text-gray-600"
+        >
+          <MdClose className="text-xl" />
+        </IconButton>
+      </div>
+      <Typography variant="body1" className="whitespace-pre-wrap mb-4">
+        {selectedMessage.content}
+      </Typography>
+      <Typography variant="caption" className="text-gray-500 block">
+        Received {formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true })}
+      </Typography>
+    </div>
+  </Modal>
+)}
+
+
     </section>
   );
 }

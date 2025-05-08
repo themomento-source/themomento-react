@@ -35,12 +35,10 @@ function PhotoListing() {
     <section className="py-12 bg-gray-50 min-h-screen">
       {/* Page Header */}
       <div className="container mx-auto text-center mb-12 px-4">
-        <h2 className="text-4xl font-bold text-gray-900 font-marcellus mb-4">
-          Premium Stock Photography
+        <h2 className="text-4xl font-bold text-gray-900 font-marcellus mb-10">
+          Photos
         </h2>
-        <p className="text-gray-600 text-lg m-6 font-pt-serif">
-          Discover exceptional images for your creative projects
-        </p>
+       
       </div>
 
       {/* Masonry-style Grid */}
