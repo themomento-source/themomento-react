@@ -50,11 +50,11 @@ function BlogCard({ img, title, author, intro, _id, categories, createdAt }) {
 
       {/* Blog Content */}
       <div className="p-6 w-[400px]">
-        <h2 className="text-xl font-bold mb-3 font-['Playfair_Display'] text-gray-800">
+        <h2 className="text-xl font-bold mb-3 font-marcellus text-gray-800">
           {title}
         </h2>
         
-        <div className="text-gray-600 mb-4 line-clamp-3 font-['PT_Serif']">
+        <div className="text-gray-600 mb-4 line-clamp-3 font-pt-serif">
           <SafeHTML html={intro} />
         </div>
 

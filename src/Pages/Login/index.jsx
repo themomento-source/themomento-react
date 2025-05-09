@@ -218,11 +218,6 @@ function Login() {
             </span>
           </div>
 
-          <div className="flex items-center my-5">
-            <hr className="flex-grow border-gray-300" />
-            <span className="px-3 text-gray-500 text-[14px]">OR</span>
-            <hr className="flex-grow border-gray-300" />
-          </div>
 
           <div className="flex items-center justify-center">
            

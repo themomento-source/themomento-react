@@ -50,7 +50,7 @@ const SafeHTML = ({ html, className }) => {
   };
 
   return (
-    <div className={className}>
+    <div className={`${className} font-pt-serif`}>
       {parse(cleanHTML, options)}
     </div>
   );

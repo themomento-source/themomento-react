@@ -55,7 +55,7 @@ const BlogDetails = () => {
       {/* Header Section */}
       <div className="relative bg-gray-50 text-gray-900 py-24 px-6 md:px-12">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">{blog.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4 font-marcellus">{blog.title}</h1>
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm md:text-base opacity-90">
             <div className="flex items-center gap-2">
               <span className="font-medium">By:</span>

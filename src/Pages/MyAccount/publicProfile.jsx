@@ -344,8 +344,8 @@ const PublicProfile = () => {
             {/* Image Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
               <div className="text-white">
-                <h3 className="text-xl font-bold mb-1">{photo.title || "Untitled Photo"}</h3>
-                <p className="text-sm opacity-90">by {photo.author || "Unknown Author"}</p>
+                <h3 className="text-xl font-bold mb-1 font-marcellus">{photo.title || "Untitled Photo"}</h3>
+                <p className="text-sm opacity-90 font-pt-serif">by {photo.author || "Unknown Author"}</p>
               </div>
             </div>
           </div>
