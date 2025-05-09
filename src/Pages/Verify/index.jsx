@@ -107,8 +107,9 @@ function Verify() {
           />
           <Button
             type="submit"
-            className="w-full py-3 mt-4 text-black font-bold rounded-md"
-            style={{ background: "linear-gradient(45deg, #007BFF, #0056b3)" }}
+            className="w-full py-3 mt-4 text-white font-bold rounded-md"
+            style={{ background: "" }}
+            variant="outlined"
             disabled={loading}
           >
             {loading ? "Verifying..." : "Verify OTP"}

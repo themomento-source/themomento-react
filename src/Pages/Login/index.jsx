@@ -61,7 +61,7 @@ function Login() {
     const validationErrors = {};
 
     if (!formData.email.trim()) {
-      validationErrors.email = "Username or Email is required";
+      validationErrors.email = "Email is required";
     }
     if (!formData.password.trim()) {
       validationErrors.password = "Password is required";
@@ -122,7 +122,7 @@ function Login() {
               type="text"
               name="email"
               id="email"
-              label="Username or Email *"
+              label="Email *"
               variant="outlined"
               className="w-full"
               value={formData.email}

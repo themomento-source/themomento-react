@@ -42,11 +42,13 @@ const BecomeMemberPromo = () => {
 
       {/* Right Section */}
       <div className="md:w-1/2 mt-10 md:mt-0">
+      <div className="max-w-[700px] w-full">
         <img 
-          src="https://res.cloudinary.com/dgob9antb/image/upload/v1742195076/becomeamembertemporary_amn7cl.jpg" 
+          src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1746801174/harvestingstrength_dyxndf.jpg" 
           alt="Membership" 
           className="w-full h-auto object-cover shadow-lg"
         />
+        </div>
       </div>
     </div>
   );
