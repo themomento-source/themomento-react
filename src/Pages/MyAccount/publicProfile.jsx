@@ -290,21 +290,21 @@ const PublicProfile = () => {
       {/* Details Section */}
       <div className="flex flex-wrap gap-4 justify-center mt-6 mb-6">
         {profileData.user?.favouriteEquipement && (
-          <div className="w-80 bg-primary p-8 shadow-md text-center flex flex-col justify-center">
-            <h3 className="text-xl font-semibold mb-4">My favorite Gear & Equipment</h3>
-            <p className="text-gray-900 font-semibold">
+          <div className="w-80 bg-gray-600 p-8 shadow-md text-center flex flex-col justify-center">
+            <h3 className="text-xl font-semibold mb-4 text-white font-marcellus">Gear & Equipment</h3>
+            <p className="text-white font-semibold">
               {profileData.user.favouriteEquipement}
             </p>
           </div>
         )}
 
         {profileData.user?.award && (
-          <div className="w-80 bg-primary p-8 shadow-md text-center flex flex-col justify-center">
-            <h3 className="text-xl font-semibold mb-4">Achievements</h3>
+          <div className="w-80 bg-gray-600 p-8 shadow-md text-center flex flex-col justify-center">
+            <h3 className="text-xl font-semibold mb-4 font-marcellus text-white">Achievements</h3>
             <ul className="space-y-2">
               {profileData.user.award.split(",").map((award, index) => (
-                <li key={index} className="flex items-center justify-center gap-2 text-gray-900 font-semibold">
-                  <FaAward className="text-gray-900" />
+                <li key={index} className="flex items-center justify-center gap-2 text-white font-semibold">
+                  <FaAward className="text-white" />
                   <span>{award.trim()}</span>
                 </li>
               ))}

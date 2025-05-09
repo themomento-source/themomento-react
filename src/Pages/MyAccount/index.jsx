@@ -16,6 +16,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { MdPhotoLibrary, MdOutlineFileUpload, MdSettings, MdLogout } from "react-icons/md";
+
 import { formatDistanceToNow } from "date-fns";
 import { CgProfile } from "react-icons/cg";
 import { Modal, IconButton } from "@mui/material";
@@ -26,6 +27,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { editData, fetchDataFromApi, uploadPhoto, deleteData } from "../../utils/api.js";
 
 function MyAccount() {
+  const [showGuidelines, setShowGuidelines] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0); 
@@ -194,6 +196,12 @@ function MyAccount() {
       formData.append("categories", JSON.stringify(submissionData.categories));
 
       const response = await uploadPhoto("/api/photo/submit", formData);
+
+      if (response.error) {
+        openAlertBox("error", response.message || "Photo submission failed.");
+        return;
+      }
+
       if (response?.success) {
         openAlertBox(
           "success",
@@ -434,6 +442,13 @@ function MyAccount() {
                         </Select>
                       </FormControl>
                       <div className="flex items-center gap-4 mt-4">
+                      <Button
+    variant="outlined"
+    onClick={() => setShowGuidelines(true)}
+    className="!border-gray-800 !text-gray-800 !rounded-none"
+  >
+    Read Before Submit
+  </Button>
                         <input
                           type="file"
                           onChange={handleFileSelect}
@@ -581,9 +596,118 @@ function MyAccount() {
   </Modal>
 )}
 
+<Modal
+  open={showGuidelines}
+  onClose={() => setShowGuidelines(false)}
+  className="flex items-center justify-center p-4"
+>
+  <div className="bg-white p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto border-2 border-black shadow-none">
+    <div className="flex justify-between items-start mb-4">
+      <Typography variant="h4" className="font-bold mb-4 font-marcellus">
+        Read Before Submit
+      </Typography>
+      <IconButton
+        onClick={() => setShowGuidelines(false)}
+        className="!text-black"
+      >
+        <MdClose className="text-xl" />
+      </IconButton>
+    </div>
+    
+    <div className="space-y-4">
+      {[
+        {
+          title: "Three photos per day.",
+          content: `You can submit up to three photos per day. Each photo must be 
+          original and showcase your unique perspective and creative vision.`
+        },
+        {
+          title: "High-Quality Image",
+          content: `Your photo should have a minimum resolution of 2500px on the
+longest side. We recommend submitting in JPEG or PNG format. `
+        },
+        {
+          title: "No Watermarks, Logos, or Frames",
+          content: `To keep the focus on your photography, please
+avoid adding watermarks, logos, or frames to your image. Your photo should be as
+natural as possible, ready for display.`
+        },
+        {
+          title: "Keep Edits Simple",
+          content: `We encourage you to capture your photos in-camera without
+relying heavily on post-editing. Extreme edits, heavy filters, or drastic alterations
+will not be accepted. You can make basic edits (such as adjusting brightness,
+contrast, or cropping) to enhance your photo, but try to keep the image true to what
+you captured.`
+        },
+        {
+          title: "Tell Your Story",
+          content: `When submitting your photo, include a brief description. Why did
+you take the photo? When and where did you capture the moment? How did you
+take the shot? This helps our reviewers select the best submissions and allows your
+story to shine through.`
+        },
+        {
+          title: "Respectful Content",
+          content: `We strive to maintain a positive, inclusive space. Please ensure
+your photo is respectful and appropriate for all audiences.`
+        },
+        {
+          title: "Social Media Feature",
+          content: `By submitting your photo daily, you could be
+featured as Today's Best Click on our website and social media channels! We review
+all submissions and select the standout shots to showcase.`
+        },
+        {
+          title: "Create Your Own Gallery",
+          content: `With each photo you submit, you’ll build your personal
+gallery on our website. Over time, you’ll be able to look back and see how your skills
+have evolved through daily practice.`
+        },
+        {
+          title: "Engage with the Community",
+          content: `Feel free to comment, like, and interact with other
+photographers. Sharing experiences, providing feedback, and engaging with the
+community is an inspiring part of this journey.`
+        },
+        {
+          title: "Use #momento_bestclick",
+          content: `Want to increase your chances of being noticed? Use the
+hashtag #momento_bestclick on social media and tag us to get featured on our
+platforms!`
+        }
+      ].map((item, index) => (
+        <div key={index} className="flex gap-3">
+          <div className="flex-shrink-0">
+            
+          </div>
+          <div>
+            <Typography variant="h6" className="font-semibold">
+              {item.title}
+            </Typography>
+            <Typography variant="body1" className="text-gray-700">
+              {item.content}
+            </Typography>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <Button
+      fullWidth
+      variant="contained"
+      className="!mt-6 !bg-black !text-white !rounded-none"
+      onClick={() => setShowGuidelines(false)}
+    >
+      I Understand
+    </Button>
+  </div>
+</Modal>
 
     </section>
   );
 }
+
+
 
 export default MyAccount;
