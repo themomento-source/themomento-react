@@ -17,7 +17,7 @@ const mainMenuItems = [
     submenu: [
       { name: "Learning", path: "/learning" },
       { name: "Interview", path: "/interview" },
-      { name: "General Blog", path: "/general-blog" }
+      { name: "Blog", path: "/general-blog" }
     ]
   },
 

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { fetchDataFromApi } from "../../utils/api";
+import { FaTimes } from "react-icons/fa";
 
 const PhotoOfTheDay = () => {
   const [photoOfTheDay, setPhotoOfTheDay] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPhotoOfTheDay = async () => {
@@ -30,7 +32,7 @@ const PhotoOfTheDay = () => {
         <p className="text-gray-900 text-center text-xl">Loading Photo of the Day...</p>
       ) : photoOfTheDay ? (
         <>
-          {/* Header Section - Always centered */}
+          {/* Header Section - Centered */}
           <div className="max-w-7xl mx-auto text-center">
             <div className="text-gray-900 py-3 mb-2 font-bold font-marcellus text-xl md:text-2xl uppercase tracking-wide">
               Today’s Best Click
@@ -47,30 +49,26 @@ const PhotoOfTheDay = () => {
 
           {/* Photo Content Section */}
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-              {/* Photo Section */}
-              <div className="md:col-span-10 relative w-full aspect-[4/3]">
-                <img
-                  src={photoOfTheDay.images[0]?.url}
-                  alt={photoOfTheDay.title}
-                  className="w-full h-full object-contain"
-                />
-              </div>
+            {/* Image Section */}
+            <div className="relative w-full aspect-[4/3] mb-4">
+              <img
+                src={photoOfTheDay.images[0]?.url}
+                alt={photoOfTheDay.title}
+                className="w-full h-full object-contain"
+              />
+            </div>
 
-              {/* Details Section */}
-              <div className="md:col-span-2">
-                <div className="text-center md:text-left">
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-marcellus">
-                    {photoOfTheDay.title}
-                  </h2>
-                  <p className="text-gray-900 text-sm md:text-base mb-6 leading-relaxed font-pt-serif">
-                    {photoOfTheDay.description}
-                  </p>
-                  <p className="text-gray-600 text-xs italic font-pt-serif">
-                    Photo by {photoOfTheDay.user?.name || "Momento User"}
-                  </p>
-                </div>
-              </div>
+            {/* Details Below Image */}
+            <div className="text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-marcellus">
+                {photoOfTheDay.title}
+              </h2>
+              <p className="text-gray-900 text-sm md:text-base mb-4 leading-relaxed font-pt-serif max-w-2xl mx-auto">
+                {photoOfTheDay.description}
+              </p>
+              <p className="text-gray-600 text-xs italic font-pt-serif">
+                Photo by {photoOfTheDay.user?.name || "Momento User"}
+              </p>
             </div>
           </div>
         </>

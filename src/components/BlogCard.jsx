@@ -44,7 +44,7 @@ function BlogCard({ img, title, author, intro, _id, categories, createdAt }) {
           ))}
         </div>
         <p className="hidden absolute bottom-2 left-3 text-white text-sm font-medium bg-black bg-opacity-50 px-2 py-1 rounded">
-  {author?.name || 'Unknown Author'}
+  {author || 'Unknown Author'}
 </p>
       </div>
 

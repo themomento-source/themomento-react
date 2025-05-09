@@ -57,10 +57,10 @@ const BlogDetails = () => {
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4 font-marcellus">{blog.title}</h1>
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm md:text-base opacity-90">
-            <div className="flex items-center gap-2">
-              <span className="font-medium">By:</span>
-              <span>{blog.author?.name || "Unknown Author"}</span>
-            </div>
+          <div className="flex items-center gap-2">
+  <span className="font-medium">By:</span>
+  <span>{blog.author || "Unknown Author"}</span>
+</div>
             {blog.createdAt && (
               <div>
                 {new Intl.DateTimeFormat("en-US", {
