@@ -31,6 +31,7 @@ import GeneralBlog from "./Pages/BlogListing/GeneralBlog.jsx";
 import ChangePassword from "./Pages/Login/changePassword/index.jsx";
 import PrivacyPolicy from "./Pages/PrivacyPolicies/index.jsx";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics.js";
+import Contact from "./Pages/Contact/index.jsx";
 
 export const MyContext = createContext();
 
@@ -82,6 +83,7 @@ const RouterContent = () => {
         <Route path="/become-member" element={<MembershipPromo />} />
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* Protected Routes */}
         <Route path="/my-account/:userId/settings" element={
@@ -178,18 +180,18 @@ function App() {
     }
   }, []);
 
-  const logout = async () => {
-    try {
-      await fetchDataFromApi(`/api/user/logout`);
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      setIsLogin(false);
-      setUserData(null);
-      toast.success("Logged out successfully");
-    } catch (error) {
-      toast.error("Logout failed");
-    }
-  };
+  // const logout = async () => {
+  //   try {
+  //     await fetchDataFromApi(`/api/user/logout`);
+  //     localStorage.removeItem("accessToken");
+  //     localStorage.removeItem("refreshToken");
+  //     setIsLogin(false);
+  //     setUserData(null);
+  //     toast.success("Logged out successfully");
+  //   } catch (error) {
+  //     toast.error("Logout failed");
+  //   }
+  // };
 
   const openAlertBox = (severity, message, duration = 4000) => {
     setAlert({ open: true, message, severity });
@@ -203,7 +205,7 @@ function App() {
     userData,
     setUserData,
     isLoading,
-    logout,
+    // logout,
     openAlertBox,
     alert
   }), [isLogin, userData, isLoading, alert.open, alert.message, alert.severity]);

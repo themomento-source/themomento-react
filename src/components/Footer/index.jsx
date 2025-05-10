@@ -1,9 +1,9 @@
 import React from "react";
 import {
   FaFacebookF,
-  FaTwitter,
+  
   FaInstagram,
-  FaLinkedinIn,
+  
 } from "react-icons/fa";
 
 function Footer() {
@@ -12,7 +12,7 @@ function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {/* About Section (No Logo) */}
+     
         <div className="md:col-span-1">
           <p className="text-gray-400 text-sm leading-relaxed">
             Capturing moments, crafting stories. Your ultimate destination for
@@ -20,7 +20,7 @@ function Footer() {
           </p>
         </div>
 
-        {/* Quick Links */}
+      
         <div className="md:col-span-1">
           <h3 className="text-white font-semibold mb-4">Explore</h3>
           <ul className="space-y-3 text-sm">
@@ -37,6 +37,11 @@ function Footer() {
             <li>
               <a href="/bloglisting" className="hover:text-white transition text-gray-300">
                 Community
+              </a>
+            </li>
+            <li>
+              <a href="/contact" className="hover:text-white transition text-gray-300">
+                Contact 
               </a>
             </li>
             

@@ -103,12 +103,12 @@ const Header = () => {
                     My Account
                   </button>
                   <hr className="border-gray-200" />
-                  <button
+                  {/* <button
                     onClick={context.logout}
                     className="block w-full px-4 py-2 text-left text-black bg-gray-50 hover:!bg-gray-100"
                   >
                     Logout
-                  </button>
+                  </button> */}
                 </div>
               )}
             </div>
@@ -212,7 +212,7 @@ My Account
 </Link>
 </li>
       <li>
-        <Link
+        {/* <Link
           onClick={() => {
             context.logout();
             setIsMobileMenuOpen(false);
@@ -220,7 +220,7 @@ My Account
           className="text-black font-pt-serif block w-full py-3 text-lg px-4 rounded text-left"
         >
           Logout
-        </Link>
+        </Link> */}
       </li>
     </>
   )}
