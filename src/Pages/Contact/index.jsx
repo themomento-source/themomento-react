@@ -6,10 +6,11 @@ function Contact() {
       <div className="max-w-4xl mx-auto text-center">
         {/* Title Section */}
         <h1 className="text-5xl font-extrabold text-gray-900 mb-6 font-marcellus">
-          Get in Touch with The Momento
+        Contact The Momento
         </h1>
         <p className="text-xl text-gray-900 mb-10 leading-relaxed font-pt-serif">
-          Whether you're a photographer, an organization, or a visual storyteller, we’re here to connect, collaborate, and support. Let’s create something amazing together.
+        We’re here to connect, collaborate, and support. Whether you're a photographer with a question, an organization with a 
+        partnership idea, or someone who simply loves visual storytelling — we’d love to hear from you.
         </p>
 
         {/* Contact Card */}
