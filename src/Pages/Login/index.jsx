@@ -47,7 +47,7 @@ function Login() {
         setErrors("Failed to send OTP:", response.message);
       }
     } catch (error) {
-      setErrors("Forgot password error:", error);
+      setErrors({ general: "Password reset failed. Please try again." });
     }
     finally{
       setForgotPasswordLoading(false);
@@ -93,7 +93,7 @@ function Login() {
           localStorage.setItem("refreshToken", response.data.refreshToken);
 
           context.setIsLogin(true);
-          navigate("/my-account/:userId");
+          navigate(`/my-account/${response.data.userId}`);
           
           window.location.reload();
         } else {
