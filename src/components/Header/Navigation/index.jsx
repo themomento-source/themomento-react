@@ -20,7 +20,7 @@ const Navigation = ({ mainMenuItems }) => {
 
   const mobileMenuItems = [
     { name: "Photos", icon: <BsCamera />, path: "/photolisting" },
-    { name: "Submit Photo ", icon: <MdOutlineFileUpload />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
+    { name: "Submit Photos ", icon: <MdOutlineFileUpload />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
     { name: "Account", icon: <BsPerson />, path: context.isLogin ? `/my-account/${context.userData?._id}` : "/login" },
   ];
 

@@ -8,7 +8,7 @@ import Navigation from "./Navigation";
 const mainMenuItems = [
   { name: "Home", path: "/" },
   { name: "Become a Member", path: "/become-member" },
-  { name: "Submit Photo", path: "/my-account/:userId" },
+  { name: "Submit Photos", path: "/my-account/:userId" },
   
   { 
     name: "Community", 
@@ -150,10 +150,10 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Menu Items */}
+
       <ul className="space-y-4 pt-4">
   {mainMenuItems.map((item) => {
-    // Dynamically determine path for Submit Photo
+
     const path = item.name === "Submit Photo"
       ? context.isLogin
         ? `/my-account/${context.userData?._id}`
@@ -186,7 +186,7 @@ const Header = () => {
               <li key={subItem.name}>
                 <Link
                   to={subItem.path}
-                  className="text-gray-300 block py-2 text-md hover:bg-gray-800 px-4 font-optima"
+                  className="text-gray-900 block py-2 text-md px-4 font-optima"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {subItem.name}
