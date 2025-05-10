@@ -182,6 +182,7 @@ function App() {
     try {
       await fetchDataFromApi(`/api/user/logout`);
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       setIsLogin(false);
       setUserData(null);
       toast.success("Logged out successfully");
