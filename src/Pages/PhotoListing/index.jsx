@@ -62,8 +62,9 @@ function PhotoListing() {
                   <img
   src={
     photo.images?.[0]?.url || "https://via.placeholder.com/400x300"
-  } // Corrected path to access the image URL
-  alt={photo.title || "Untitled Photo"} // Fallback alt
+  } 
+   loading="lazy"
+  alt={photo.title || "Untitled Photo"} 
   className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
 />
 
