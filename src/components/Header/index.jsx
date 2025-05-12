@@ -21,7 +21,7 @@ const mainMenuItems = [
     ]
   },
 
-  { name: "Photos", path: "/photolisting" },
+  // { name: "Photos", path: "/photolisting" },
 
 
   { name: "About Us", path: "/about" },

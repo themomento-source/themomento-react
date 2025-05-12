@@ -23,7 +23,7 @@ function HomeImageGallery() {
   }, []);
 
   const handleContextMenu = (event) => {
-    event.preventDefault(); // Prevent right-click
+    event.preventDefault(); 
     console.log("Right-click is disabled on this image.");
   };
 
@@ -53,10 +53,10 @@ function HomeImageGallery() {
             <div
               className="relative overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-zoom-in"
               onContextMenu={handleContextMenu}
-              onClick={() => handleImageClick(photo._id)} // Left-click functionality
+              onClick={() => handleImageClick(photo._id)} 
             >
               <img
-                src={photo.imageUrl} // Assuming API provides imageUrl
+                src={photo.imageUrl} 
                 alt={photo.title}
                 className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-300"
               />
