@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchDataFromApi } from "../../utils/api";
+import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import {
   FacebookShareButton,
@@ -81,9 +82,24 @@ const PhotoOfTheDay = () => {
               <p className="text-gray-900 text-sm md:text-base mb-4 leading-relaxed font-pt-serif max-w-2xl mx-auto">
                 {photoOfTheDay.description}
               </p>
-              <p className="text-gray-600 text-xs italic font-pt-serif">
+              {/* <p className="text-gray-600 text-xs italic font-pt-serif">
                 Photo by {photoOfTheDay.user?.name || "Momento User"}
-              </p>
+              </p> */}
+
+
+{photoOfTheDay.user && (
+  <p className="text-gray-600  italic font-pt-serif text-s">
+    Photo by{" "}
+    <Link
+      to={`/user/${photoOfTheDay.user._id}`}
+      className="text-blue-600 hover:underline"
+    >
+      {photoOfTheDay.user.name || "Momento User"}
+    </Link>
+  </p>
+)}
+
+
             </div>
           </div>
         </>
