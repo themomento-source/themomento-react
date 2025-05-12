@@ -6,7 +6,7 @@ import HomeImageGallery from "../../components/HomeImageGallery";
 
 import PhotoOfTheDay from "../../components/PhotoOfTheDay";
 import BecomeMemberPromo from "../../components/PromotionBecomeAMember";
-// import PhotoListing from "../PhotoListing";
+import PhotoListing from "../PhotoListing";
 
 // import MembershipPromo from "../../components/PromotionCreateGallerry";
 // import EventsSection from "../../components/EventSectionHomepage";
@@ -19,7 +19,7 @@ function Home() {
       {/* <HomeCatSlider /> */}
       <PhotoOfTheDay />
       <BecomeMemberPromo />
-    {/* <PhotoListing/> */}
+    <PhotoListing/>
     
 
       
