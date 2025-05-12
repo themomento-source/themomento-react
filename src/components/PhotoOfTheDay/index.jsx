@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { fetchDataFromApi } from "../../utils/api";
 import { FaTimes } from "react-icons/fa";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  LinkedinShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  LinkedinIcon,
+} from "react-share";
 
 const PhotoOfTheDay = () => {
   const [photoOfTheDay, setPhotoOfTheDay] = useState(null);
@@ -25,6 +35,10 @@ const PhotoOfTheDay = () => {
 
     fetchPhotoOfTheDay();
   }, []);
+
+  const handleImageClick = (e) => {
+    e.stopPropagation(); // Prevent closing the modal when the image is clicked
+  };
 
   return (
     <div className="bg-gray-50 px-4 py-8 md:px-8 border-t-4 border-b-4 border-black">
@@ -55,6 +69,7 @@ const PhotoOfTheDay = () => {
                 src={photoOfTheDay.images[0]?.url}
                 alt={photoOfTheDay.title}
                 className="w-full h-full object-contain"
+                onClick={() => setIsModalOpen(true)}
               />
             </div>
 
@@ -75,7 +90,70 @@ const PhotoOfTheDay = () => {
       ) : (
         <p className="text-white text-center text-xl">No Photo of the Day Available</p>
       )}
+ {isModalOpen && (
+  <div 
+    className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 overflow-auto"
+    onClick={() => setIsModalOpen(false)}
+  >
+    <div className="relative">
+      <button
+        className="absolute -top-10 right-0 text-white hover:text-amber-200 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation(); 
+          setIsModalOpen(false);
+        }}
+      >
+        <FaTimes className="text-3xl" />
+      </button>
+      <img
+        src={photoOfTheDay.images[0]?.url}
+        alt={photoOfTheDay.title}
+        onClick={handleImageClick}
+        className="block max-w-full max-h-screen w-auto h-auto"
+      />
     </div>
+  </div>
+)}
+
+{/* {photoOfTheDay && (
+  <div className="mt-8 flex justify-center gap-4 flex-wrap">
+    <FacebookShareButton
+     url={"https://themomento.co.uk/"}
+      quote={photoOfTheDay.title}
+    >
+      <FacebookIcon size={40} round />
+    </FacebookShareButton>
+
+    <TwitterShareButton
+     url={"https://themomento.co.uk/"}
+      title={photoOfTheDay.title}
+    >
+      <TwitterIcon size={40} round />
+    </TwitterShareButton>
+
+    <WhatsappShareButton
+      url={"https://themomento.co.uk/"}
+      title={photoOfTheDay.title}
+    >
+      <WhatsappIcon size={40} round />
+    </WhatsappShareButton>
+
+    <LinkedinShareButton
+      url={"https://themomento.co.uk/"}
+      title={photoOfTheDay.title}
+      summary={photoOfTheDay.description}
+      source="Momento"
+    >
+      <LinkedinIcon size={40} round />
+    </LinkedinShareButton>
+  </div>
+)} */}
+
+
+    </div>
+
+   
+  
   );
 };
 

@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { FaTimes } from "react-icons/fa";
 
 function HomeSlider() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const heroImage =
     "https://res.cloudinary.com/dac4gsvh0/image/upload/v1746817093/MomentoHeroImage_ob164v.jpg";
+
+    const handleImageClick = (e) => {
+      e.stopPropagation(); 
+    };
 
   return (
     <div className="bg-black flex items-center py-12 md:py-20">
@@ -29,11 +35,39 @@ function HomeSlider() {
                 src={heroImage}
                 alt="Photography showcase"
                 className="w-full h-full object-contain shadow-xl"
+                onClick={() => setIsModalOpen(true)}
               />
             </div>
           </div>
         </div>
       </div>
+
+ {/* Modal for Hero Image */}
+ {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 overflow-auto"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div className="relative">
+            <button
+              className="absolute -top-10 right-0 text-white hover:text-yellow-300 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsModalOpen(false);
+              }}
+            >
+              <FaTimes className="text-3xl" />
+            </button>
+            <img
+              src={heroImage}
+              alt="Full Size Hero"
+              onClick={handleImageClick}
+              className="block max-w-full max-h-screen w-auto h-auto"
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
