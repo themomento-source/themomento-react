@@ -138,6 +138,12 @@ function MyAccount() {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (file.size > 1 * 1024 * 1024) {
+      openAlertBox("error", "Avatar size exceeds 1MB limit");
+      return;
+    }
+  
+
     if (!file.type.match(/image\/(jpeg|jpg|png|webp)/)) {
       openAlertBox("error", "Only JPEG, JPG, PNG, and WEBP images are allowed.");
       return;
@@ -161,7 +167,7 @@ function MyAccount() {
       }
     } catch (error) {
       console.error("Avatar upload failed:", error);
-      openAlertBox("error", error.response?.data?.message || "Avatar upload failed.");
+      openAlertBox("error", error.message || "Avatar upload failed.");
     } finally {
       setUploadingAvatar(false);
     }
@@ -275,7 +281,13 @@ function MyAccount() {
                     disabled={uploadingAvatar}
                   />
                   <label htmlFor="avatarInput" className="cursor-pointer">
-                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
+                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 relative">
+                    {uploadingAvatar && (
+      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <CircularProgress size={24} color="inherit" />
+        <span className="text-white text-xs mt-2">Uploading</span>
+      </div>
+    )}
                       {userData?.avatar ? (
                         <img
                           src={`${userData.avatar}?ts=${new Date().getTime()}`}
