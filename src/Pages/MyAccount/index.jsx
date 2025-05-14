@@ -648,13 +648,13 @@ function MyAccount() {
                         </Select>
                       </FormControl>
                       <div className="flex items-center gap-4 mt-4">
-                      <Button
+                      {/* <Button
     variant="outlined"
     onClick={() => setShowGuidelines(true)}
     className="!border-gray-800 !text-gray-800 !rounded-none"
   >
     Read Before Submit
-  </Button>
+  </Button> */}
   <input
   type="file"
   onChange={handleFileSelect}
@@ -665,13 +665,13 @@ function MyAccount() {
   ref={fileInputRef}
 />
                         <label htmlFor="photoSubmission">
-                          <Button
+                          {/* <Button
                             startIcon={<MdOutlineFileUpload className="text-lg" />}
                             component="span"
                             className="!bg-primary !text-gray-800 !rounded-none !capitalize"
                           >
                             Upload File
-                          </Button>
+                          </Button> */}
                         </label>
                         <Button
   type="submit"
@@ -697,7 +697,7 @@ function MyAccount() {
                       )}
                     </form>
       <Button type="submit">
-        {isSubmitting ? "Updating..." : "Update Photo"}
+        {isSubmitting ? "Updating..." : ""}
       </Button>
 
   </div>
