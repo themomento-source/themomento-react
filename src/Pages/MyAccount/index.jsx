@@ -39,6 +39,7 @@ function MyAccount() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingSubmissions, setLoadingSubmissions] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [editingPhoto, setEditingPhoto] = useState(null);
   const [submissionData, setSubmissionData] = useState({
     title: "",
     description: "",
@@ -90,12 +91,12 @@ function MyAccount() {
   useEffect(() => {
     fetchUnreadMessages();
 
-    // Set an interval to refresh unread messages count every 30 seconds
+   
     const interval = setInterval(() => {
       fetchUnreadMessages();
-    }, 30000); // 30 seconds
+    }, 30000); 
 
-    return () => clearInterval(interval); // Clear interval on component unmount
+    return () => clearInterval(interval); 
   }, []);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ function MyAccount() {
         const response = await fetchDataFromApi("/api/message");
         if (response?.success) {
           setMessages(response.data);
-          fetchUnreadMessages(); // Fetch unread count when messages load
+          fetchUnreadMessages(); 
         }
       } catch (error) {
         openAlertBox("error", "Failed to load messages");
@@ -173,6 +174,18 @@ function MyAccount() {
     }
   };
 
+
+  const handleEditPhoto = (submission) => {
+    setEditingPhoto(submission);
+    setSubmissionData({
+      title: submission.title,
+      description: submission.description,
+      categories: submission.categories.map(cat => cat._id),
+      file: null,
+      preview: submission.images[0]?.url || "",
+    });
+  };
+
   const handleSubmissionChange = (e) => {
     const { name, value } = e.target;
     setSubmissionData((prev) => ({ ...prev, [name]: value }));
@@ -188,53 +201,51 @@ function MyAccount() {
 
   const handlePhotoSubmission = async (e) => {
     e.preventDefault();
-    if (!submissionData.file) {
-      openAlertBox("error", "Please select a file to upload.");
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       const formData = new FormData();
-      formData.append("photo", submissionData.file);
+      
+      if (submissionData.file) {
+        formData.append("photo", submissionData.file);
+      }
+      
       formData.append("title", submissionData.title);
       formData.append("description", submissionData.description);
       formData.append("categories", JSON.stringify(submissionData.categories));
-
-      const response = await uploadPhoto("/api/photo/submit", formData);
-
-      if (response.error) {
-        openAlertBox("error", response.message || "Photo submission failed.");
-        return;
-      }
-
-      if (response?.success) {
-        openAlertBox(
-          "success",
-          "Photo submitted successfully! Our team will review your submission. " +
-          "Approved photos will appear in your public profile. If rejected, " +
-          "the photo will be permanently removed from our storage.",
-          9000
+  
+      let response;
+      if (editingPhoto) {
+        // Update existing photo
+        response = await editData(
+          `/api/photo/update/${editingPhoto._id}`,
+          formData,
+          
         );
+      } else {
+        // New submission
+        response = await uploadPhoto("/api/photo/submit", formData);
+      }
+  
+      if (response?.success) {
+        openAlertBox("success", editingPhoto ? "Photo updated!" : "Photo submitted!");
+        setEditingPhoto(null);
         await fetchSubmissions();
+        // Reset form
         setSubmissionData({
           title: "",
           description: "",
           categories: [],
-          size: "",
-          resolution: "",
           file: null,
           preview: "",
         });
-        if (fileInputRef.current) fileInputRef.current.value = "";
       }
     } catch (error) {
-      console.error("Photo submission failed:", error);
-      openAlertBox("error", error.response?.data?.message || "Photo submission failed.");
+      // Error handling
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
 
   const handleDeletePhoto = async (photoId) => {
@@ -547,6 +558,15 @@ function MyAccount() {
     <Typography variant="caption" className="text-gray-500">
       {new Date(submission.createdAt).toLocaleDateString()}
     </Typography>
+
+    <Button
+  variant="outlined"
+  size="small"
+  onClick={() => handleEditPhoto(submission)}
+>
+  Edit
+</Button>
+
     <Button
       variant="outlined"
       color="error"
@@ -578,6 +598,110 @@ function MyAccount() {
           </Card>
         </main>
       </div>
+
+      <Modal open={Boolean(editingPhoto)} onClose={() => setEditingPhoto(null)}>
+  <div className="bg-white p-6 max-w-2xl w-full rounded-lg">
+    <h2 className="text-2xl mb-4">Edit Photo</h2>
+
+   
+    <form onSubmit={handlePhotoSubmission}>
+                      <TextField
+                        fullWidth
+                        label="Title"
+                        name="title"
+                        value={submissionData.title}
+                        onChange={handleSubmissionChange}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                      />
+                      <TextField
+                        fullWidth
+                        label="Description"
+                        name="description"
+                        multiline
+                        rows={3}
+                        value={submissionData.description}
+                        onChange={handleSubmissionChange}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        inputProps={{ maxLength: 400 }}
+                        helperText={`${submissionData.description.length}/400`}
+                      />
+                      <FormControl fullWidth margin="normal" required>
+                        <InputLabel>Categories</InputLabel>
+                        <Select
+                          multiple
+                          name="categories"
+                          value={submissionData.categories}
+                          onChange={handleSubmissionChange}
+                          renderValue={(selected) =>
+                            selected.map((id) => categories.find((c) => c._id === id)?.name).join(", ")
+                          }
+                        >
+                          {categories.map((category) => (
+                            <MenuItem key={category._id} value={category._id}>
+                              {category.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <div className="flex items-center gap-4 mt-4">
+                      <Button
+    variant="outlined"
+    onClick={() => setShowGuidelines(true)}
+    className="!border-gray-800 !text-gray-800 !rounded-none"
+  >
+    Read Before Submit
+  </Button>
+  <input
+  type="file"
+  onChange={handleFileSelect}
+  className="hidden-file-input"
+  id="photoSubmission"
+  accept="image/*"
+  required={!editingPhoto} 
+  ref={fileInputRef}
+/>
+                        <label htmlFor="photoSubmission">
+                          <Button
+                            startIcon={<MdOutlineFileUpload className="text-lg" />}
+                            component="span"
+                            className="!bg-primary !text-gray-800 !rounded-none !capitalize"
+                          >
+                            Upload File
+                          </Button>
+                        </label>
+                        <Button
+  type="submit"
+  variant="contained"
+  className="!rounded-none"
+  startIcon={<FiSend />}
+  disabled={isSubmitting || (!editingPhoto && !submissionData.file)}
+>
+  {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
+</Button>
+                      </div>
+                      {submissionData.file && (
+                        <div className="mt-4">
+                          <Typography variant="body2" color="text.secondary">
+                            Selected file: {submissionData.file.name}
+                          </Typography>
+                          <img
+                            src={submissionData.preview}
+                            alt="Preview"
+                            className="mt-2 w-32 h-32 object-cover"
+                          />
+                        </div>
+                      )}
+                    </form>
+      <Button type="submit">
+        {isSubmitting ? "Updating..." : "Update Photo"}
+      </Button>
+
+  </div>
+</Modal>
 
 
       {selectedMessage && (
