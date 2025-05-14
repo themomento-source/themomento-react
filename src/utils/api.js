@@ -272,9 +272,7 @@ export const deleteData = async (url) => {
 
 
 export const blogAPI = {
-  getAll: (params = "") => fetchDataFromApi(`/api/blog/all${params}`),
-  getById: (id) => fetchDataFromApi(`/api/blog/${id}`),
-  create: (data) => postData("/api/blog/create", data),
-  update: (id, data) => editData(`/api/blog/${id}`, data),
-  delete: (id) => editData(`/api/blog/${id}`, {}, { method: "DELETE" }),
+  getAll: (params = "") => fetchDataFromApi(`/api/blog/public/all${params}`),
+  getById: (id) => fetchDataFromApi(`/api/blog/public/${id}`),
 };
+
