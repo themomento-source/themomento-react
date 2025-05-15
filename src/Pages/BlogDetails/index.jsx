@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { blogAPI } from "../../utils/api";
 import SafeHTML from "../../components/SafeHTML";
+import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -73,6 +74,36 @@ const BlogDetails = () => {
           </div>
         </div>
       </div>
+
+{/* Social Media Share Icons */}
+
+ <div className="flex justify-center gap-4 text-gray-600 text-xl mb-6">
+  <a
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-blue-600 transition"
+  >
+    <FaFacebookF />
+  </a>
+  <a
+    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(blog.title)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-blue-400 transition"
+  >
+    <FaTwitter />
+  </a>
+  <a
+    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-blue-700 transition"
+  >
+    <FaLinkedinIn />
+  </a>
+</div>
+
 
       {/* Blog Content */}
       <div className="container mx-auto px-4 md:px-8 mt-12">
