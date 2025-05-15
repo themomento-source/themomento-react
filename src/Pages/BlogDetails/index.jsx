@@ -76,8 +76,8 @@ const BlogDetails = () => {
       </div>
 
 {/* Social Media Share Icons */}
-
- <div className="flex justify-center gap-4 text-gray-600 text-xl mb-6">
+<div className="flex flex-wrap justify-center gap-4 text-gray-600 text-xl mb-6">
+  {/* Facebook */}
   <a
     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
     target="_blank"
@@ -86,6 +86,8 @@ const BlogDetails = () => {
   >
     <FaFacebookF />
   </a>
+
+  {/* Twitter */}
   <a
     href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(blog.title)}`}
     target="_blank"
@@ -94,6 +96,8 @@ const BlogDetails = () => {
   >
     <FaTwitter />
   </a>
+
+  {/* LinkedIn */}
   <a
     href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
     target="_blank"
@@ -102,7 +106,44 @@ const BlogDetails = () => {
   >
     <FaLinkedinIn />
   </a>
+
+  {/* WhatsApp */}
+  <a
+    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(blog.title + " " + window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-green-500 transition"
+  >
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 32 32">
+      <path d="M16.002 3.2a12.794 12.794 0 0 0-11.03 19.319l-1.169 4.276a1 1 0 0 0 1.236 1.236l4.276-1.17A12.802 12.802 0 1 0 16.002 3.2zm6.955 18.028c-.28.789-1.603 1.472-2.257 1.572-.578.086-1.287.123-2.07-.135-.478-.156-1.092-.354-1.886-.693-3.326-1.44-5.497-4.992-5.664-5.236-.165-.245-1.35-1.794-1.35-3.428 0-1.633.857-2.435 1.165-2.769.308-.334.673-.417.897-.417.224 0 .448.002.64.012.206.011.48-.078.751.57.28.68.957 2.342 1.041 2.51.083.166.138.36.025.58-.114.221-.171.358-.336.55-.166.192-.352.429-.503.578-.167.165-.34.344-.148.676.193.332.861 1.42 1.844 2.3 1.264 1.138 2.33 1.488 2.662 1.653.332.165.527.138.723-.083.196-.221.834-.96 1.057-1.29.223-.33.448-.276.752-.165.304.11 1.917.905 2.244 1.07.327.165.546.248.627.386.082.137.082.786-.197 1.576z" />
+    </svg>
+  </a>
+
+  {/* Facebook Messenger */}
+  <a
+    href={`fb-messenger://share/?link=${encodeURIComponent(window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-blue-500 transition"
+  >
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 32 32">
+      <path d="M16 3C8.82 3 3 8.08 3 14.25c0 3.21 1.56 6.1 4.06 8.08v5.17l4.45-2.44c1.36.38 2.82.58 4.49.58 7.18 0 13-5.08 13-11.25S23.18 3 16 3zm2.88 13.08l-3.23-3.48-5.73 3.48 6.35-6.52 3.24 3.47 5.72-3.47-6.35 6.52z" />
+    </svg>
+  </a>
+
+  {/* Copy Link */}
+  <button
+  onClick={() => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied to clipboard!");
+  }}
+  className="text-gray-900 hover:underline transition text-sm"
+  title="Copy Link"
+>
+  Copy Link
+</button>
 </div>
+
 
 
       {/* Blog Content */}
