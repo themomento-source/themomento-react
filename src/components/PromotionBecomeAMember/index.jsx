@@ -50,7 +50,7 @@ const BecomeMemberPromo = () => {
         <div className="md:w-1/2 flex justify-center">
           <div className="max-w-[600px] w-full cursor-pointer">
             <img 
-              src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1746801174/harvestingstrength_dyxndf.jpg" 
+              src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1747300331/drilldown_222_1_bie9gg.jpg" 
               alt="Membership" 
               className="w-full h-auto object-cover shadow-lg hover:opacity-90 transition-opacity"
               onClick={() => setIsModalOpen(true)}
@@ -73,7 +73,7 @@ const BecomeMemberPromo = () => {
               <FaTimes className="text-3xl" />
             </button>
             <img
-              src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1746801174/harvestingstrength_dyxndf.jpg"
+              src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1747300331/drilldown_222_1_bie9gg.jpg"
               alt="Membership Full Size"
               className="max-w-full max-h-[80vh] object-contain"
               onClick={(e) => e.stopPropagation()}
