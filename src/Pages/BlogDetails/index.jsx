@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { blogAPI } from "../../utils/api";
 import SafeHTML from "../../components/SafeHTML";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { LiaCopy } from "react-icons/lia";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -132,16 +133,19 @@ const BlogDetails = () => {
   </a>
 
   {/* Copy Link */}
-  <button
+
+
+<button
   onClick={() => {
     navigator.clipboard.writeText(window.location.href);
     alert("Link copied to clipboard!");
   }}
-  className="text-gray-900 hover:underline transition text-sm"
+  className="text-gray-900 hover:underline transition text-sm flex items-center"
   title="Copy Link"
 >
-  Copy Link
+  <LiaCopy size={20} />
 </button>
+
 </div>
 
 
