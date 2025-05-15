@@ -86,7 +86,7 @@ const BlogDetails = () => {
         </div>
 
         {/* Article Content */}
-        <div className="prose lg:prose-xl max-w-prose mx-auto">
+        <div className="prose lg:prose-xl max-w-4xl mx-auto">
           <SafeHTML html={blog.description} />
         </div>
       </div>
