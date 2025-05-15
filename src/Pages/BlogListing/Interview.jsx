@@ -12,7 +12,7 @@ function Interview() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await blogAPI.getPublished("?category=Interviews");
+        const response = await blogAPI.getAll("?category=Interviews");
         if (response?.success) {
           setBlogs(response.data.blogs);
         } else {
