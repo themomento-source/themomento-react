@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
                         <ul className="list-disc pl-6 space-y-2">
                             <li>We implement industry-standard security measures including encryption, 
                               secure servers, and restricted access protocols to safeguard your data.</li>
-                            <li>Your photographs are stored securely, and access is controlled to prevent unauthorized downloads or misuse.</li>
+                            <li>Your photographs are stored securely.</li>
                             <li>Regular audits and updates ensure ongoing protection against emerging threats.</li>
                            
                         </ul>
