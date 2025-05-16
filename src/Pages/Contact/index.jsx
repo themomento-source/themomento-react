@@ -12,7 +12,7 @@ function Contact() {
           We’d Love to Hear From You
         </h2>
         <p className="text-lg text-gray-900 mb-8 font-pt-serif text-left">
-          At The Momento, we’re building more than just a platform — we’re growing a global photography community. 
+          At The Momento, we’re building more than just a platform we’re growing a global photography community. 
           Whether you're a photographer looking to get involved, a supporter with ideas, or an organization interested 
           in partnership or advertising, we're here and ready to connect.
         </p>
@@ -60,7 +60,7 @@ function Contact() {
           {/* Additional Info */}
           <p className="text-gray-900 font-pt-serif">
             We typically respond within 48 hours. If you're contacting us about submissions, support, advertising, 
-            or collaboration — please include as much detail as possible so we can direct your query to the right person.
+            or collaboration please include as much detail as possible so we can direct your query to the right person.
           </p>
 
           <p className="text-gray-900 font-pt-serif">

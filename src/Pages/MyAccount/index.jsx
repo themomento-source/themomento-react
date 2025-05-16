@@ -315,13 +315,24 @@ function MyAccount() {
                           <CircularProgress size={24} color="inherit" />
                         </div>
                       )}
+
+
+
+
                     </div>
                   </label>
                 </div>
-                <Typography variant="h6" className="font-semibold text-gray-800 text-center mb-2">
+                <Typography variant="h6" className="!font-semibold text-gray-800 text-center mb-2 !font-marcellus">
                   {userData?.name || "User Name"}
                 </Typography>
+
+                <p className="font-pt-serif">
+                 Unique Id:  {userData?.uniqueId}
+                </p>
               </div>
+
+
+              
 
               {/* Navigation */}
               <nav className="space-y-2">

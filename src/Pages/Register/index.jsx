@@ -17,7 +17,7 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    fullname: "",
+    location: "",
     mobile: "",
     email: "",
     password: "",
@@ -25,6 +25,7 @@ function Register() {
 
   const [errors, setErrors] = useState({
     name: false,
+    location: false,
     email: false,
     password: false,
     passwordStrength: "",
@@ -42,6 +43,8 @@ function Register() {
     if (e.target.value.trim() !== "") {
       setErrors({ ...errors, [e.target.name]: false });
     }
+
+
 
     // Validate password while typing
     if (e.target.name === "password") {
@@ -169,7 +172,7 @@ function Register() {
                         </h1>
                         <p className="text-xl text-gray-900 font-pt-serif">
                             Turn your everyday passion into a powerful portfolio.
-At The Momento, we’re not just showcasing beautiful images — we’re helping photographers build
+At The Momento, we’re not just showcasing beautiful images we’re helping photographers build
  meaningful careers and creative futures.
                         </p>
                     </div>
@@ -185,7 +188,7 @@ At The Momento, we’re not just showcasing beautiful images — we’re helping
                                 <div>
                                     <h3 className="font-medium font-pt-serif text-gray-900">Build Your Free Professional Portfolio</h3>
                                     <p className="text-gray-900 text-sm">Each photo you submit contributes to a sleek, 
-                                      review-based portfolio — perfect to share with clients, 
+                                      review-based portfolio perfect to share with clients, 
                                       employers, or use in applications and grants.</p>
                                 </div>
                             </div>
@@ -215,10 +218,10 @@ At The Momento, we’re not just showcasing beautiful images — we’re helping
                                     
                                 </div>
                                 <div>
-                                    <h3 className="font-medium font-pt-serif text-gray-900">Grow with Global Exposure</h3>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Grow with Global Community</h3>
                                     <p className="text-gray-900 text-sm">Stand out in an international photography community.
                                        Featured photos get published on our 
-                                      website and social media — giving your work the reach it deserves.</p>
+                                      website and social media giving your work the reach it deserves.</p>
                                 </div>
                             </div>
                                <div className="flex items-start gap-4">
@@ -244,10 +247,10 @@ At The Momento, we’re not just showcasing beautiful images — we’re helping
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 shadow-md">
+                    <div className="bg-amber-200 p-6 shadow-md">
                         <p className="text-xl text-black font-medium text-center font-marcellus">
                             Signing up takes less than 1 minute.<br/>
-                            <span className="text-gray-800">Start building your future in photography — for free.</span>
+                            <span className="text-gray-800">Start building your future in photography for free.</span>
                         </p>
                     </div>
                 </div>
@@ -262,23 +265,24 @@ At The Momento, we’re not just showcasing beautiful images — we’re helping
                         <TextField
                             name="name"
                             type="text"
-                            label="Username *"
+                            label="Full Name *"
                             variant="outlined"
                             fullWidth
                             value={formData.name}
                             onChange={handleChange}
                             error={errors.name}
-                            helperText={errors.name && "Name is required"}
+                            helperText={errors.name && "Full Name is required"}
                         />
 
                         <TextField
-                            name="fullname"
+                            name="location"
                             type="text"
-                            label="Full Name"
+                            label="Location *"
                             variant="outlined"
                             fullWidth
-                            value={formData.fullname}
+                            value={formData.location}
                             onChange={handleChange}
+                            helperText={errors.location && "Location is required"}
                         />
 
                         <TextField

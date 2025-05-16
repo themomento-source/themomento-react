@@ -40,10 +40,10 @@ const PublicProfile = () => {
         const transformedPhotos = (photosResponse?.photos || []).map(photo => ({
           type: 'photo',
           id: photo._id,
-          img: photo.images[0]?.url, // Access the first image URL
+          img: photo.images[0]?.url, 
           title: photo.title,
           description: photo.description,
-          author: userResponse?.data?.name || 'Unknown Artist', // Ensure user data is available
+          author: userResponse?.data?.name || 'Unknown Artist', 
           createdAt: photo.createdAt,
         }));
 

@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import { fetchDataFromApi } from "../../utils/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { FaFacebookSquare, FaTwitterSquare, FaLinkedin, FaInstagramSquare, FaLink } from "react-icons/fa";
+
 
 
 function PhotoDetails() {
@@ -86,7 +88,7 @@ function PhotoDetails() {
 
           {/* Details Section */}
           <div className="max-w-4xl mx-auto w-full">
-            <div className="bg-white p-8 shadow-xl">
+            <div className="bg-gray-50 p-8 shadow-xl">
               <h1 className="text-4xl font-bold text-gray-900 mb-4 font-marcellus">
                 {photo.title}
               </h1>
@@ -112,7 +114,7 @@ function PhotoDetails() {
         className="flex items-center space-x-4 mb-8 hover:bg-gray-100 transition-colors p-2 rounded"
       >
         <img
-          src={photo.user?.avatar || "/default-avatar.jpg"}
+          src={photo.user?.avatar}
           alt={photo.user?.name}
           className="w-14 h-14  object-cover border-2 border-gray-200"
         />
@@ -127,7 +129,66 @@ function PhotoDetails() {
               {/* Action Buttons */}
               <div className="flex space-x-4">
                 
-                
+                {/* Share Buttons Section */}
+<div className="mt-12">
+  <h3 className="text-xl font-semibold text-gray-800 mb-4 font-pt-serif">
+    Share this photo
+  </h3>
+  <div className="flex items-center space-x-4 text-2xl">
+    {/* Facebook */}
+    <a
+      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 hover:text-blue-800"
+    >
+      <FaFacebookSquare />
+    </a>
+
+    {/* Twitter */}
+    <a
+      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(photo.title)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-400 hover:text-blue-600"
+    >
+      <FaTwitterSquare />
+    </a>
+
+    {/* LinkedIn */}
+    <a
+      href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(photo.title)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-700 hover:text-blue-900"
+    >
+      <FaLinkedin />
+    </a>
+
+    {/* Instagram (Not for direct sharing, just a placeholder link) */}
+    <a
+      href="https://www.instagram.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-pink-500 hover:text-pink-700"
+    >
+      <FaInstagramSquare />
+    </a>
+
+    {/* Copy Link */}
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      }}
+      className="text-gray-600 hover:text-black"
+      title="Copy link"
+    >
+      <FaLink />
+    </button>
+  </div>
+</div>
+
               </div>
             </div>
 
@@ -135,6 +196,10 @@ function PhotoDetails() {
            
           </div>
         </div>
+
+
+
+
 
         {/* Similar Photos */}
         {relatedPhotos.length > 0 && (
