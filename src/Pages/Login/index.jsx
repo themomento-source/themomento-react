@@ -110,10 +110,10 @@ function Login() {
   };
 
   return (
-    <section className="section py-10 bg-gradient-to-b from-gray-900 to-black min-h-screen">
+    <section className="section py-10 bg-gray-50 to-black min-h-screen">
     <div className="container mx-auto px-4">
-      <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
-        <h3 className="text-center text-[20px] font-bold text-black">
+      <div className="card shadow-md w-full md:w-[500px] m-auto  bg-white p-5 px-12">
+        <h3 className="text-center text-2xl font-bold text-gray-900 font-marcellus">
           Login to Your Account
         </h3>
         <form className="w-full mt-5" onSubmit={handleSubmit}>
@@ -160,7 +160,7 @@ function Login() {
 
           <div className="text-center my-3">
     <a
-      className={`text-blue-600 text-[15px] font-semibold ${
+      className={`text-blue-600 text-[15px] font-semibold font-marcellus ${
         forgotPasswordLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:underline"
       }`}
       href="#"

@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc";
 import { postData } from "../../utils/api.js";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -141,7 +140,7 @@ function Register() {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
-        context.setIsLogin(true); // Update context to indicate login
+        context.setIsLogin(true); 
 
         setSuccessMessage("Google sign-in successful! Redirecting...");
         setTimeout(() => {
@@ -158,133 +157,218 @@ function Register() {
     }
   };
 
-  return (
-    <section className="section bg-gradient-to-b from-gray-900 to-black min-h-screen py-10">
-      <div className="container mx-auto px-4">
-        <div className="card shadow-md w-full md:w-[500px] m-auto rounded-md bg-white p-5 px-12">
-          <h3 className="text-center text-[20px] font-bold text-black">
-            Create Your Account
-          </h3>
-          <form className="w-full mt-5" onSubmit={handleSubmit}>
-            <div className="form-group w-full mb-5">
-              <TextField
-                name="name"
-                type="text"
-                label="Username *"
-                variant="outlined"
-                className="w-full"
-                value={formData.name}
-                onChange={handleChange}
-                error={errors.name}
-                helperText={errors.name ? "Name is required" : ""}
-              />
+ return (
+    <section className="min-h-screen bg-gray-50 to-black">
+        <div className="container mx-auto px-4 py-12">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+                {/* Left Column - Promo Content */}
+                <div className="text-white space-y-8 ">
+                    <div className="space-y-4">
+                        <h1 className="text-4xl font-bold bg-gray-900 bg-clip-text text-transparent font-marcellus">
+                            Your Gateway to a Global Photography Career Starts Here
+                        </h1>
+                        <p className="text-xl text-gray-900 font-pt-serif">
+                            Turn your everyday passion into a powerful portfolio.
+At The Momento, we’re not just showcasing beautiful images — we’re helping photographers build
+ meaningful careers and creative futures.
+                        </p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <h2 className="text-2xl font-semibold font-pt-serif text-gray-900">Why Sign Up?</h2>
+                        
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-4">
+                                <div className="bg-gray-600 p-2 rounded-full">
+                                    {/* <span className="text-blue-400 text-xl">📸</span> */}
+                                </div>
+                                <div>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Build Your Free Professional Portfolio</h3>
+                                    <p className="text-gray-900 text-sm">Each photo you submit contributes to a sleek, 
+                                      review-based portfolio — perfect to share with clients, 
+                                      employers, or use in applications and grants.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-4">
+                                <div className="bg-gray-600 p-2 rounded-full">
+                                    {/* <span className="text-purple-400 text-xl">🌟</span> */}
+                                </div>
+                                <div>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Daily Submissions & Expert Reviews</h3>
+                                    <p className="text-gray-900 text-sm">Upload up to 3 photos per day and receive curated reviews that 
+                                      help refine your storytelling and elevate your craft.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-4">
+                                <div className="bg-gray-600 p-2 rounded-full">
+                                    
+                                </div>
+                                <div>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Global Exposure</h3>
+                                    <p className="text-gray-900 text-sm">Featured photos published on our platform and social media.</p>
+                                </div>
+                            </div>
+                               <div className="flex items-start gap-4">
+                                <div className="bg-gray-600 p-2 rounded-full">
+                                    
+                                </div>
+                                <div>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Grow with Global Exposure</h3>
+                                    <p className="text-gray-900 text-sm">Stand out in an international photography community.
+                                       Featured photos get published on our 
+                                      website and social media — giving your work the reach it deserves.</p>
+                                </div>
+                            </div>
+                               <div className="flex items-start gap-4">
+                                <div className="bg-gray-600 p-2 rounded-full">
+                                    
+                                </div>
+                                <div>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Learn by Doing</h3>
+                                    <p className="text-gray-900 text-sm">Gain hands-on experience, sharpen your visual language, 
+                                      and explore real-world photography topics through our free articles, tips, and interviews.</p>
+                                </div>
+                            </div>
+                              <div className="flex items-start gap-4">
+                                <div className="bg-gray-600 p-2 rounded-full">
+                                    
+                                </div>
+                                <div>
+                                    <h3 className="font-medium font-pt-serif text-gray-900">Join a Supportive Creative Network</h3>
+                                    <p className="text-gray-900 text-sm">Collaborate with photographers worldwide, join challenges, and be
+                                       part of a platform that exists to empower your journey.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 shadow-md">
+                        <p className="text-xl text-black font-medium text-center font-marcellus">
+                            Signing up takes less than 1 minute.<br/>
+                            <span className="text-gray-800">Start building your future in photography — for free.</span>
+                        </p>
+                    </div>
+                </div>
+
+                {/* Right Column - Registration Form */}
+                <div className="bg-white  shadow-2xl p-8">
+                    <h3 className="text-2xl font-bold text-gray-900 text-center mb-8 font-marcellus">
+                        Start Your Journey
+                    </h3>
+                    
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                        <TextField
+                            name="name"
+                            type="text"
+                            label="Username *"
+                            variant="outlined"
+                            fullWidth
+                            value={formData.name}
+                            onChange={handleChange}
+                            error={errors.name}
+                            helperText={errors.name && "Name is required"}
+                        />
+
+                        <TextField
+                            name="fullname"
+                            type="text"
+                            label="Full Name"
+                            variant="outlined"
+                            fullWidth
+                            value={formData.fullname}
+                            onChange={handleChange}
+                        />
+
+                        <TextField
+                            name="mobile"
+                            type="tel"
+                            label="Mobile Number"
+                            variant="outlined"
+                            fullWidth
+                            value={formData.mobile}
+                            onChange={handleChange}
+                        />
+
+                        <TextField
+                            name="email"
+                            type="email"
+                            label="Email ID *"
+                            variant="outlined"
+                            fullWidth
+                            value={formData.email}
+                            onChange={handleChange}
+                            error={errors.email}
+                            helperText={errors.email && "Email is required"}
+                        />
+
+                        <div className="relative">
+                            <TextField
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                label="Password *"
+                                variant="outlined"
+                                fullWidth
+                                value={formData.password}
+                                onChange={handleChange}
+                                error={errors.password}
+                                helperText={errors.password && "Password is required"}
+                            />
+                            <button
+                                type="button"
+                                className="absolute top-3 right-3"
+                                onClick={() => setShowPassword(prev => !prev)}
+                            >
+                                {showPassword ? <IoMdEyeOff className="text-gray-500" /> : <IoMdEye className="text-gray-500" />}
+                            </button>
+                        </div>
+
+                        {errors.passwordStrength && (
+                            <div className="text-red-500 text-sm">{errors.passwordStrength}</div>
+                        )}
+
+                        {errorMessage && (
+                            <div className="text-red-500 text-center">{errorMessage}</div>
+                        )}
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            fullWidth
+                            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 font-bold shadow-lg"
+                            disabled={loading}
+                        >
+                            {loading ? <CircularProgress size={24} color="inherit" /> : 'Create Account'}
+                        </Button>
+
+                        {successMessage && (
+                            <div className="text-green-500 text-center">{successMessage}</div>
+                        )}
+
+                        
+
+                        <div className="relative my-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300"></div>
+                            </div>
+                           
+                        </div>
+
+                    </form>
+
+                    <div className="mt-6 text-center text-sm">
+                        <span className="text-gray-600">Already have an account? </span>
+                        <a href="/login" className="font-semibold text-blue-600 hover:text-blue-700">
+                            Sign in
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div className="form-group w-full mb-5">
-              <TextField
-                name="fullname"
-                type="text"
-                label="Full Name"
-                variant="outlined"
-                className="w-full"
-                value={formData.fullname}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group w-full mb-5">
-              <TextField
-                name="mobile"
-                type="tel"
-                label="Mobile Number"
-                variant="outlined"
-                className="w-full"
-                value={formData.mobile}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group w-full mb-5">
-              <TextField
-                name="email"
-                type="email"
-                label="Email ID *"
-                variant="outlined"
-                className="w-full"
-                value={formData.email}
-                onChange={handleChange}
-                error={errors.email}
-                helperText={errors.email ? "Email is required" : ""}
-              />
-            </div>
-
-            <div className="form-group w-full mb-5 relative">
-              <TextField
-                name="password"
-                type={showPassword ? "text" : "password"}
-                label="Password *"
-                variant="outlined"
-                className="w-full"
-                value={formData.password}
-                onChange={handleChange}
-                error={errors.password}
-                helperText={errors.password ? "Password is required" : ""}
-              />
-              <button
-                type="button"
-                className="absolute top-[10px] right-[10px]"
-                onClick={() => setShowPassword((prev) => !prev)}
-              >
-                {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
-              </button>
-            </div>
-
-            {errors.passwordStrength && (
-              <div className="text-center text-red-500">{errors.passwordStrength}</div>
-            )}
-
-            {errorMessage && (
-              <div className="text-center text-red-500">{errorMessage}</div>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full py-3 text-white font-bold"
-              style={{ background: "linear-gradient(45deg, #007BFF, #0056b3)" }}
-              disabled={loading}
-            >
-              {loading ? (
-                <CircularProgress size={24} color="white" />
-              ) : (
-                <span className="text-white">Register</span>
-              )}
-            </Button>
-
-            {successMessage && (
-              <div className="text-center text-green-500">{successMessage}</div>
-            )}
-
-            <div className="text-center mt-4">
-              <span className="text-gray-600">
-                Already have an account?{" "}
-                <a className="text-blue-600 font-semibold" href="/login">
-                  Login
-                </a>
-              </span>
-            </div>
-
-            <div className="flex items-center my-5">
-              <hr className="flex-grow border-gray-300" />
-              <span className="px-3 text-gray-500">OR</span>
-              <hr className="flex-grow border-gray-300" />
-            </div>
-
-            
-          </form>
+        
         </div>
-      </div>
     </section>
-  );
-}
+);}
 
 export default Register;

@@ -468,7 +468,7 @@ function MyAccount() {
                       <Button
     variant="outlined"
     onClick={() => setShowGuidelines(true)}
-    className="!border-gray-800 !text-gray-800 !rounded-none"
+    className="!border-gray-800 !text-gray-800 !rounded-none !font-pt-serif"
   >
     Read Before Submit
   </Button>
@@ -485,7 +485,7 @@ function MyAccount() {
                           <Button
                             startIcon={<MdOutlineFileUpload className="text-lg" />}
                             component="span"
-                            className="!bg-primary !text-gray-800 !rounded-none !capitalize"
+                            className="!bg-primary !font-pt-serif !text-gray-800 !rounded-none !capitalize"
                           >
                             Upload File
                           </Button>
@@ -493,7 +493,7 @@ function MyAccount() {
                         <Button
                           type="submit"
                           variant="contained"
-                          className="!rounded-none"
+                          className="!rounded-none !font-pt-serif"
                           startIcon={<FiSend />}
                           disabled={isSubmitting || !submissionData.file}
                         >
@@ -737,9 +737,9 @@ function MyAccount() {
   onClose={() => setShowGuidelines(false)}
   className="flex items-center justify-center p-4"
 >
-  <div className="bg-white p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto border-2 border-black shadow-none">
+  <div className="bg-gray-50 p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto border-2 shadow-md">
     <div className="flex justify-between items-start mb-4">
-      <Typography variant="h4" className="font-bold mb-4 font-marcellus">
+      <Typography variant="h4" className="font-bold mb-4 !font-marcellus">
         Read Before Submit
       </Typography>
       <IconButton
@@ -750,7 +750,7 @@ function MyAccount() {
       </IconButton>
     </div>
     
-    <div className="space-y-4">
+    <div className="space-y-4 font-pt-serif">
       {[
         {
           title: "Three photos per day.",
@@ -762,6 +762,13 @@ function MyAccount() {
           content: `Your photo should have a minimum resolution of 2500px on the
 longest side. We recommend submitting in JPEG or PNG format. `
         },
+ {
+      title: "File Size Limit",
+      content: `Each photo must not exceed 5 MB in size. This ensures quick uploads 
+and smooth viewing experiences for everyone. Optimize your images before submission 
+while maintaining quality.`
+    },
+
         {
           title: "No Watermarks, Logos, or Frames",
           content: `To keep the focus on your photography, please
@@ -818,10 +825,10 @@ platforms!`
             
           </div>
           <div>
-            <Typography variant="h6" className="font-semibold">
+            <Typography variant="h6" className="!font-semibold !font-marcellus">
               {item.title}
             </Typography>
-            <Typography variant="body1" className="text-gray-700">
+            <Typography variant="body1" className="!text-gray-700 !font-pt-serif">
               {item.content}
             </Typography>
           </div>

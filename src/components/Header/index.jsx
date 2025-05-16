@@ -120,7 +120,7 @@ const Header = () => {
               <Link
               
                 to="/login"
-                className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-400"
+                className="hidden md:inline-block px-2 py-1 font-pt-serif hover:bg-amber-400"
               >
                 Login
                 
@@ -129,7 +129,7 @@ const Header = () => {
               <button className="text-gray-900 font-semi-bold">
               <Link
                 to="/register"
-                className="hidden md:inline-block px-2 py-1 font-optima hover:bg-amber-700"
+                className="hidden md:inline-block px-2 py-1 font-pt-serif hover:bg-amber-400"
               >
                 Register
               </Link>

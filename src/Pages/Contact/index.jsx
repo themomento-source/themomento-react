@@ -5,52 +5,68 @@ function Contact() {
     <div className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto text-center">
         {/* Title Section */}
-        <h1 className="text-5xl font-extrabold text-gray-900 mb-6 font-marcellus">
-        Contact The Momento
+        <h1 className="text-4xl font-bold text-gray-900 mb-4 font-marcellus">
+          Contact Us
         </h1>
-        <p className="text-xl text-gray-900 mb-10 leading-relaxed font-pt-serif">
-        We’re here to connect, collaborate, and support. Whether you're a photographer with a question, an organization with a 
-        partnership idea, or someone who simply loves visual storytelling — we’d love to hear from you.
+        <h2 className="text-3xl font-semibold text-gray-900 mb-6 font-marcellus">
+          We’d Love to Hear From You
+        </h2>
+        <p className="text-lg text-gray-900 mb-8 font-pt-serif text-left">
+          At The Momento, we’re building more than just a platform — we’re growing a global photography community. 
+          Whether you're a photographer looking to get involved, a supporter with ideas, or an organization interested 
+          in partnership or advertising, we're here and ready to connect.
         </p>
 
         {/* Contact Card */}
-        <div className="bg-white shadow-lg p-8 inline-block">
-          <h2 className="text-3xl font-semibold text-gray-800 mb-4 font-marcellus">
-            Reach Out to Us
-          </h2>
-          <p className="text-lg text-gray-700 mb-4 font-pt-serif">
-            We’d love to hear from you! Feel free to contact us via email.
-          </p>
-          <p className="text-lg text-gray-900">
-            <span className="font-semibold font-pt-serif">Email:</span>{' '}
-            <a
-              href="mailto:support@themomento.co.uk"
-              className="text-blue-500 hover:text-blue-700 underline transition duration-300 font-pt-serif"
-            >
-              support@themomento.co.uk
-            </a>
-          </p>
-        </div>
+        <div className="bg-white shadow-md p-8 inline-block text-left space-y-6">
+          {/* Location Section */}
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2 font-marcellus">
+               Our Location
+            </h3>
+            <p className="text-gray-900 font-pt-serif">
+              The Momento<br />
+              Southsea, Portsmouth, PO5, UK
+            </p>
+          </div>
 
-      
-        <div className="mt-12">
-          <p className="text-gray-600 text-sm font-medium">
-            We usually respond within 24-48 hours.
+          {/* Email Section */}
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2 font-marcellus">
+               Email
+            </h3>
+            <p className="text-gray-900 font-pt-serif space-y-2">
+              <a
+                
+                className="block text-blue-500 hover:text-blue-700 underline transition duration-300"
+              >
+                info@themomento.co.uk
+              </a>
+              <a
+              
+                className="block text-blue-500 hover:text-blue-700 underline transition duration-300"
+              >
+                support@themomento.co.uk
+              </a>
+              <a
+               
+                className="block text-blue-500 hover:text-blue-700 underline transition duration-300"
+              >
+                submission@themomento.co.uk
+              </a>
+            </p>
+          </div>
+
+          {/* Additional Info */}
+          <p className="text-gray-900 font-pt-serif">
+            We typically respond within 48 hours. If you're contacting us about submissions, support, advertising, 
+            or collaboration — please include as much detail as possible so we can direct your query to the right person.
           </p>
-          <svg
-            className="mx-auto mt-4 w-12 h-12 text-blue-400 animate-bounce"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8 16l-4-4m0 0l4-4m-4 4h16"
-            ></path>
-          </svg>
+
+          <p className="text-gray-900 font-pt-serif">
+           We may be small now, but our vision is big. Let’s build 
+           something powerful together.
+          </p>
         </div>
       </div>
     </div>
