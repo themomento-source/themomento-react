@@ -765,8 +765,9 @@ function MyAccount() {
       {[
         {
           title: "Three photos per day.",
-          content: `You can submit up to three photos per day. Each photo must be 
-          original and showcase your unique perspective and creative vision.`
+          content: `You can submit up to three original photos per day, 
+          each showcasing your unique perspective and creative vision. 
+          If your photo is not approved, it will be deleted from our database.`
         },
         {
           title: "High-Quality Image",
