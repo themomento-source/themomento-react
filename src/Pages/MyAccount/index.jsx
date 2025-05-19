@@ -50,6 +50,9 @@ function MyAccount() {
     preview: "",
   });
 
+  const MAX_FILE_SIZE_MB = 5;
+  const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024; 
+
   const { userData, setUserData, openAlertBox, setIsLogin } = useContext(MyContext);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -199,53 +202,83 @@ function MyAccount() {
     }
   };
 
-  const handlePhotoSubmission = async (e) => {
-    e.preventDefault();
-    try {
-      setIsSubmitting(true);
-      const formData = new FormData();
-      
-      if (submissionData.file) {
-        formData.append("photo", submissionData.file);
+
+
+
+const handlePhotoSubmission = async (e) => {
+  e.preventDefault();
+  try {
+    setIsSubmitting(true);
+    
+    // Client-side validation
+    if (submissionData.file) {
+      if (submissionData.file.size > MAX_FILE_SIZE_BYTES) {
+        throw new Error(`File size exceeds ${MAX_FILE_SIZE_MB}MB limit`);
       }
       
-      formData.append("title", submissionData.title);
-      formData.append("description", submissionData.description);
-      formData.append("categories", JSON.stringify(submissionData.categories));
-  
-      let response;
-      if (editingPhoto) {
-        // Update existing photo
-        response = await editData(
-          `/api/photo/update/${editingPhoto._id}`,
-          formData,
-          
-        );
-      } else {
-        // New submission
-        response = await uploadPhoto("/api/photo/submit", formData);
+      if (!['image/jpeg', 'image/png', 'image/gif'].includes(submissionData.file.type)) {
+        throw new Error('Only JPG, PNG, and GIF files are allowed');
       }
-  
-      if (response?.success) {
-        openAlertBox("success", editingPhoto ? "Photo updated!" : "Photo submitted!");
-        setEditingPhoto(null);
-        await fetchSubmissions();
-        // Reset form
-        setSubmissionData({
-          title: "",
-          description: "",
-          categories: [],
-          file: null,
-          preview: "",
-        });
-      }
-    } catch (error) {
-      // Error handling
-    } finally {
-      setIsSubmitting(false);
     }
-  };
-  
+
+    const formData = new FormData();
+    
+    if (submissionData.file) {
+      formData.append("photo", submissionData.file);
+    }
+    
+    formData.append("title", submissionData.title.trim());
+    formData.append("description", submissionData.description.trim());
+    formData.append("categories", JSON.stringify(submissionData.categories));
+
+    // Simple title validation
+    if (!submissionData.title.trim()) {
+      throw new Error('Title is required');
+    }
+
+    let response;
+    if (editingPhoto) {
+      response = await editData(
+        `/api/photo/update/${editingPhoto._id}`,
+        formData
+      );
+    } else {
+      response = await uploadPhoto("/api/photo/submit", formData);
+    }
+
+    if (response?.success) {
+      openAlertBox("success", editingPhoto ? "Photo updated!" : "Photo submitted!");
+      setEditingPhoto(null);
+      await fetchSubmissions();
+      setSubmissionData({
+        title: "",
+        description: "",
+        categories: [],
+        file: null,
+        preview: "",
+      });
+    }
+  } catch (error) {
+    console.error("Submission error:", error);
+    
+    let errorMessage = "Submission failed. Please try again.";
+    
+    // Handle specific error cases
+    if (error.message.includes('File size exceeds')) {
+      errorMessage = error.message;
+    } else if (error.response?.status === 413) {
+      errorMessage = `File size exceeds server limit (max ${MAX_FILE_SIZE_MB}MB)`;
+    } else if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    openAlertBox("error", errorMessage);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
 
   const handleDeletePhoto = async (photoId) => {
@@ -510,6 +543,9 @@ function MyAccount() {
                         >
                           {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
                         </Button>
+                        <p className="file-size-note">
+  Maximum file size: {MAX_FILE_SIZE_MB}MB
+</p>
                       </div>
                       {submissionData.file && (
                         <div className="mt-4">
