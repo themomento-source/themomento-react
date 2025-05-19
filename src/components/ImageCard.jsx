@@ -20,7 +20,7 @@ function ImageCard({
     if (type === "dayphoto") {
       onSelect?.(); // Open modal for day photos
     } else {
-      navigate(`/photodetails/${id}`); // Navigate for regular products
+      navigate(`/photodetails/${id}`); 
     }
   };
 
@@ -71,9 +71,9 @@ function ImageCard({
         
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
-          {type === "product" && (
+          {/* {type === "product" && (
             <p className="text-gray-300 text-lg font-medium">{price}$</p>
-          )}
+          )} */}
         </div>
         
         <div className="flex gap-5 justify-center">

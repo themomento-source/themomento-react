@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import normalizeFancyText from "../../../../backend/utils/normalizeFancyText";
 import { BsArrowLeft } from "react-icons/bs";
 import { fetchDataFromApi } from "../../utils/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -90,10 +91,10 @@ function PhotoDetails() {
           <div className="max-w-4xl mx-auto w-full">
             <div className="bg-gray-50 p-8 shadow-xl">
               <h1 className="text-4xl font-bold text-gray-900 mb-4 font-marcellus">
-                {photo.title}
+                {normalizeFancyText(photo.title)}
               </h1>
               <p className="text-lg text-gray-900 leading-relaxed mb-8 font-pt-serif">
-                {photo.description}
+                {normalizeFancyText(photo.description)}
               </p>
 
               <div className="m-4">

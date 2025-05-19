@@ -6,7 +6,7 @@
 *{margin: 0px; padding: 0px; box-sizing: border-box;}
 
 body{
-  font-family: "Montserrat", serif;
+  /* font-family: "Montserrat", serif; */
   font-optical-sizing: auto;
   background:  rgb(243, 244, 245);
   color: rgba(0,0,0,0.8)

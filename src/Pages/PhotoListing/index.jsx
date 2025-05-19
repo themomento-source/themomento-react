@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
+import normalizeFancyText from "../../../../backend/utils/normalizeFancyText";
 
 function PhotoListing() {
   const [allPhotos, setAllPhotos] = useState([]);
@@ -75,8 +76,8 @@ function PhotoListing() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                     <div className="text-white">
-                      <h3 className="text-xl font-bold font-marcellus mb-1">{photo.title || "Untitled Photo"}</h3>
-                      <p className="text-sm opacity-90 font-pt-serif">by {photo.user?.name}</p>
+                      <h3 className="text-xl font-bold font-marcellus mb-1">{normalizeFancyText(photo.title)}</h3>
+                      <p className="text-sm opacity-90 font-pt-serif">by {normalizeFancyText(photo.user?.name)}</p>
                     </div>
                   </div>
                 </div>
