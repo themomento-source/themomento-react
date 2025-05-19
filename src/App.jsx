@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
 import { useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { HelmetProvider } from 'react-helmet-async';
 import toast, { Toaster } from "react-hot-toast";
 import Alert from '@mui/material/Alert';
 import "./App.css";
@@ -213,6 +214,7 @@ function App() {
   return (
     <BrowserRouter>
      <MyContext.Provider value={contextValue}>
+       <HelmetProvider>
         <RouterContent />
         <Toaster />
         <Drawer open={openCartPanel} onClose={() => setOpenCartPanel(false)} anchor="right">
@@ -221,6 +223,7 @@ function App() {
             <IoCloseSharp className="text-[20px] cursor-pointer" onClick={() => setOpenCartPanel(false)} />
           </div>
         </Drawer>
+        </HelmetProvider>
       </MyContext.Provider>
     </BrowserRouter>
   );
