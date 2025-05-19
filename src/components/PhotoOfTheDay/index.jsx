@@ -12,6 +12,7 @@ import {
   WhatsappIcon,
   LinkedinIcon,
 } from "react-share";
+import { normalizeFancyText } from "../../utils/normalizeFancyText";
 
 const PhotoOfTheDay = () => {
   const [photoOfTheDay, setPhotoOfTheDay] = useState(null);
@@ -77,10 +78,10 @@ const PhotoOfTheDay = () => {
             {/* Details Below Image */}
             <div className="text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-marcellus">
-                {photoOfTheDay.title}
+                {normalizeFancyText(photoOfTheDay.title)}
               </h2>
               <p className="text-gray-900 text-sm md:text-base mb-4 leading-relaxed font-pt-serif max-w-2xl mx-auto">
-                {photoOfTheDay.description}
+                {normalizeFancyText(photoOfTheDay.description)}
               </p>
               {/* <p className="text-gray-600 text-xs italic font-pt-serif">
                 Photo by {photoOfTheDay.user?.name || "Momento User"}

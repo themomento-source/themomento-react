@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import normalizeFancyText from "../../../../backend/utils/normalizeFancyText";
+import { normalizeFancyText } from "../../utils/normalizeFancyText";
 import { BsArrowLeft } from "react-icons/bs";
 import { fetchDataFromApi } from "../../utils/api";
 import LoadingSpinner from "../../components/LoadingSpinner";

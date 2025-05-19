@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api";
-import normalizeFancyText from "../../../../backend/utils/normalizeFancyText";
+import { normalizeFancyText } from "../../utils/normalizeFancyText";
 
 function PhotoListing() {
   const [allPhotos, setAllPhotos] = useState([]);
