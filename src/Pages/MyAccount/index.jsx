@@ -508,45 +508,51 @@ const handlePhotoSubmission = async (e) => {
                           ))}
                         </Select>
                       </FormControl>
-                      <div className="flex items-center gap-4 mt-4">
-                      <Button
-    variant="outlined"
-    onClick={() => setShowGuidelines(true)}
-    className="!border-gray-800 !text-gray-800 !rounded-none !font-pt-serif"
-  >
-    Read Before Submit
-  </Button>
-                        <input
-                          type="file"
-                          onChange={handleFileSelect}
-                          className="hidden-file-input"
-                          id="photoSubmission"
-                          accept="image/*"
-                          required
-                          ref={fileInputRef}
-                        />
-                        <label htmlFor="photoSubmission">
-                          <Button
-                            startIcon={<MdOutlineFileUpload className="text-lg" />}
-                            component="span"
-                            className="!bg-primary !font-pt-serif !text-gray-800 !rounded-none !capitalize"
-                          >
-                            Upload File
-                          </Button>
-                        </label>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          className="!rounded-none !font-pt-serif"
-                          startIcon={<FiSend />}
-                          disabled={isSubmitting || !submissionData.file}
-                        >
-                          {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
-                        </Button>
-                        <p className="file-size-note">
-  Maximum file size: {MAX_FILE_SIZE_MB}MB
-</p>
-                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 mt-4 space-y-3 sm:space-y-0">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+    <Button
+      variant="outlined"
+      onClick={() => setShowGuidelines(true)}
+      className="!border-gray-800 !text-gray-800 !rounded-none !font-pt-serif w-full sm:w-auto"
+    >
+      Read Before Submit
+    </Button>
+    <p className="file-size-note text-sm text-gray-600 mt-2 sm:mt-0 sm:ml-2">
+      Maximum file size: {MAX_FILE_SIZE_MB}MB
+    </p>
+  </div>
+
+  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+    <input
+      type="file"
+      onChange={handleFileSelect}
+      className="hidden-file-input"
+      id="photoSubmission"
+      accept="image/*"
+      required
+      ref={fileInputRef}
+    />
+    <label htmlFor="photoSubmission" className="w-full sm:w-auto">
+      <Button
+        startIcon={<MdOutlineFileUpload className="text-lg" />}
+        component="span"
+        className="!bg-primary !font-pt-serif !text-gray-800 !rounded-none !capitalize w-full sm:w-auto"
+      >
+        Upload File
+      </Button>
+    </label>
+    <Button
+      type="submit"
+      variant="contained"
+      className="!rounded-none !font-pt-serif mt-2 sm:mt-0 w-full sm:w-auto"
+      startIcon={<FiSend />}
+      disabled={isSubmitting || !submissionData.file}
+    >
+      {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
+    </Button>
+  </div>
+</div>
+
                       {submissionData.file && (
                         <div className="mt-4">
                           <Typography variant="body2" color="text.secondary">
