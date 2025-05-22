@@ -38,6 +38,7 @@ function MyAccount() {
   const [userSubmissions, setUserSubmissions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingSubmissions, setLoadingSubmissions] = useState(true);
+  const [submissionsToday, setSubmissionsToday] = useState(0);
   const [categories, setCategories] = useState([]);
   const [editingPhoto, setEditingPhoto] = useState(null);
   const [submissionData, setSubmissionData] = useState({
@@ -56,6 +57,17 @@ function MyAccount() {
   const { userData, setUserData, openAlertBox, setIsLogin } = useContext(MyContext);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+  const fetchSubmissionsCount = async () => {
+    const today = new Date().toISOString().split('T')[0];
+    const response = await fetchDataFromApi(
+      `/api/photo/submissions-count?date=${today}`
+    );
+    setSubmissionsToday(response.count);
+  };
+  fetchSubmissionsCount();
+}, [userSubmissions]);
 
   useEffect(() => {
     if (userData && userId !== userData._id) {
@@ -259,15 +271,14 @@ const handlePhotoSubmission = async (e) => {
       });
     }
   } catch (error) {
-    console.error("Submission error:", error);
-    
     let errorMessage = "Submission failed. Please try again.";
     
-    // Handle specific error cases
     if (error.message.includes('File size exceeds')) {
       errorMessage = error.message;
-    } else if (error.response?.status === 413) {
+    } else if (error.status === 413) {
       errorMessage = `File size exceeds server limit (max ${MAX_FILE_SIZE_MB}MB)`;
+    } else if (error.status === 429) {
+      errorMessage = error.message || "Daily submission limit reached";
     } else if (error.response?.data?.message) {
       errorMessage = error.response.data.message;
     } else if (error.message) {
@@ -550,6 +561,10 @@ const handlePhotoSubmission = async (e) => {
     >
       {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
     </Button>
+
+
+
+
   </div>
 </div>
 
@@ -728,12 +743,13 @@ const handlePhotoSubmission = async (e) => {
                         </label>
                         <Button
   type="submit"
+  
   variant="contained"
   className="!rounded-none"
   startIcon={<FiSend />}
-  disabled={isSubmitting || (!editingPhoto && !submissionData.file)}
+  disabled={isSubmitting || submissionsToday >=3 || (!editingPhoto && !submissionData.file)}
 >
-  {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
+  {submissionsToday >=3 ? "daily Limit Reached" : isSubmitting ? <CircularProgress size={24} /> : "Submit"}
 </Button>
                       </div>
                       {submissionData.file && (

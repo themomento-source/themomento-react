@@ -48,9 +48,10 @@ export const postData = async (url, formData) => {
     console.error("postData error:", error);
     return {
       error: true,
-      message:
-        error.response?.data?.message || `HTTP error! status: ${error.response?.status}`,
+      
+       message: error.response?.data?.message || error.message,
       status: error.response?.status,
+        data: error.response?.data
     };
   }
 };
@@ -60,32 +61,29 @@ export const uploadPhoto = async (url, formData) => {
     const response = await axios.post(apiUrl + url, formData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-     
       },
     });
 
+    if (!response.data.success) {
+      const error = new Error(response.data.message || "Photo submission failed");
+      error.status = response.status;
+      throw error;
+    }
     return response.data;
   } catch (error) {
-    console.error("uploadPhoto error:", error);
+    let errorMessage = "Network error or server unreachable";
+    let status = 500;
+
     if (error.response) {
-      
-      return {
-        error: true,
-        message:
-          error.response.data?.message ||
-          `HTTP error! status: ${error.response.status}`,
-        status: error.response.status,
-      };
-    } else {
-    
-      return {
-        error: true,
-        message: "Network error or server unreachable",
-      };
+      errorMessage = error.response.data?.message || error.message;
+      status = error.response.status;
     }
+
+    const newError = new Error(errorMessage);
+    newError.status = status;
+    throw newError;
   }
 };
-
 
 export const fetchDataFromApi = async (url) => {
   try {
