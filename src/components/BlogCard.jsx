@@ -58,6 +58,8 @@ function BlogCard({ img, title, author, intro, _id, categories, createdAt }) {
           <SafeHTML html={intro} />
         </div>
 
+  
+
         <div className="hidden flex items-center justify-between text-sm border-t pt-3">
           <span className="text-gray-500">
             {formatDate(createdAt)}
