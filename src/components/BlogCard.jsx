@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SafeHTML from "./SafeHTML";
 import { format } from 'date-fns';
 
-function BlogCard({ img, title, author, intro, _id, categories, createdAt }) {
+function BlogCard({ img, title, author, _id, categories, createdAt }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
