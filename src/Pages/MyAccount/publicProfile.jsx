@@ -316,7 +316,7 @@ const PublicProfile = () => {
       {/* Gallery Section */}
       <div>
         <h1 className="flex items-center justify-center font-semibold font-marcellus text-3xl m-6 p-6 text-black ">
-          Gallerry
+          Gallery
         </h1>
      
       <div className="container mx-auto px-4">
