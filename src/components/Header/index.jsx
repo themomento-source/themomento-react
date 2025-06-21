@@ -8,7 +8,9 @@ import SearchBar from "../SearchBar";
 
 const mainMenuItems = [
   { name: "Home", path: "/" },
-  { name: "Photos", path: "/photolisting" },
+   { name: "Photos", path: "/photolisting" },
+  { name: "Become a Member", path: "/become-member" },
+ 
   { name: "Submit Photos", path: "/my-account/:userId" },
   
   { 
@@ -28,6 +30,8 @@ const mainMenuItems = [
   { name: "About Us", path: "/about" },
 ];
 
+
+
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
@@ -38,6 +42,11 @@ const Header = () => {
   const handleMobileMenuToggle = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const handleSubmenuToggle = (menuItemName) => setOpenSubmenu(current => (current === menuItemName ? null : menuItemName));
   const handleMyAccountClick = () => navigate(`/my-account/${context.userData?._id}`);
+  const handleLogoClick = () => { 
+    navigate("/"); 
+    window.location.reload(); 
+  
+  }
 
   return (
     <header className="sticky top-0 bg-white z-20 shadow-sm">
@@ -49,6 +58,7 @@ const Header = () => {
               src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1745945392/TheMomentoiLOGO_qxjbh4_2be1b8.jpg"
               className="h-7 lg:h-8 w-auto"
               alt="Logo"
+              onClick={handleLogoClick}
             />
           </Link>
         </div>

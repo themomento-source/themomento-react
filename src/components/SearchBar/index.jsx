@@ -138,7 +138,7 @@ const SearchBar = () => {
                       <img src={user.avatar} alt={user.name} className="w-10 h-10 object-cover rounded-full mr-3" />
                       <div className="flex-1 min-w-0">
                         <span className="font-semibold text-gray-800 block truncate">{user.name}</span>
-                        <span className="text-sm text-gray-500 block truncate">ID: {user.uniqueId}</span>
+                        {/* <span className="text-sm text-gray-500 block truncate">Location: {user.location}</span> */}
                       </div>
                     </Link>
                   ))}
