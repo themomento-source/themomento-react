@@ -1,0 +1,27 @@
+{
+  "name": "The Momento - Photography & Blog Platform",
+  "short_name": "The Momento",
+  "description": "Discover stunning photography and insightful blog posts on The Momento. Share your moments, stories, and creativity with our community.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f2937",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dgob9antb/image/upload/c_thumb,w_200,g_face/v1740280803/fabiconmomento-removebg-preview_dae0zq.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://res.cloudinary.com/dgob9antb/image/upload/c_thumb,w_200,g_face/v1740280803/fabiconmomento-removebg-preview_dae0zq.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["photography", "social", "lifestyle", "entertainment"],
+  "lang": "en",
+  "dir": "ltr"
+}
