@@ -5,8 +5,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import { fetchDataFromApi } from "../../utils/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { FaFacebookSquare, FaTwitterSquare, FaLinkedin, FaInstagramSquare, FaLink } from "react-icons/fa";
-
-
+import SEO from "../../components/SEO";
 
 function PhotoDetails() {
   const { id } = useParams();
@@ -52,6 +51,17 @@ function PhotoDetails() {
 
   return (
     <div className="min-h-screen bg-white">
+      {photo && (
+        <SEO
+          title={normalizeFancyText(photo.title)}
+          description={normalizeFancyText(photo.description)}
+          image={photo.images?.[0]?.url}
+          type="website"
+          author={photo.user?.name}
+          publishedTime={photo.createdAt}
+        />
+      )}
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
           onClick={() => navigate("/photolisting")}
@@ -63,8 +73,6 @@ function PhotoDetails() {
 
         {/* Main Content Container */}
         <div className="flex flex-col">
-
-
 
           
           {/* Image Section - Full Width */}
@@ -238,11 +246,4 @@ function PhotoDetails() {
 };
 
 export default PhotoDetails;
-
-
-
-
-
-
-
 

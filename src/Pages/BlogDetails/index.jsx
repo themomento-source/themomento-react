@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import SEO from "../../components/SEO";
 
 import { blogAPI } from "../../utils/api";
 import SafeHTML from "../../components/SafeHTML";
@@ -34,9 +34,6 @@ const BlogDetails = () => {
 
   if (loading)
     return (
-
-
-      
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <p className="text-gray-500 text-lg animate-pulse">Loading blog post...</p>
       </div>
@@ -56,43 +53,23 @@ const BlogDetails = () => {
     );
 
   if (!blog) return null;
-  const metaDescription = blog.description
-    ?.replace(/<[^>]+>/g, '')
-    .slice(0, 160)
-    .trim();
-    
-  const metaImage = blog.image?.startsWith('http') 
-    ? blog.image 
-    : `${window.location.origin}${blog.image || '/default-social-image.jpg'}`;
 
-  const currentUrl = window.location.href;
-
-
+  // Extract tags from blog content or categories
+  const tags = blog.tags || blog.category ? [blog.category] : [];
+  
   return (
-    
     <div className="bg-gray-50 min-h-screen">
-      <Helmet prioritizeSeoTags>
-        <title>{blog.title}</title>
-        <meta name="description" content={metaDescription} />
-        
-        {/* Open Graph */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={blog.title} />
-        <meta property="og:description" content={metaDescription} />
-        <meta property="og:image" content={metaImage} />
-        <meta property="og:url" content={currentUrl} />
-        <meta property="og:site_name" content="The Momento" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={blog.title} />
-        <meta name="twitter:description" content={metaDescription} />
-        <meta name="twitter:image" content={metaImage} />
-        <meta name="twitter:site" content="@yourtwitterhandle" />
-
-        {/* Canonical */}
-        <link rel="canonical" href={currentUrl} />
-      </Helmet>
+      <SEO
+        title={blog.title}
+        description={blog.description}
+        image={blog.image}
+        type="article"
+        author={blog.author}
+        publishedTime={blog.createdAt}
+        modifiedTime={blog.updatedAt}
+        tags={tags}
+      />
+      
       {/* Header Section */}
       <div className="relative bg-gray-50 text-gray-900 py-24 px-6 md:px-12">
         <div className="container mx-auto text-center">
@@ -172,8 +149,6 @@ const BlogDetails = () => {
   </a>
 
   {/* Copy Link */}
-
-
 <button
   onClick={() => {
     navigator.clipboard.writeText(window.location.href);
@@ -186,8 +161,6 @@ const BlogDetails = () => {
 </button>
 
 </div>
-
-
 
       {/* Blog Content */}
       <div className="container mx-auto px-4 md:px-8 mt-12">
