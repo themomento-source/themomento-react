@@ -8,6 +8,7 @@ function PhotoListing() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const navigate = useNavigate();
   const LIMIT = 8;
@@ -36,11 +37,28 @@ function PhotoListing() {
     }
   };
 
+  // Effect for fetching photos based on page number
   useEffect(() => {
     fetchPhotos(page);
   }, [page]);
 
+  // Effect for restoring scroll position once photos are loaded
+  useEffect(() => {
+    if (isInitialLoad && allPhotos.length > 0) {
+      const scrollPosition = sessionStorage.getItem('photoListingScroll');
+      if (scrollPosition) {
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(scrollPosition, 10));
+          sessionStorage.removeItem('photoListingScroll');
+        }, 100);
+      }
+      setIsInitialLoad(false);
+    }
+  }, [allPhotos, isInitialLoad]);
+
   const handleImageClick = (id) => {
+    // Save the current scroll position before navigating
+    sessionStorage.setItem('photoListingScroll', window.scrollY);
     navigate(`/photodetails/${id}`);
   };
 

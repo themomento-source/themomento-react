@@ -4,6 +4,7 @@ import { fetchDataFromApi } from "../../utils/api";
 
 function HomeImageGallery() {
   const [featuredPhotos, setFeaturedPhotos] = useState([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,15 +23,28 @@ function HomeImageGallery() {
     fetchFeaturedPhotos();
   }, []);
 
+  useEffect(() => {
+    if (isInitialLoad && featuredPhotos.length > 0) {
+      const scrollPosition = sessionStorage.getItem('homeGalleryScroll');
+      if (scrollPosition) {
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(scrollPosition, 10));
+          sessionStorage.removeItem('homeGalleryScroll');
+        }, 100); 
+      }
+      setIsInitialLoad(false);
+    }
+  }, [featuredPhotos, isInitialLoad]);
+
   const handleContextMenu = (event) => {
     event.preventDefault(); 
     console.log("Right-click is disabled on this image.");
   };
 
   const handleImageClick = (id) => {
-    // Handle left-click logic (e.g., navigate to product details page)
-    console.log(`Left-clicked on image with ID: ${id}`);
-    navigate(`/photodetails/${id}`); // Example navigation to a product details page
+    // Save scroll position before navigating
+    sessionStorage.setItem('homeGalleryScroll', window.scrollY);
+    navigate(`/photodetails/${id}`);
   };
 
   return (

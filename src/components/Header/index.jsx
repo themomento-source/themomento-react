@@ -4,10 +4,11 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlineClose } from "react-icons/md";
 import { MyContext } from "../../App";
 import Navigation from "./Navigation";
+import SearchBar from "../SearchBar";
 
 const mainMenuItems = [
   { name: "Home", path: "/" },
-  { name: "Become a Member", path: "/become-member" },
+  { name: "Photos", path: "/photolisting" },
   { name: "Submit Photos", path: "/my-account/:userId" },
   
   { 
@@ -34,206 +35,114 @@ const Header = () => {
   const context = useContext(MyContext);
   const navigate = useNavigate();
 
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const handleMobileLinkClick = () => {
-    setIsMobileMenuOpen(false);
-    window.location.reload();
-  };
-
-  const handleSubmenuToggle = (menuItemName) => {
-    setOpenSubmenu((current) => (current === menuItemName ? null : menuItemName));
-  };
-
-
-  // Handle "My Account" click
-  const handleMyAccountClick = () => {
-    navigate(`/my-account/${context.userData?._id}`);
-    window.location.reload();
-  };
-
-  const handleLogoClick = () => {
-    navigate("/");
-    window.location.reload();
-  };
+  const handleMobileMenuToggle = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const handleSubmenuToggle = (menuItemName) => setOpenSubmenu(current => (current === menuItemName ? null : menuItemName));
+  const handleMyAccountClick = () => navigate(`/my-account/${context.userData?._id}`);
 
   return (
-    <header className="sticky top-0 bg-gray-50 z-10">
-      <div className="flex items-center justify-between px-4 py-3">
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-  <button
-    onClick={handleMobileMenuToggle} 
-    className="text-gray-900 hover:text-gray-300 px-2 py-4"
-  >
-    <GiHamburgerMenu size={24} />
-  </button>
-</div>
-        {/* Logo */}
-        <Link to="/" className="flex-grow md:flex-grow-0">
-          <img
-            onClick={handleLogoClick}
-            src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1745945392/TheMomentoiLOGO_qxjbh4_2be1b8.jpg"
-            className="h-6 lg:h-8 w-auto cursor-pointer"
-            alt="Logo"
-          />
-        </Link>
+    <header className="sticky top-0 bg-white z-20 shadow-sm">
+      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+        {/* Left Section: Logo */}
+        <div className="flex-shrink-0">
+          <Link to="/" className="flex items-center">
+            <img
+              src="https://res.cloudinary.com/dac4gsvh0/image/upload/v1745945392/TheMomentoiLOGO_qxjbh4_2be1b8.jpg"
+              className="h-7 lg:h-8 w-auto"
+              alt="Logo"
+            />
+          </Link>
+        </div>
 
-        {/* User Profile */}
-        <div className="flex items-center gap-4 ml-auto">
-          {context.isLogin ? (
-            <div className="relative">
-              <button
-                onClick={() => setAnchorEl(!anchorEl)}
-                className="focus:outline-none"
-              >
-                <img
-                  src={context.userData?.avatar}
-                  alt="User Avatar"
-                  className="h-8 w-8 rounded-full border-white border-[2px]"
-                />
-              </button>
+        {/* Center Section: Desktop Navigation & Search */}
+        <div className="hidden md:flex flex-1 justify-center items-center space-x-8 font-marcellus">
+          <Navigation menuItems={mainMenuItems} />
+          <div className="w-full max-w-xs lg:max-w-sm">
+             <SearchBar />
+          </div>
+        </div>
 
-              {anchorEl && (
-                <div className="absolute right-0 mt-2 w-40 bg-black shadow-md rounded-md overflow-hidden z-10">
-                  <button
-                    onClick={handleMyAccountClick}
-                    className="block w-full px-4 py-2 text-left text-black bg-gray-50 hover:!bg-gray-100"
-                  >
-                    My Account
+        {/* Right Section: User Profile & Mobile Menu Button */}
+        <div className="flex-shrink-0 flex items-center gap-4">
+          {/* User Profile */}
+          <div className="hidden md:flex items-center gap-2">
+              {context.isLogin ? (
+                  <div className="relative">
+                  <button onClick={() => setAnchorEl(!anchorEl)} className="focus:outline-none">
+                      <img src={context.userData?.avatar} alt="User Avatar" className="h-9 w-9 rounded-full border-2 border-gray-200 object-cover"/>
                   </button>
-                  <hr className="border-gray-200" />
-                  {/* <button
-                    onClick={context.logout}
-                    className="block w-full px-4 py-2 text-left text-black bg-gray-50 hover:!bg-gray-100"
-                  >
-                    Logout
-                  </button> */}
-                </div>
+                  {anchorEl && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden z-30">
+                      <button onClick={handleMyAccountClick} className="block w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100">My Account</button>
+                      {/* <hr className="border-gray-200" />
+                      <button onClick={context.logout} className="block w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100">Logout</button> */}
+                      </div>
+                  )}
+                  </div>
+              ) : (
+                  <>
+                  <Link to="/login" className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-amber-500 transition-colors">Login</Link>
+                  <Link to="/register" className="px-5 py-2 text-sm font-semibold text-white bg-amber-500 rounded-md hover:bg-amber-600 transition-colors">Register</Link>
+                  </>
               )}
-            </div>
-          ) : (
-            <div className="flex gap-2">
-              <button className="text-gray-900 font-semi-bold">
-              <Link
-              
-                to="/login"
-                className="hidden md:inline-block px-2 py-1 font-pt-serif hover:bg-amber-400"
-              >
-                Login
-                
-              </Link>
-              </button>
-              <button className="text-gray-900 font-semi-bold">
-              <Link
-                to="/register"
-                className="hidden md:inline-block px-2 py-1 font-pt-serif hover:bg-amber-400"
-              >
-                Register
-              </Link>
-              </button>
-            </div>
-          )}
+          </div>
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button onClick={handleMobileMenuToggle} className="text-gray-800 hover:text-amber-500 p-2">
+              <GiHamburgerMenu size={24} />
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Menu Panel */}
       {isMobileMenuOpen && (
-  <div className="md:hidden fixed inset-0 bg-gray-50 z-50 pt-16">
-    <div className="container mx-auto px-4">
-      {/* Menu Header with Close Icon */}
-      <div className="flex justify-between items-center pb-4 border-b border-gray-50">
-        <h2 className="text-gray-900 text-xl font-bold">Menu</h2>
-        <button
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="text-black text-2xl p-2 hover:bg-gray-800 rounded-full"
-        >
-          <MdOutlineClose />
-        </button>
-      </div>
-
-
-      <ul className="space-y-4 pt-4">
-  {mainMenuItems.map((item) => {
-
-    const path = item.name === "Submit Photo"
-      ? context.isLogin
-        ? `/my-account/${context.userData?._id}`
-        : "/login"
-      : item.path;
-
-    return (
-      <li key={item.name}>
-        {item.hasSubmenu ? (
-          <div
-            className="flex justify-between items-center text-black font-serif py-3 text-lg  px-4 rounded cursor-pointer"
-            onClick={() => handleSubmenuToggle(item.name)}
-          >
-            <span>{item.name}</span>
-            <span>{openSubmenu === item.name ? "-" : "+"}</span>
+        <div className="md:hidden fixed inset-0 bg-white z-50 p-4">
+          <div className="flex justify-between items-center pb-4 border-b">
+              <h2 className="text-gray-900 text-xl font-bold">Menu</h2>
+              <button onClick={handleMobileMenuToggle} className="text-gray-800 p-2"><MdOutlineClose size={28} /></button>
           </div>
-        ) : (
-          <Link
-            to={path}
-            className="flex justify-between items-center text-black font-serif py-3 text-lg  px-4 rounded cursor-pointer"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span>{item.name}</span>
-          </Link>
-        )}
-
-        {item.submenu && openSubmenu === item.name && (
-          <ul className="ml-6">
-            {item.submenu.map((subItem) => (
-              <li key={subItem.name}>
-                <Link
-                  to={subItem.path}
-                  className="text-gray-900 block py-2 text-md px-4 font-optima"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {subItem.name}
-                </Link>
+          <div className="mt-6">
+              <SearchBar />
+          </div>
+          <ul className="mt-6 space-y-2">
+              {mainMenuItems.map(item => (
+                  <li key={item.name}>
+                  {item.hasSubmenu ? (
+                      <div>
+                          <button onClick={() => handleSubmenuToggle(item.name)} className="w-full flex justify-between items-center text-gray-800 font-semibold py-3 px-3 rounded-md hover:bg-gray-100">
+                              <span>{item.name}</span>
+                              <span>{openSubmenu === item.name ? "-" : "+"}</span>
+                          </button>
+                          {openSubmenu === item.name && (
+                              <ul className="ml-4 mt-1 space-y-1">
+                                  {item.submenu.map(subItem => (
+                                      <li key={subItem.name}><Link to={subItem.path} className="block text-gray-600 py-2 px-3 rounded-md hover:bg-gray-100" onClick={handleMobileMenuToggle}>{subItem.name}</Link></li>
+                                  ))}
+                              </ul>
+                          )}
+                      </div>
+                  ) : (
+                      <Link to={item.name === "Submit Photos" ? (context.isLogin ? `/my-account/${context.userData?._id}` : "/login") : item.path} className="block text-gray-800 font-semibold py-3 px-3 rounded-md hover:bg-gray-100" onClick={handleMobileMenuToggle}>
+                          {item.name}
+                      </Link>
+                  )}
+                  </li>
+              ))}
+              <li className="border-t pt-4 mt-4 space-y-2">
+              {context.isLogin ? (
+                  <button onClick={() => { handleMyAccountClick(); handleMobileMenuToggle(); }} className="w-full text-left text-gray-800 font-semibold py-3 px-3 rounded-md hover:bg-gray-100">My Account</button>
+              ) : (
+                  <>
+                      <Link to="/login" className="block text-gray-800 font-semibold py-3 px-3 rounded-md hover:bg-gray-100" onClick={handleMobileMenuToggle}>Login</Link>
+                      <Link to="/register" className="block text-gray-800 font-semibold py-3 px-3 rounded-md hover:bg-gray-100" onClick={handleMobileMenuToggle}>Register</Link>
+                  </>
+              )}
               </li>
-            ))}
           </ul>
-        )}
-      </li>
-
-
-    );
-  })}
-  {context.isLogin && (
-    <>
-     <li>
-<Link
-to={`/my-account/${context.userData?._id}`}
-className="text-black font-pt-serif block py-3 text-lg  px-4 rounded"
-onClick={() => setIsMobileMenuOpen(false)}
->
-My Account
-</Link>
-</li>
-      <li>
-        {/* <Link
-          onClick={() => {
-            context.logout();
-            setIsMobileMenuOpen(false);
-          }}
-          className="text-black font-pt-serif block w-full py-3 text-lg px-4 rounded text-left"
-        >
-          Logout
-        </Link> */}
-      </li>
-    </>
-  )}
-</ul>
-          </div>
         </div>
       )}
-
-      {/* Navigation Component */}
-      <Navigation mainMenuItems={mainMenuItems} />
     </header>
   );
 };
+
 export default Header;

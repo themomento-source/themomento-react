@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SafeHTML from "./SafeHTML";
 import { format } from 'date-fns';
 
-function BlogCard({ img, title, author, _id, categories, createdAt }) {
+function BlogCard({ img, title, author, _id, categories, createdAt, intro }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -22,15 +22,15 @@ function BlogCard({ img, title, author, _id, categories, createdAt }) {
 
   return (
     <div
-      className="w-full bg-white shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+      className="w-full bg-white shadow-md  overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col"
       onClick={handleClick}
     >
       {/* Blog Image */}
-      <div className="relative w-full h-48">
+      <div className="relative w-full h-58">
         <img 
           src={img} 
           alt={title} 
-          className="w-[400px] h-full object-cover"
+          className="w-full h-full object-cover"
         />
         {/* Category Tags */}
         <div className="absolute top-2 left-2 flex gap-2">
@@ -43,29 +43,26 @@ function BlogCard({ img, title, author, _id, categories, createdAt }) {
             </span>
           ))}
         </div>
-        <p className="hidden absolute bottom-2 left-3 text-white text-sm font-medium bg-black bg-opacity-50 px-2 py-1 rounded">
-  {author || 'Unknown Author'}
-</p>
       </div>
 
       {/* Blog Content */}
-      <div className="p-6 w-[400px]">
-        <h2 className="text-xl font-bold mb-3 font-marcellus text-gray-800">
+      <div className="p-6 flex flex-col flex-grow">
+        <h2 className="text-xl font-bold mb-2 font-marcellus text-gray-800 hover:text-amber-600 transition-colors duration-300">
           {title}
         </h2>
         
-        {/* <div className="text-gray-600 mb-4 line-clamp-3 font-pt-serif">
-          <SafeHTML html={intro} />
-        </div> */}
+        {intro && (
+            <div className="text-gray-600 mb-4 line-clamp-3 font-pt-serif flex-grow">
+              <SafeHTML html={intro} />
+            </div>
+        )}
 
-  
-
-        <div className="hidden flex items-center justify-between text-sm border-t pt-3">
-          <span className="text-gray-500">
-            {formatDate(createdAt)}
+        <div className="flex items-center text-sm border-t pt-4 mt-auto">
+          <span className="text-gray-500 font-medium">
+            By {author || 'Unknown Author'}
           </span>
-          <span className="text-amber-600 hover:text-amber-700 font-medium">
-            Read More →
+          <span className="text-gray-500 ml-auto">
+            {formatDate(createdAt)}
           </span>
         </div>
       </div>
