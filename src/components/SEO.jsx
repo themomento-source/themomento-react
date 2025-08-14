@@ -18,12 +18,17 @@ const SEO = ({
     .slice(0, 160)
     .trim();
 
-  // Ensure image has full URL
+  // Ensure image has full URL with better fallback handling
   const fullImageUrl = image?.startsWith('http') 
     ? image 
     : image 
       ? `${window.location.origin}${image}`
       : `${window.location.origin}/default-social-image.jpg`;
+
+  // Ensure image URL is accessible to Facebook crawlers
+  const facebookImageUrl = fullImageUrl?.includes('cloudinary') 
+    ? fullImageUrl 
+    : fullImageUrl;
 
   // Current URL
   const currentUrl = url || window.location.href;
@@ -78,9 +83,11 @@ const SEO = ({
       <meta property="og:url" content={currentUrl} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={cleanDescription} />
-      <meta property="og:image" content={fullImageUrl} />
+      <meta property="og:image" content={facebookImageUrl} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:secure_url" content={facebookImageUrl} />
+      <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:site_name" content="The Momento" />
       <meta property="og:locale" content="en_US" />
       
@@ -125,6 +132,14 @@ const SEO = ({
       
       {/* Facebook App ID (if you have one) */}
       {/* <meta property="fb:app_id" content="your-facebook-app-id" /> */}
+      
+      {/* Facebook Debug Info - Remove in production */}
+      {/* 
+        To debug Facebook sharing:
+        1. Use Facebook Sharing Debugger: https://developers.facebook.com/tools/debug/
+        2. Clear cache and re-scrape
+        3. Ensure image is publicly accessible
+      */}
       
       {/* Additional Twitter Tags */}
       <meta name="twitter:domain" content={window.location.hostname} />

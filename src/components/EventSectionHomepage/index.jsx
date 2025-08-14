@@ -18,11 +18,16 @@ const EventsSection = () => {
           const formattedEvents = response.events.map((event) => ({
             id: event._id, // Use MongoDB _id as the unique identifier
             title: event.title,
-            date: new Date(event.eventDate).toLocaleDateString("en-US", {
+            date: new Date(event.startDate || event.eventDate).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
-            }), 
+            }) + (event.endDate && event.endDate !== event.startDate ? 
+              " - " + new Date(event.endDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }) : ""), 
             location: event.location,
             image: event.imageUrl,
             externalLink: "", 

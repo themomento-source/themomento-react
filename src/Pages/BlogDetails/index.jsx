@@ -62,7 +62,7 @@ const BlogDetails = () => {
       <SEO
         title={blog.title}
         description={blog.description}
-        image={blog.image}
+        image={blog.image || blog.bodyImages?.[0]?.url}
         type="article"
         author={blog.author}
         publishedTime={blog.createdAt}
